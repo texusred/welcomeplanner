@@ -1,0 +1,193 @@
+/* Print-specific styles for stall layout pages */
+
+@media print {
+    /* Reset page margins and background */
+    @page {
+        margin: 0.5in;
+        size: landscape;
+    }
+    
+    * {
+        -webkit-print-color-adjust: exact !important;
+        color-adjust: exact !important;
+        print-color-adjust: exact !important;
+    }
+    
+    body {
+        background: white !important;
+        font-size: 12px;
+    }
+    
+    /* Hide interactive elements */
+    .header,
+    .edit-mode-info,
+    .selection-tools,
+    .modern-btn,
+    .btn,
+    .resize-handle {
+        display: none !important;
+    }
+    
+    /* Layout container adjustments */
+    .layout-wrapper {
+        margin-top: 0 !important;
+        height: auto !important;
+        overflow: visible !important;
+    }
+    
+    .layout-container {
+        box-shadow: none !important;
+        border: 2px solid #333 !important;
+        border-radius: 0 !important;
+        margin: 0 !important;
+        width: 100% !important;
+        height: 7in !important;
+        page-break-inside: avoid;
+        position: relative;
+    }
+    
+    /* Ensure all elements print with proper colors */
+    .stall {
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+        border: 1px solid rgba(0,0,0,0.2) !important;
+        font-weight: bold !important;
+        transform: none !important;
+    }
+    
+    .stall.red {
+        background: #dc3545 !important;
+        color: white !important;
+    }
+    
+    .stall.green {
+        background: #28a745 !important;
+        color: white !important;
+    }
+    
+    .stall.light-green {
+        background: #90EE90 !important;
+        color: #333 !important;
+        border: 1px solid #333 !important;
+    }
+    
+    /* Background areas */
+    .background-area {
+        background: rgba(102, 126, 234, 0.15) !important;
+        border: 2px dashed #667eea !important;
+        border-radius: 4px !important;
+    }
+    
+    .background-label {
+        color: #333 !important;
+        font-weight: bold !important;
+        font-size: 11px !important;
+    }
+    
+    /* Infrastructure elements */
+    .door {
+        background: #fd7e14 !important;
+        color: white !important;
+        border: 1px solid #333 !important;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+    
+    .power-box {
+        background: #ffc107 !important;
+        color: #333 !important;
+        border: 1px solid #333 !important;
+        box-shadow: none !important;
+        transform: none !important;
+    }
+    
+    /* Remove selection indicators */
+    .stall.selected {
+        border: 2px solid #333 !important;
+        transform: none !important;
+        box-shadow: 0 1px 3px rgba(0,0,0,0.3) !important;
+    }
+    
+    .stall.selected::after {
+        display: none !important;
+    }
+    
+    .selection-box {
+        display: none !important;
+    }
+    
+    /* Add print header */
+    .layout-container::before {
+        content: "LAB Courtyard - Stall Layout Plan";
+        position: absolute;
+        top: -25px;
+        left: 0;
+        font-size: 16px;
+        font-weight: bold;
+        color: #333;
+    }
+    
+    /* Add print footer with timestamp */
+    .layout-container::after {
+        content: "Printed: " attr(data-print-time);
+        position: absolute;
+        bottom: -25px;
+        right: 0;
+        font-size: 10px;
+        color: #666;
+    }
+    
+    /* Ensure text remains readable */
+    .stall,
+    .door,
+    .power-box,
+    .background-label {
+        text-shadow: none !important;
+    }
+    
+    /* Page break control */
+    .layout-container {
+        page-break-before: auto;
+        page-break-after: auto;
+        page-break-inside: avoid;
+    }
+    
+    /* High contrast mode adjustments */
+    @media print and (prefers-contrast: high) {
+        .stall {
+            border: 2px solid #000 !important;
+        }
+        
+        .background-area {
+            border: 3px dashed #000 !important;
+            background: rgba(0,0,0,0.1) !important;
+        }
+        
+        .door,
+        .power-box {
+            border: 2px solid #000 !important;
+        }
+    }
+    
+    /* Ensure proper scaling for different paper sizes */
+    @media print and (max-width: 8.5in) {
+        .layout-container {
+            transform: scale(0.9);
+            transform-origin: top left;
+        }
+    }
+    
+    @media print and (max-width: 7in) {
+        .layout-container {
+            transform: scale(0.8);
+            transform-origin: top left;
+        }
+        
+        .stall {
+            font-size: 10px !important;
+        }
+        
+        .background-label {
+            font-size: 9px !important;
+        }
+    }
+}

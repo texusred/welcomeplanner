@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>LAB Courtyard - Cambridge Stall Planner</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="styles/layout.css" rel="stylesheet">
+    <link href="styles/print.css" rel="stylesheet" media="print">
+</head>
+<body>
+    <div class="header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link text-white me-3" onclick="window.location.href='index.html'">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </button>
+            <h4><i class="fas fa-microscope me-2"></i>LAB Courtyard</h4>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="modern-btn btn-edit" onclick="toggleEditMode()">
+                <i class="fas fa-edit me-1"></i>Edit Mode: OFF
+            </button>
+            <button class="modern-btn btn-print" onclick="window.print()">
+                <i class="fas fa-print me-1"></i>Print
+            </button>
+        </div>
+    </div>
+
+    <div class="edit-mode-info" id="editInfo">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Edit Mode Active:</strong> 
+        Drag elements to move • Double-tap stalls to edit numbers • Drag corners to resize areas<br>
+        <small><strong>Multi-Select:</strong> Hold Ctrl/Cmd + click stalls, or drag to select area</small>
+    </div>
+
+    <div class="layout-wrapper">
+        <div class="zoom-pan-container">
+            <div class="layout-container" id="layoutContainer">
+                <!-- Selection box for drag selection -->
+                <div class="selection-box" id="selectionBox"></div>
+
+                <!-- Resizable background areas with labels inside -->
+                <div class="background-area" id="bench1" style="top: 50px; left: 50px; width: 120px; height: 200px;">
+                    <div class="background-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">BENCH</div>
+                    <div class="resize-handle"></div>
+                </div>
+                
+                <div class="background-area" id="bench2" style="top: 280px; left: 200px; width: 100px; height: 120px;">
+                    <div class="background-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">BENCH</div>
+                    <div class="resize-handle"></div>
+                </div>
+
+                <!-- Moveable doors -->
+                <div class="door" style="top: 30px; left: 250px;">DOOR</div>
+                <div class="door" style="top: 60px; left: 280px;">DOOR</div>
+                <div class="door" style="top: 450px; left: 900px;">DOOR</div>
+                <div class="door" style="top: 450px; left: 940px;">DOOR</div>
+                <div class="door" style="top: 500px; left: 30px;">DOOR</div>
+
+                <!-- Moveable power box -->
+                <div class="power-box" style="top: 540px; left: 80px;">
+                    <i class="fas fa-bolt"></i>
+                </div>
+
+                <!-- LAB Courtyard Stalls with modern styling -->
+                <div class="stall green" style="top: 80px; left: 180px;">71</div>
+                <div class="stall green" style="top: 120px; left: 180px;">72</div>
+                <div class="stall green" style="top: 160px; left: 180px;">73</div>
+                <div class="stall green" style="top: 200px; left: 180px;">74</div>
+                <div class="stall green" style="top: 240px; left: 180px;">75</div>
+
+                <div class="stall light-green" style="top: 120px; left: 320px;">107</div>
+
+                <div class="stall red" style="top: 160px; left: 380px;">76</div>
+                <div class="stall red" style="top: 200px; left: 380px;">77</div>
+                <div class="stall red" style="top: 240px; left: 380px;">78</div>
+                <div class="stall red" style="top: 280px; left: 380px;">79</div>
+
+                <div class="stall red" style="top: 340px; left: 350px;">80</div>
+                <div class="stall light-green" style="top: 340px; left: 400px;">81</div>
+                <div class="stall light-green" style="top: 340px; left: 450px;">82</div>
+                <div class="stall light-green" style="top: 340px; left: 500px;">83</div>
+                <div class="stall light-green" style="top: 340px; left: 550px;">84</div>
+                <div class="stall green" style="top: 340px; left: 600px;">85</div>
+                <div class="stall light-green" style="top: 340px; left: 650px;">86</div>
+                <div class="stall light-green" style="top: 340px; left: 700px;">87</div>
+
+                <div class="stall green" style="top: 300px; left: 800px;">88</div>
+                <div class="stall light-green" style="top: 260px; left: 800px;">89</div>
+                <div class="stall light-green" style="top: 220px; left: 800px;">90</div>
+                <div class="stall light-green" style="top: 180px; left: 850px;">91</div>
+                <div class="stall light-green" style="top: 220px; left: 850px;">92</div>
+                <div class="stall light-green" style="top: 260px; left: 850px;">93</div>
+
+                <div class="stall red" style="top: 420px; left: 750px;">94</div>
+                <div class="stall red" style="top: 420px; left: 700px;">95</div>
+                <div class="stall red" style="top: 420px; left: 650px;">96</div>
+                <div class="stall red" style="top: 420px; left: 600px;">97</div>
+                <div class="stall red" style="top: 420px; left: 550px;">98</div>
+                <div class="stall red" style="top: 420px; left: 500px;">99</div>
+                <div class="stall red" style="top: 420px; left: 450px;">100</div>
+                <div class="stall red" style="top: 420px; left: 400px;">101</div>
+
+                <div class="stall green" style="top: 460px; left: 350px;">102</div>
+                <div class="stall red" style="top: 500px; left: 350px;">103</div>
+                <div class="stall green" style="top: 540px; left: 350px;">104</div>
+                <div class="stall red" style="top: 580px; left: 350px;">105</div>
+                <div class="stall green" style="top: 580px; left: 150px;">106</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selection Tools -->
+    <div class="selection-tools" id="selectionTools">
+        <span class="selection-count" id="selectionCount">0 stalls selected</span>
+        <button class="selection-btn btn-group" onclick="groupSelected()">
+            <i class="fas fa-object-group me-1"></i>Group Move
+        </button>
+        <button class="selection-btn btn-clear" onclick="clearSelection()">
+            <i class="fas fa-times me-1"></i>Clear
+        </button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/drag-handler.js"></script>
+</body>
+</html>

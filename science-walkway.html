@@ -1,0 +1,144 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Science Walkway - Cambridge Stall Planner</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="styles/layout.css" rel="stylesheet">
+    <link href="styles/print.css" rel="stylesheet" media="print">
+</head>
+<body>
+    <div class="header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link text-white me-3" onclick="window.location.href='index.html'">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </button>
+            <h4><i class="fas fa-flask me-2"></i>Science Walkway</h4>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="modern-btn btn-edit" onclick="toggleEditMode()">
+                <i class="fas fa-edit me-1"></i>Edit Mode: OFF
+            </button>
+            <button class="modern-btn btn-print" onclick="window.print()">
+                <i class="fas fa-print me-1"></i>Print
+            </button>
+        </div>
+    </div>
+
+    <div class="edit-mode-info" id="editInfo">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Edit Mode Active:</strong> 
+        Drag elements to move • Double-tap stalls to edit numbers • Drag corners to resize areas<br>
+        <small><strong>Multi-Select:</strong> Hold Ctrl/Cmd + click stalls, or drag to select area</small>
+    </div>
+
+    <div class="layout-wrapper">
+        <div class="zoom-pan-container">
+            <div class="layout-container" id="layoutContainer">
+                <!-- Selection box for drag selection -->
+                <div class="selection-box" id="selectionBox"></div>
+
+                <!-- Double stall area -->
+                <div class="background-area" id="double-stall" style="top: 150px; left: 500px; width: 80px; height: 60px;">
+                    <div class="background-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">DOUBLE STALL</div>
+                    <div class="resize-handle"></div>
+                </div>
+
+                <!-- Science Walkway Stalls (46-70) -->
+                <!-- Left column (46-61) -->
+                <div class="stall blue" style="top: 100px; left: 200px;">46</div>
+                <div class="stall blue" style="top: 150px; left: 200px;">47</div>
+                <div class="stall blue" style="top: 200px; left: 200px;">48</div>
+                <div class="stall blue" style="top: 250px; left: 200px;">49</div>
+                <div class="stall blue" style="top: 300px; left: 200px;">50</div>
+                <div class="stall blue" style="top: 350px; left: 200px;">51</div>
+                <div class="stall blue" style="top: 400px; left: 200px;">52</div>
+                <div class="stall blue" style="top: 450px; left: 200px;">53</div>
+                <div class="stall blue" style="top: 500px; left: 200px;">54</div>
+                <div class="stall blue" style="top: 550px; left: 200px;">55</div>
+                <div class="stall blue" style="top: 600px; left: 200px;">56</div>
+                <div class="stall blue" style="top: 650px; left: 200px;">57</div>
+                <div class="stall blue" style="top: 700px; left: 200px;">58</div>
+                <div class="stall blue" style="top: 750px; left: 200px;">59</div>
+                <div class="stall blue" style="top: 800px; left: 200px;">60</div>
+                <div class="stall blue" style="top: 850px; left: 200px;">61</div>
+
+                <!-- Right column (62-70) -->
+                <div class="stall blue" style="top: 100px; left: 400px;">62</div>
+                <div class="stall blue" style="top: 150px; left: 400px;">63</div>
+                <div class="stall blue" style="top: 200px; left: 400px;">64</div>
+                <div class="stall blue" style="top: 250px; left: 400px;">65</div>
+                <div class="stall blue" style="top: 300px; left: 400px;">66</div>
+                <div class="stall blue" style="top: 350px; left: 400px;">67</div>
+                <div class="stall blue" style="top: 400px; left: 400px;">68</div>
+                <div class="stall blue" style="top: 450px; left: 400px;">69</div>
+                <div class="stall blue" style="top: 500px; left: 400px;">70</div>
+
+                <!-- Central walkway special stalls -->
+                <div class="stall green" style="top: 250px; left: 300px;">S1</div>
+                <div class="stall green" style="top: 350px; left: 300px;">S2</div>
+                <div class="stall green" style="top: 450px; left: 300px;">S3</div>
+
+                <!-- Additional positioned stalls for variety -->
+                <div class="stall light-green" style="top: 550px; left: 300px;">71</div>
+                <div class="stall light-green" style="top: 600px; left: 300px;">72</div>
+                <div class="stall light-green" style="top: 650px; left: 300px;">73</div>
+
+                <!-- End section stalls -->
+                <div class="stall red" style="top: 750px; left: 300px;">74</div>
+                <div class="stall red" style="top: 800px; left: 300px;">75</div>
+
+                <!-- Side extension stalls -->
+                <div class="stall blue" style="top: 150px; left: 100px;">A1</div>
+                <div class="stall blue" style="top: 200px; left: 100px;">A2</div>
+                <div class="stall blue" style="top: 250px; left: 100px;">A3</div>
+
+                <div class="stall blue" style="top: 150px; left: 500px;">B1</div>
+                <div class="stall blue" style="top: 200px; left: 500px;">B2</div>
+                <div class="stall blue" style="top: 250px; left: 500px;">B3</div>
+
+                <!-- Power/utility areas -->
+                <div class="power-box" style="top: 50px; left: 300px;">
+                    <i class="fas fa-bolt"></i>
+                </div>
+
+                <div class="power-box" style="top: 900px; left: 300px;">
+                    <i class="fas fa-bolt"></i>
+                </div>
+
+                <!-- Entrance/exit markers -->
+                <div class="door" style="top: 50px; left: 150px;">ENTRANCE</div>
+                <div class="door" style="top: 900px; left: 250px;">EXIT</div>
+
+                <!-- Information point -->
+                <div class="background-area" id="info-point" style="top: 400px; left: 50px; width: 60px; height: 40px;">
+                    <div class="background-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">INFO</div>
+                    <div class="resize-handle"></div>
+                </div>
+
+                <!-- Rest area -->
+                <div class="background-area" id="rest-area" style="top: 700px; left: 450px; width: 100px; height: 80px;">
+                    <div class="background-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">REST AREA</div>
+                    <div class="resize-handle"></div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selection Tools -->
+    <div class="selection-tools" id="selectionTools">
+        <span class="selection-count" id="selectionCount">0 stalls selected</span>
+        <button class="selection-btn btn-group" onclick="groupSelected()">
+            <i class="fas fa-object-group me-1"></i>Group Move
+        </button>
+        <button class="selection-btn btn-clear" onclick="clearSelection()">
+            <i class="fas fa-times me-1"></i>Clear
+        </button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/drag-handler.js"></script>
+</body>
+</html>

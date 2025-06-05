@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Ruskin Courtyard - Cambridge Stall Planner</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
+    <link href="styles/layout.css" rel="stylesheet">
+    <link href="styles/print.css" rel="stylesheet" media="print">
+</head>
+<body>
+    <div class="header d-flex justify-content-between align-items-center">
+        <div class="d-flex align-items-center">
+            <button class="btn btn-link text-white me-3" onclick="window.location.href='index.html'">
+                <i class="fas fa-arrow-left me-1"></i>Back
+            </button>
+            <h4><i class="fas fa-university me-2"></i>Ruskin Courtyard</h4>
+        </div>
+        <div class="d-flex gap-2">
+            <button class="modern-btn btn-edit" onclick="toggleEditMode()">
+                <i class="fas fa-edit me-1"></i>Edit Mode: OFF
+            </button>
+            <button class="modern-btn btn-print" onclick="window.print()">
+                <i class="fas fa-print me-1"></i>Print
+            </button>
+        </div>
+    </div>
+
+    <div class="edit-mode-info" id="editInfo">
+        <i class="fas fa-info-circle me-2"></i>
+        <strong>Edit Mode Active:</strong> 
+        Drag elements to move • Double-tap stalls to edit numbers • Drag corners to resize areas<br>
+        <small><strong>Multi-Select:</strong> Hold Ctrl/Cmd + click stalls, or drag to select area</small>
+    </div>
+
+    <div class="layout-wrapper">
+        <div class="zoom-pan-container">
+            <div class="layout-container" id="layoutContainer">
+                <!-- Selection box for drag selection -->
+                <div class="selection-box" id="selectionBox"></div>
+
+                <!-- Memorial Garden area -->
+                <div class="background-area" id="memorial-garden" style="top: 200px; right: 50px; width: 200px; height: 150px;">
+                    <div class="background-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">MEMORIAL GARDEN</div>
+                    <div class="resize-handle"></div>
+                </div>
+
+                <!-- Power boxes -->
+                <div class="power-box" style="top: 50px; left: 400px;">
+                    <i class="fas fa-bolt"></i>
+                </div>
+
+                <!-- SU H2H area -->
+                <div class="background-area" id="su-h2h" style="top: 20px; right: 20px; width: 100px; height: 40px;">
+                    <div class="background-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">SU H2H</div>
+                    <div class="resize-handle"></div>
+                </div>
+
+                <!-- Stage area -->
+                <div class="background-area" id="stage" style="bottom: 250px; left: 400px; width: 80px; height: 120px;">
+                    <div class="background-label" style="top: 50%; left: 50%; transform: translate(-50%, -50%);">STAGE</div>
+                    <div class="resize-handle"></div>
+                </div>
+
+                <!-- Ruskin Courtyard Stalls (1-45) -->
+                <!-- Top row (1-17) -->
+                <div class="stall red" style="top: 100px; left: 50px;">1</div>
+                <div class="stall red" style="top: 100px; left: 100px;">2</div>
+                <div class="stall red" style="top: 100px; left: 150px;">3</div>
+                <div class="stall red" style="top: 100px; left: 200px;">4</div>
+                <div class="stall red" style="top: 100px; left: 250px;">5</div>
+                <div class="stall red" style="top: 100px; left: 300px;">6</div>
+                <div class="stall red" style="top: 100px; left: 350px;">7</div>
+                <div class="stall red" style="top: 100px; left: 450px;">8</div>
+                <div class="stall red" style="top: 100px; left: 500px;">9</div>
+                <div class="stall red" style="top: 100px; left: 550px;">10</div>
+                <div class="stall red" style="top: 100px; left: 600px;">11</div>
+                <div class="stall red" style="top: 100px; left: 650px;">12</div>
+                <div class="stall red" style="top: 100px; left: 700px;">13</div>
+                <div class="stall red" style="top: 100px; left: 750px;">14</div>
+                <div class="stall red" style="top: 100px; left: 800px;">15</div>
+                <div class="stall red" style="top: 100px; left: 850px;">16</div>
+                <div class="stall red" style="top: 100px; left: 900px;">17</div>
+
+                <!-- Left column (18-28) -->
+                <div class="stall blue" style="top: 150px; left: 50px;">18</div>
+                <div class="stall blue" style="top: 200px; left: 50px;">19</div>
+                <div class="stall blue" style="top: 250px; left: 50px;">20</div>
+                <div class="stall blue" style="top: 300px; left: 50px;">21</div>
+                <div class="stall blue" style="top: 350px; left: 50px;">22</div>
+                <div class="stall blue" style="top: 400px; left: 50px;">23</div>
+                <div class="stall blue" style="top: 450px; left: 50px;">24</div>
+                <div class="stall blue" style="top: 500px; left: 50px;">25</div>
+                <div class="stall blue" style="top: 550px; left: 50px;">26</div>
+                <div class="stall blue" style="top: 600px; left: 50px;">27</div>
+                <div class="stall blue" style="top: 650px; left: 50px;">28</div>
+
+                <!-- Inner courtyard stalls (29-43) -->
+                <div class="stall blue" style="top: 200px; left: 150px;">29</div>
+                <div class="stall blue" style="top: 200px; left: 200px;">30</div>
+                <div class="stall blue" style="top: 200px; left: 250px;">31</div>
+                <div class="stall blue" style="top: 200px; left: 300px;">32</div>
+                <div class="stall blue" style="top: 200px; left: 350px;">33</div>
+
+                <div class="stall blue" style="top: 250px; left: 150px;">34</div>
+                <div class="stall blue" style="top: 300px; left: 150px;">35</div>
+                <div class="stall blue" style="top: 350px; left: 150px;">36</div>
+                <div class="stall blue" style="top: 400px; left: 150px;">37</div>
+                <div class="stall blue" style="top: 450px; left: 150px;">38</div>
+
+                <div class="stall blue" style="top: 400px; left: 200px;">39</div>
+                <div class="stall blue" style="top: 400px; left: 250px;">40</div>
+                <div class="stall blue" style="top: 400px; left: 300px;">41</div>
+                <div class="stall blue" style="top: 400px; left: 350px;">42</div>
+
+                <div class="stall green" style="top: 300px; left: 450px;">43</div>
+
+                <!-- Central stage stalls -->
+                <div class="stall green" style="top: 450px; left: 450px;">44</div>
+
+                <!-- Bottom stalls (45) -->
+                <div class="stall green" style="top: 650px; left: 450px;">45</div>
+
+                <!-- Bottom row -->
+                <div class="stall red" style="top: 700px; left: 100px;">46</div>
+                <div class="stall red" style="top: 700px; left: 150px;">47</div>
+                <div class="stall red" style="top: 700px; left: 200px;">48</div>
+                <div class="stall red" style="top: 700px; left: 250px;">49</div>
+                <div class="stall red" style="top: 700px; left: 300px;">50</div>
+                <div class="stall red" style="top: 700px; left: 350px;">51</div>
+
+                <!-- Right side stalls -->
+                <div class="stall green" style="top: 450px; left: 950px;">52</div>
+                <div class="stall green" style="top: 500px; left: 950px;">53</div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Selection Tools -->
+    <div class="selection-tools" id="selectionTools">
+        <span class="selection-count" id="selectionCount">0 stalls selected</span>
+        <button class="selection-btn btn-group" onclick="groupSelected()">
+            <i class="fas fa-object-group me-1"></i>Group Move
+        </button>
+        <button class="selection-btn btn-clear" onclick="clearSelection()">
+            <i class="fas fa-times me-1"></i>Clear
+        </button>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/drag-handler.js"></script>
+</body>
+</html>
