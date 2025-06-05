@@ -13,7 +13,7 @@
     <title>Cambridge Stall Planner</title>
     
     <!-- PWA Manifest -->
-    <link rel="manifest" href="/manifest.json">
+    <link rel="manifest" href="manifest.json">
     
     <!-- Apple touch icons -->
     <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQpIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzY2N2VlYSIgLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNzY0YmEyIiAvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxwYXRoIGQ9Ik05NiA2MEw2MCA5NkwzNiA3MkwyNCA5NkwyNCA0OEg3MkwxMDggMTJMMTMyIDM2TDE0NCAyNEwxNDQgNzJIOTZWNjBaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPHBhdGggZD0iTTk2IDEwOEw2MCAxNDRMMzYgMTIwTDI0IDE0NEwyNCA5Nkg3MkwxMDggNjBMMTMyIDg0TDE0NCA3MkwxNDQgMTIwSDk2VjEwOFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNyIvPgo8cGF0aCBkPSJNOTYgMTU2TDYwIDE5Mkw2MCA5NkwxMzIgOTZMMTMyIDE5Mkw5NiAxNTZaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz4KPC9zdmc+">
@@ -56,7 +56,7 @@
                         </p>
                         <div class="area-stats">
                             <div class="stat-item">
-                                <span class="stat-number" data-count="45">45</span>
+                                <span class="stat-number" data-count="53">53</span>
                                 <span class="stat-label">Stalls</span>
                             </div>
                             <div class="stat-item">
@@ -84,7 +84,7 @@
                         </p>
                         <div class="area-stats">
                             <div class="stat-item">
-                                <span class="stat-number" data-count="25">25</span>
+                                <span class="stat-number" data-count="31">31</span>
                                 <span class="stat-label">Stalls</span>
                             </div>
                             <div class="stat-item">
@@ -195,7 +195,7 @@
     <script>
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
+                navigator.serviceWorker.register('js/sw.js')
                     .then(registration => {
                         console.log('[SW] Registration successful:', registration);
                     })

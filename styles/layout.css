@@ -670,6 +670,52 @@ body {
     /* Android-specific styles */
 }
 
+/* Mobile Layout Info */
+.mobile-layout-info {
+    position: fixed;
+    bottom: var(--mobile-safe-area-bottom);
+    left: 0;
+    right: 0;
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(10px);
+    border-top: 1px solid rgba(255, 255, 255, 0.2);
+    padding: 10px 20px;
+    display: none;
+    z-index: 1040;
+    box-shadow: 0 -5px 15px rgba(0,0,0,0.1);
+}
+
+.mobile-device .mobile-layout-info {
+    display: block;
+}
+
+.layout-stats {
+    display: flex;
+    justify-content: space-around;
+    align-items: center;
+    max-width: 400px;
+    margin: 0 auto;
+}
+
+.layout-stats .stat {
+    display: flex;
+    align-items: center;
+    gap: 5px;
+    font-size: 0.85rem;
+    font-weight: 600;
+    color: var(--dark-color);
+}
+
+.layout-stats .stat i {
+    font-size: 0.9rem;
+    color: var(--primary-color);
+}
+
+/* Adjust layout wrapper for mobile info bar */
+.mobile-device .layout-wrapper {
+    padding-bottom: 50px; /* Space for mobile layout info */
+}
+
 /* Standalone PWA mode */
 .standalone-app .layout-wrapper {
     height: 100vh;

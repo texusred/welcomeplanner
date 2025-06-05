@@ -109,32 +109,40 @@ body {
     border: 1px solid rgba(255, 255, 255, 0.2);
     box-shadow: var(--card-shadow);
     cursor: pointer;
-    transition: var(--transition);
+    transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1), opacity 0.3s ease;
     transform: translateX(100%);
     opacity: 0;
     overflow: hidden;
     touch-action: pan-y;
+    will-change: transform, opacity;
 }
 
 /* Active card */
 .area-card.active {
     transform: translateX(0);
     opacity: 1;
-    z-index: 2;
+    z-index: 3;
 }
 
 /* Previous card */
 .area-card.prev {
     transform: translateX(-100%);
-    opacity: 0.3;
+    opacity: 0;
     z-index: 1;
 }
 
 /* Next card */
 .area-card.next {
     transform: translateX(100%);
-    opacity: 0.3;
+    opacity: 0;
     z-index: 1;
+}
+
+/* Initialize first card as active */
+.area-card:first-child {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 3;
 }
 
 /* Card background gradient */
