@@ -2,21 +2,32 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="Stall Planner">
+    <meta name="theme-color" content="#667eea">
+    <meta name="msapplication-TileColor" content="#667eea">
+    <meta name="screen-orientation" content="landscape">
     <title>Cambridge Stall Planner</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Apple touch icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQpIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzY2N2VlYSIgLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNzY0YmEyIiAvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxwYXRoIGQ9Ik05NiA2MEw2MCA5NkwzNiA3MkwyNCA5NkwyNCA0OEg3MkwxMDggMTJMMTMyIDM2TDE0NCAyNEwxNDQgNzJIOTZWNjBaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPHBhdGggZD0iTTk2IDEwOEw2MCAxNDRMMzYgMTIwTDI0IDE0NEwyNCA5Nkg3MkwxMDggNjBMMTMyIDg0TDE0NCA3MkwxNDQgMTIwSDk2VjEwOFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNyIvPgo8cGF0aCBkPSJNOTYgMTU2TDYwIDE5Mkw2MCA5NkwxMzIgOTZMMTMyIDE5Mkw5NiAxNTZaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz4KPC9zdmc+">
+    
+    <!-- External Resources -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="styles/main.css" rel="stylesheet">
 </head>
 <body>
-    <!-- Animated background -->
-    <div class="background-decoration">
-        <div class="floating-shape shape-1"></div>
-        <div class="floating-shape shape-2"></div>
-        <div class="floating-shape shape-3"></div>
-    </div>
-
-    <div class="container-fluid">
+    <!-- Orientation Overlay (will be added by mobile-utils.js) -->
+    
+    <!-- Mobile-first card deck container -->
+    <div class="mobile-container">
         <!-- Main Header -->
         <div class="main-header">
             <h1 class="main-title">
@@ -24,114 +35,175 @@
                 Cambridge Stall Planner
             </h1>
             <p class="main-subtitle">
-                Plan and organize your student union welcome fair with our interactive stall layout system. 
-                Drag, drop, and customize stall positions across three distinct areas.
+                Plan and organize your student union welcome fair. 
+                Choose an area to view the interactive stall layout.
             </p>
         </div>
 
-        <!-- Areas Grid -->
-        <div class="areas-grid">
-            <!-- Ruskin Courtyard -->
-            <div class="area-card" onclick="navigateToArea('ruskin')">
-                <div class="area-icon ruskin-icon">
-                    <i class="fas fa-university"></i>
-                </div>
-                <h3 class="area-title">Ruskin Courtyard</h3>
-                <p class="area-description">
-                    The main central courtyard area with memorial garden access and primary foot traffic flow.
-                </p>
-                <div class="area-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">45</span>
-                        <span class="stat-label">Stalls</span>
+        <!-- Card Deck - Mobile: Stack, Desktop: Grid -->
+        <div class="areas-container">
+            <div class="areas-deck" id="areasDeck">
+                <!-- Ruskin Courtyard Card -->
+                <div class="area-card ruskin-card" data-area="ruskin" onclick="navigateToArea('ruskin')">
+                    <div class="card-background"></div>
+                    <div class="card-content">
+                        <div class="area-icon ruskin-icon">
+                            <i class="fas fa-university"></i>
+                        </div>
+                        <h2 class="area-title">Ruskin Courtyard</h2>
+                        <p class="area-description">
+                            The main central courtyard area with memorial garden access and primary foot traffic flow.
+                        </p>
+                        <div class="area-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" data-count="45">45</span>
+                                <span class="stat-label">Stalls</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">High</span>
+                                <span class="stat-label">Traffic</span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <span class="action-text">Tap to View Layout</span>
+                            <i class="fas fa-arrow-right action-arrow"></i>
+                        </div>
                     </div>
-                    <div class="stat-item">
-                        <span class="stat-number">High</span>
-                        <span class="stat-label">Traffic</span>
+                </div>
+
+                <!-- Science Walkway Card -->
+                <div class="area-card science-card" data-area="science" onclick="navigateToArea('science')">
+                    <div class="card-background"></div>
+                    <div class="card-content">
+                        <div class="area-icon science-icon">
+                            <i class="fas fa-flask"></i>
+                        </div>
+                        <h2 class="area-title">Science Walkway</h2>
+                        <p class="area-description">
+                            Linear walkway layout perfect for science societies and academic departments.
+                        </p>
+                        <div class="area-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" data-count="25">25</span>
+                                <span class="stat-label">Stalls</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">Med</span>
+                                <span class="stat-label">Traffic</span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <span class="action-text">Tap to View Layout</span>
+                            <i class="fas fa-arrow-right action-arrow"></i>
+                        </div>
                     </div>
                 </div>
-                <button class="area-button">
-                    <i class="fas fa-edit me-2"></i>
-                    Plan Layout
-                </button>
+
+                <!-- LAB Courtyard Card -->
+                <div class="area-card lab-card" data-area="lab" onclick="navigateToArea('lab')">
+                    <div class="card-background"></div>
+                    <div class="card-content">
+                        <div class="area-icon lab-icon">
+                            <i class="fas fa-microscope"></i>
+                        </div>
+                        <h2 class="area-title">LAB Courtyard</h2>
+                        <p class="area-description">
+                            Complex multi-level area with bench seating and varied stall configurations.
+                        </p>
+                        <div class="area-stats">
+                            <div class="stat-item">
+                                <span class="stat-number" data-count="37">37</span>
+                                <span class="stat-label">Stalls</span>
+                            </div>
+                            <div class="stat-item">
+                                <span class="stat-number">Low</span>
+                                <span class="stat-label">Traffic</span>
+                            </div>
+                        </div>
+                        <div class="card-action">
+                            <span class="action-text">Tap to View Layout</span>
+                            <i class="fas fa-arrow-right action-arrow"></i>
+                        </div>
+                    </div>
+                </div>
             </div>
 
-            <!-- Science Walkway -->
-            <div class="area-card" onclick="navigateToArea('science')">
-                <div class="area-icon science-icon">
-                    <i class="fas fa-flask"></i>
-                </div>
-                <h3 class="area-title">Science Walkway</h3>
-                <p class="area-description">
-                    Linear walkway layout perfect for science societies and academic departments.
-                </p>
-                <div class="area-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">25</span>
-                        <span class="stat-label">Stalls</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">Med</span>
-                        <span class="stat-label">Traffic</span>
-                    </div>
-                </div>
-                <button class="area-button">
-                    <i class="fas fa-edit me-2"></i>
-                    Plan Layout
-                </button>
-            </div>
-
-            <!-- LAB Courtyard -->
-            <div class="area-card" onclick="navigateToArea('lab')">
-                <div class="area-icon lab-icon">
-                    <i class="fas fa-microscope"></i>
-                </div>
-                <h3 class="area-title">LAB Courtyard</h3>
-                <p class="area-description">
-                    Complex multi-level area with bench seating and varied stall configurations.
-                </p>
-                <div class="area-stats">
-                    <div class="stat-item">
-                        <span class="stat-number">37</span>
-                        <span class="stat-label">Stalls</span>
-                    </div>
-                    <div class="stat-item">
-                        <span class="stat-number">Low</span>
-                        <span class="stat-label">Traffic</span>
-                    </div>
-                </div>
-                <button class="area-button">
-                    <i class="fas fa-edit me-2"></i>
-                    Plan Layout
-                </button>
+            <!-- Card Navigation Dots (Mobile) -->
+            <div class="card-indicators" id="cardIndicators">
+                <span class="indicator active" data-card="0"></span>
+                <span class="indicator" data-card="1"></span>
+                <span class="indicator" data-card="2"></span>
             </div>
         </div>
 
-        <!-- Footer Info -->
-        <div class="footer-info">
-            <p class="footer-text">
-                <i class="fas fa-lightbulb me-2"></i>
-                <strong>Tip:</strong> Enable edit mode to drag stalls, resize areas, and customize your layout. 
-                All changes are automatically saved and print-ready.
-            </p>
-            <div class="d-flex justify-content-center gap-3 align-items-center flex-wrap">
-                <span class="version-badge">
-                    <i class="fas fa-code me-1"></i>
-                    v2024.1
-                </span>
-                <span class="version-badge">
-                    <i class="fas fa-mobile-alt me-1"></i>
-                    Mobile Optimized
-                </span>
-                <span class="version-badge">
-                    <i class="fas fa-print me-1"></i>
-                    Print Ready
-                </span>
+        <!-- App Info (Mobile: Bottom, Desktop: Footer) -->
+        <div class="app-info">
+            <div class="info-content">
+                <p class="info-text">
+                    <i class="fas fa-lightbulb me-2"></i>
+                    <span class="desktop-only"><strong>Desktop:</strong> Full editing capabilities with drag & drop</span>
+                    <span class="mobile-only"><strong>Mobile:</strong> Optimized viewing experience in landscape mode</span>
+                </p>
+                <div class="app-badges">
+                    <span class="app-badge">
+                        <i class="fas fa-mobile-alt me-1"></i>
+                        PWA Ready
+                    </span>
+                    <span class="app-badge">
+                        <i class="fas fa-wifi me-1"></i>
+                        Offline Capable
+                    </span>
+                    <span class="app-badge desktop-only">
+                        <i class="fas fa-edit me-1"></i>
+                        Full Editor
+                    </span>
+                    <span class="app-badge mobile-only">
+                        <i class="fas fa-eye me-1"></i>
+                        View Mode
+                    </span>
+                </div>
             </div>
         </div>
     </div>
 
+    <!-- Install prompt (for PWA) -->
+    <div class="install-prompt" id="installPrompt">
+        <div class="install-content">
+            <div class="install-icon">
+                <i class="fas fa-download"></i>
+            </div>
+            <div class="install-text">
+                <h4>Install App</h4>
+                <p>Add to home screen for quick access</p>
+            </div>
+            <button class="install-btn" id="installBtn">
+                <i class="fas fa-plus me-1"></i>
+                Install
+            </button>
+            <button class="install-close" id="installClose">
+                <i class="fas fa-times"></i>
+            </button>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/mobile-utils.js"></script>
     <script src="js/main.js"></script>
+    
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('[SW] Registration successful:', registration);
+                    })
+                    .catch(error => {
+                        console.log('[SW] Registration failed:', error);
+                    });
+            });
+        }
+    </script>
 </body>
 </html>

@@ -1,3 +1,5 @@
+/* Cambridge Stall Planner - Mobile-First Main Styles */
+
 /* Modern UI Design Variables */
 :root {
     --primary-color: #667eea;
@@ -9,7 +11,22 @@
     --light-bg: #f7fafc;
     --card-shadow: 0 15px 35px rgba(0,0,0,0.1);
     --border-radius: 16px;
-    --hover-transform: translateY(-5px);
+    --transition: all 0.3s ease;
+    
+    /* Mobile-optimized spacing */
+    --mobile-padding: 20px;
+    --mobile-gap: 20px;
+    --card-height-mobile: 85vh;
+    --card-height-desktop: auto;
+    
+    /* Touch targets */
+    --touch-target: 44px;
+    --touch-target-large: 56px;
+}
+
+/* Base Styles - Mobile First */
+* {
+    box-sizing: border-box;
 }
 
 body {
@@ -19,129 +36,154 @@ body {
     padding: 0;
     min-height: 100vh;
     overflow-x: hidden;
+    -webkit-font-smoothing: antialiased;
+    -moz-osx-font-smoothing: grayscale;
 }
 
-/* Animated background */
-.background-decoration {
-    position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
-    pointer-events: none;
-    z-index: 0;
-    opacity: 0.1;
-}
-
-.floating-shape {
-    position: absolute;
-    background: rgba(255,255,255,0.1);
-    border-radius: 50%;
-    animation: float 6s ease-in-out infinite;
-}
-
-.shape-1 { width: 80px; height: 80px; top: 20%; left: 10%; animation-delay: 0s; }
-.shape-2 { width: 120px; height: 120px; top: 60%; right: 15%; animation-delay: 2s; }
-.shape-3 { width: 60px; height: 60px; bottom: 20%; left: 20%; animation-delay: 4s; }
-
-@keyframes float {
-    0%, 100% { transform: translateY(0px) rotate(0deg); }
-    50% { transform: translateY(-20px) rotate(180deg); }
-}
-
-.container-fluid {
+/* Mobile container - full screen */
+.mobile-container {
     position: relative;
+    min-height: 100vh;
+    padding: var(--mobile-padding);
+    display: flex;
+    flex-direction: column;
     z-index: 1;
-    padding: 20px;
 }
 
+/* Header - Mobile Optimized */
 .main-header {
     text-align: center;
-    margin-bottom: 40px;
+    margin-bottom: var(--mobile-gap);
     padding: 20px 0;
+    flex-shrink: 0;
 }
 
 .main-title {
-    font-size: 2.5rem;
+    font-size: 2rem;
     font-weight: 800;
-    background: linear-gradient(135deg, white, rgba(255,255,255,0.8));
+    background: linear-gradient(135deg, white, rgba(255,255,255,0.9));
     -webkit-background-clip: text;
     -webkit-text-fill-color: transparent;
     background-clip: text;
-    margin-bottom: 15px;
-    text-shadow: 0 4px 8px rgba(0,0,0,0.1);
+    margin-bottom: 12px;
+    line-height: 1.2;
 }
 
 .main-subtitle {
-    font-size: 1.1rem;
+    font-size: 1rem;
     color: rgba(255,255,255,0.9);
     font-weight: 400;
-    max-width: 600px;
-    margin: 0 auto;
-    line-height: 1.6;
+    line-height: 1.5;
+    margin: 0;
+    max-width: 90%;
+    margin-left: auto;
+    margin-right: auto;
 }
 
-.areas-grid {
-    display: grid;
-    grid-template-columns: 1fr;
-    gap: 20px;
-    max-width: 900px;
-    margin: 0 auto;
+/* Areas Container */
+.areas-container {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    position: relative;
 }
 
-@media (min-width: 768px) {
-    .areas-grid {
-        grid-template-columns: 1fr 1fr 1fr;
-        gap: 25px;
-    }
+/* Card Deck - Mobile: Stack with swipe, Desktop: Grid */
+.areas-deck {
+    position: relative;
+    height: var(--card-height-mobile);
+    overflow: hidden;
+    border-radius: var(--border-radius);
 }
 
+/* Individual Area Cards */
 .area-card {
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
     background: rgba(255, 255, 255, 0.95);
     backdrop-filter: blur(20px);
     border-radius: var(--border-radius);
-    padding: 30px 25px;
-    text-align: center;
-    box-shadow: var(--card-shadow);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    transition: all 0.3s ease;
+    box-shadow: var(--card-shadow);
     cursor: pointer;
-    position: relative;
+    transition: var(--transition);
+    transform: translateX(100%);
+    opacity: 0;
     overflow: hidden;
+    touch-action: pan-y;
 }
 
-.area-card:before {
-    content: '';
+/* Active card */
+.area-card.active {
+    transform: translateX(0);
+    opacity: 1;
+    z-index: 2;
+}
+
+/* Previous card */
+.area-card.prev {
+    transform: translateX(-100%);
+    opacity: 0.3;
+    z-index: 1;
+}
+
+/* Next card */
+.area-card.next {
+    transform: translateX(100%);
+    opacity: 0.3;
+    z-index: 1;
+}
+
+/* Card background gradient */
+.card-background {
     position: absolute;
     top: 0;
-    left: -100%;
-    width: 100%;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    opacity: 0.05;
+    border-radius: var(--border-radius);
+}
+
+.ruskin-card .card-background {
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+}
+
+.science-card .card-background {
+    background: linear-gradient(135deg, var(--success-color), #38a169);
+}
+
+.lab-card .card-background {
+    background: linear-gradient(135deg, var(--warning-color), #dd6b20);
+}
+
+/* Card Content */
+.card-content {
+    position: relative;
     height: 100%;
-    background: linear-gradient(90deg, transparent, rgba(255,255,255,0.2), transparent);
-    transition: left 0.6s;
+    padding: 40px 30px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    text-align: center;
+    z-index: 2;
 }
 
-.area-card:hover:before {
-    left: 100%;
-}
-
-.area-card:hover {
-    transform: var(--hover-transform);
-    box-shadow: 0 20px 40px rgba(0,0,0,0.15);
-}
-
+/* Area Icons - Larger for mobile */
 .area-icon {
     width: 80px;
     height: 80px;
-    margin: 0 auto 20px;
+    margin: 0 auto 25px;
     border-radius: 20px;
     display: flex;
     align-items: center;
     justify-content: center;
-    font-size: 2rem;
+    font-size: 2.2rem;
     color: white;
-    position: relative;
-    z-index: 2;
+    flex-shrink: 0;
 }
 
 .ruskin-icon {
@@ -156,30 +198,29 @@ body {
     background: linear-gradient(135deg, #ed8936, #dd6b20);
 }
 
+/* Typography */
 .area-title {
-    font-size: 1.4rem;
+    font-size: 2rem;
     font-weight: 700;
     color: var(--dark-color);
-    margin-bottom: 12px;
-    position: relative;
-    z-index: 2;
+    margin-bottom: 15px;
+    line-height: 1.2;
 }
 
 .area-description {
-    font-size: 0.95rem;
+    font-size: 1.1rem;
     color: #718096;
-    margin-bottom: 20px;
-    line-height: 1.5;
-    position: relative;
-    z-index: 2;
+    margin-bottom: 30px;
+    line-height: 1.6;
+    flex-grow: 1;
 }
 
+/* Stats */
 .area-stats {
     display: flex;
     justify-content: space-around;
-    margin-bottom: 20px;
-    position: relative;
-    z-index: 2;
+    margin-bottom: 30px;
+    padding: 0 20px;
 }
 
 .stat-item {
@@ -187,61 +228,124 @@ body {
 }
 
 .stat-number {
-    font-size: 1.5rem;
+    font-size: 1.8rem;
     font-weight: 800;
     color: var(--primary-color);
     display: block;
+    line-height: 1.2;
 }
 
 .stat-label {
-    font-size: 0.8rem;
+    font-size: 0.9rem;
     color: #a0aec0;
     font-weight: 600;
     text-transform: uppercase;
     letter-spacing: 0.5px;
+    margin-top: 5px;
 }
 
-.area-button {
+/* Card Action */
+.card-action {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 10px;
     background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
     color: white;
-    border: none;
-    border-radius: 10px;
-    padding: 12px 25px;
+    padding: 15px 25px;
+    border-radius: 12px;
     font-weight: 600;
-    font-size: 0.9rem;
-    transition: all 0.3s ease;
-    box-shadow: 0 4px 15px rgba(102, 126, 234, 0.3);
-    position: relative;
-    z-index: 2;
-    width: 100%;
+    font-size: 1rem;
+    margin-top: auto;
+    transition: var(--transition);
+    min-height: var(--touch-target);
 }
 
-.area-button:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 6px 20px rgba(102, 126, 234, 0.4);
+.action-text {
+    flex: 1;
 }
 
-.footer-info {
+.action-arrow {
+    font-size: 1.1rem;
+    transition: transform 0.3s ease;
+}
+
+.area-card:active .card-action {
+    transform: scale(0.98);
+}
+
+.area-card:active .action-arrow {
+    transform: translateX(5px);
+}
+
+/* Card Navigation Indicators */
+.card-indicators {
+    display: flex;
+    justify-content: center;
+    gap: 12px;
+    margin-top: 20px;
+    padding: 10px;
+}
+
+.indicator {
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    cursor: pointer;
+    transition: var(--transition);
+    min-width: var(--touch-target);
+    min-height: var(--touch-target);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.indicator::after {
+    content: '';
+    width: 12px;
+    height: 12px;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.3);
+    transition: var(--transition);
+}
+
+.indicator.active::after {
+    background: white;
+    transform: scale(1.2);
+}
+
+/* App Info */
+.app-info {
+    margin-top: auto;
+    padding-top: var(--mobile-gap);
+    flex-shrink: 0;
+}
+
+.info-content {
     text-align: center;
-    margin-top: 50px;
-    padding: 25px;
     background: rgba(255, 255, 255, 0.1);
     backdrop-filter: blur(10px);
     border-radius: var(--border-radius);
     border: 1px solid rgba(255, 255, 255, 0.2);
-    max-width: 600px;
-    margin-left: auto;
-    margin-right: auto;
+    padding: 20px;
 }
 
-.footer-text {
+.info-text {
     color: rgba(255, 255, 255, 0.9);
-    font-size: 0.95rem;
-    line-height: 1.6;
+    font-size: 0.9rem;
+    line-height: 1.5;
     margin-bottom: 15px;
 }
 
-.version-badge {
+.app-badges {
+    display: flex;
+    justify-content: center;
+    gap: 8px;
+    flex-wrap: wrap;
+}
+
+.app-badge {
     display: inline-block;
     background: rgba(255, 255, 255, 0.2);
     color: white;
@@ -250,43 +354,339 @@ body {
     font-size: 0.8rem;
     font-weight: 600;
     border: 1px solid rgba(255, 255, 255, 0.3);
+    white-space: nowrap;
 }
 
-/* Mobile optimizations */
-@media (max-width: 767px) {
+/* Device-specific content */
+.mobile-only {
+    display: inline;
+}
+
+.desktop-only {
+    display: none;
+}
+
+/* Orientation Overlay */
+#orientation-overlay {
+    position: fixed;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+    z-index: 9999;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 0.3s ease;
+}
+
+#orientation-overlay.active {
+    opacity: 1;
+    pointer-events: all;
+}
+
+.orientation-content {
+    text-align: center;
+    color: white;
+    padding: 40px;
+}
+
+.rotation-icon {
+    font-size: 4rem;
+    margin-bottom: 20px;
+    position: relative;
+}
+
+.rotation-icon .fa-mobile-alt {
+    display: block;
+    margin-bottom: 10px;
+}
+
+.rotation-icon .fa-redo-alt {
+    font-size: 2rem;
+    opacity: 0.7;
+    animation: rotate 2s infinite linear;
+}
+
+@keyframes rotate {
+    from { transform: rotate(0deg); }
+    to { transform: rotate(360deg); }
+}
+
+.orientation-content h3 {
+    font-size: 1.5rem;
+    font-weight: 700;
+    margin-bottom: 10px;
+}
+
+.orientation-content p {
+    font-size: 1rem;
+    opacity: 0.9;
+}
+
+/* Install Prompt */
+.install-prompt {
+    position: fixed;
+    bottom: 20px;
+    left: 20px;
+    right: 20px;
+    background: white;
+    border-radius: var(--border-radius);
+    box-shadow: var(--card-shadow);
+    padding: 15px;
+    transform: translateY(100px);
+    opacity: 0;
+    pointer-events: none;
+    transition: var(--transition);
+    z-index: 1000;
+}
+
+.install-prompt.show {
+    transform: translateY(0);
+    opacity: 1;
+    pointer-events: all;
+}
+
+.install-content {
+    display: flex;
+    align-items: center;
+    gap: 15px;
+}
+
+.install-icon {
+    width: 40px;
+    height: 40px;
+    background: var(--primary-color);
+    border-radius: 10px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    color: white;
+    font-size: 1.2rem;
+}
+
+.install-text {
+    flex: 1;
+}
+
+.install-text h4 {
+    font-size: 1rem;
+    font-weight: 600;
+    margin: 0 0 2px 0;
+    color: var(--dark-color);
+}
+
+.install-text p {
+    font-size: 0.85rem;
+    color: #718096;
+    margin: 0;
+}
+
+.install-btn {
+    background: var(--primary-color);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 8px 16px;
+    font-weight: 600;
+    font-size: 0.9rem;
+    min-height: var(--touch-target);
+    min-width: 80px;
+}
+
+.install-close {
+    background: none;
+    border: none;
+    color: #a0aec0;
+    font-size: 1.2rem;
+    padding: 5px;
+    min-height: var(--touch-target);
+    min-width: var(--touch-target);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+/* Tablet Landscape (768px+) */
+@media screen and (min-width: 768px) and (orientation: landscape) {
+    :root {
+        --mobile-padding: 30px;
+        --mobile-gap: 30px;
+    }
+    
     .main-title {
-        font-size: 2rem;
+        font-size: 2.2rem;
+    }
+    
+    .main-subtitle {
+        font-size: 1.1rem;
+        max-width: 80%;
+    }
+    
+    .area-title {
+        font-size: 2.2rem;
+    }
+    
+    .area-description {
+        font-size: 1.2rem;
+    }
+}
+
+/* Desktop (1024px+) - Grid Layout */
+@media screen and (min-width: 1024px) {
+    .mobile-only {
+        display: none;
+    }
+    
+    .desktop-only {
+        display: inline;
+    }
+    
+    .mobile-container {
+        padding: 40px;
+        max-width: 1200px;
+        margin: 0 auto;
+    }
+    
+    .main-title {
+        font-size: 2.5rem;
+    }
+    
+    .main-subtitle {
+        font-size: 1.2rem;
+        max-width: 600px;
+    }
+    
+    /* Desktop Grid Layout */
+    .areas-deck {
+        height: auto;
+        display: grid;
+        grid-template-columns: repeat(3, 1fr);
+        gap: 25px;
+        overflow: visible;
     }
     
     .area-card {
-        padding: 25px 20px;
-    }
-    
-    .area-icon {
-        width: 70px;
-        height: 70px;
-        font-size: 1.8rem;
-    }
-    
-    .container-fluid {
-        padding: 15px;
-    }
-}
-
-/* Loading animation */
-.area-card {
-    animation: fadeInUp 0.6s ease forwards;
-    opacity: 0;
-    transform: translateY(30px);
-}
-
-.area-card:nth-child(1) { animation-delay: 0.1s; }
-.area-card:nth-child(2) { animation-delay: 0.2s; }
-.area-card:nth-child(3) { animation-delay: 0.3s; }
-
-@keyframes fadeInUp {
-    to {
+        position: relative;
+        transform: none;
         opacity: 1;
-        transform: translateY(0);
+        height: auto;
+        min-height: 500px;
+    }
+    
+    .area-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 20px 40px rgba(0,0,0,0.15);
+    }
+    
+    .area-card:hover .card-background {
+        opacity: 0.1;
+    }
+    
+    .card-content {
+        padding: 30px 25px;
+        height: 100%;
+    }
+    
+    .area-title {
+        font-size: 1.4rem;
+    }
+    
+    .area-description {
+        font-size: 0.95rem;
+    }
+    
+    .card-indicators {
+        display: none;
+    }
+    
+    .app-info {
+        margin-top: 50px;
+    }
+    
+    .install-prompt {
+        bottom: 30px;
+        left: 30px;
+        right: auto;
+        max-width: 350px;
+    }
+}
+
+/* Large Desktop (1440px+) */
+@media screen and (min-width: 1440px) {
+    .mobile-container {
+        max-width: 1400px;
+        padding: 60px;
+    }
+    
+    .areas-deck {
+        gap: 30px;
+    }
+    
+    .area-card {
+        min-height: 550px;
+    }
+}
+
+/* High DPI / Retina */
+@media (-webkit-min-device-pixel-ratio: 2), (min-resolution: 192dpi) {
+    body {
+        -webkit-font-smoothing: antialiased;
+        -moz-osx-font-smoothing: grayscale;
+    }
+}
+
+/* Reduced Motion */
+@media (prefers-reduced-motion: reduce) {
+    * {
+        animation-duration: 0.01ms !important;
+        animation-iteration-count: 1 !important;
+        transition-duration: 0.01ms !important;
+    }
+    
+    .rotation-icon .fa-redo-alt {
+        animation: none;
+    }
+}
+
+/* High Contrast */
+@media (prefers-contrast: high) {
+    :root {
+        --card-shadow: 0 4px 8px rgba(0,0,0,0.3);
+    }
+    
+    .area-card {
+        border: 2px solid rgba(0,0,0,0.2);
+    }
+    
+    .indicator {
+        border: 2px solid rgba(255,255,255,0.5);
+    }
+}
+
+/* Dark Mode Support */
+@media (prefers-color-scheme: dark) {
+    .area-card {
+        background: rgba(45, 55, 72, 0.95);
+        border-color: rgba(255, 255, 255, 0.1);
+    }
+    
+    .area-title {
+        color: white;
+    }
+    
+    .area-description {
+        color: #a0aec0;
+    }
+    
+    .install-prompt {
+        background: #2d3748;
+    }
+    
+    .install-text h4 {
+        color: white;
     }
 }

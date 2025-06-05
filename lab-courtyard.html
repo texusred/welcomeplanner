@@ -2,14 +2,29 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
+    <meta name="mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta name="apple-mobile-web-app-title" content="LAB Courtyard">
+    <meta name="theme-color" content="#ed8936">
+    <meta name="msapplication-TileColor" content="#ed8936">
+    <meta name="screen-orientation" content="landscape">
     <title>LAB Courtyard - Cambridge Stall Planner</title>
+    
+    <!-- PWA Manifest -->
+    <link rel="manifest" href="/manifest.json">
+    
+    <!-- Apple touch icons -->
+    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iOTYiIGhlaWdodD0iOTYiIHZpZXdCb3g9IjAgMCA5NiA5NiIgZmlsbD0ibm9uZSIgeG1sbnM9Imh0dHA6Ly93d3cudzMub3JnLzIwMDAvc3ZnIj4KPHJlY3Qgd2lkdGg9Ijk2IiBoZWlnaHQ9Ijk2IiByeD0iMTYiIGZpbGw9IiNlZDg5MzYiLz4KPHBhdGggZD0iTTQ4IDI0TDI0IDQ4TDE4IDQyTDEyIDQ4TDEyIDI0SDM2TDYwIDZMNjYgMTJMNzIgNkw3MiAzNkg0OFYyNFoiIGZpbGw9IndoaXRlIi8+Cjwvc3ZnPg==">
+    
+    <!-- External Resources -->
     <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
     <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
     <link href="styles/layout.css" rel="stylesheet">
-    <link href="styles/print.css" rel="stylesheet" media="print">
 </head>
 <body>
+    <!-- Desktop Header (hidden on mobile) -->
     <div class="header d-flex justify-content-between align-items-center">
         <div class="d-flex align-items-center">
             <button class="btn btn-link text-white me-3" onclick="window.location.href='index.html'">
@@ -27,6 +42,18 @@
         </div>
     </div>
 
+    <!-- Mobile Navigation (shows on mobile only) -->
+    <div class="mobile-nav">
+        <button class="mobile-back-btn" onclick="goBackToHome()">
+            <i class="fas fa-arrow-left"></i>
+        </button>
+        <div class="mobile-nav-title">
+            <i class="fas fa-microscope me-2"></i>
+            LAB Courtyard
+        </div>
+    </div>
+
+    <!-- Desktop Edit Mode Info (hidden on mobile) -->
     <div class="edit-mode-info" id="editInfo">
         <i class="fas fa-info-circle me-2"></i>
         <strong>Edit Mode Active:</strong> 
@@ -34,10 +61,11 @@
         <small><strong>Multi-Select:</strong> Hold Ctrl/Cmd + click stalls, or drag to select area</small>
     </div>
 
+    <!-- Main Layout Wrapper -->
     <div class="layout-wrapper">
         <div class="zoom-pan-container">
             <div class="layout-container" id="layoutContainer">
-                <!-- Selection box for drag selection -->
+                <!-- Selection box for drag selection (desktop only) -->
                 <div class="selection-box" id="selectionBox"></div>
 
                 <!-- Resizable background areas with labels inside -->
@@ -111,7 +139,7 @@
         </div>
     </div>
 
-    <!-- Selection Tools -->
+    <!-- Desktop Selection Tools (hidden on mobile) -->
     <div class="selection-tools" id="selectionTools">
         <span class="selection-count" id="selectionCount">0 stalls selected</span>
         <button class="selection-btn btn-group" onclick="groupSelected()">
@@ -122,7 +150,63 @@
         </button>
     </div>
 
+    <!-- Edge Swipe Areas for Mobile Navigation -->
+    <div class="edge-swipe-area edge-swipe-left"></div>
+    <div class="edge-swipe-area edge-swipe-right"></div>
+
+    <!-- Mobile Layout Info (shows on mobile only) -->
+    <div class="mobile-layout-info">
+        <div class="layout-stats">
+            <div class="stat">
+                <i class="fas fa-th-large me-1"></i>
+                <span>37 Stalls</span>
+            </div>
+            <div class="stat">
+                <i class="fas fa-users me-1"></i>
+                <span>Low Traffic</span>
+            </div>
+            <div class="stat">
+                <i class="fas fa-expand-arrows-alt me-1"></i>
+                <span>Pinch to Zoom</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
     <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
+    <script src="js/mobile-utils.js"></script>
     <script src="js/drag-handler.js"></script>
+    
+    <!-- Register Service Worker -->
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => {
+                        console.log('[SW] Registration successful:', registration);
+                    })
+                    .catch(error => {
+                        console.log('[SW] Registration failed:', error);
+                    });
+            });
+        }
+
+        // Mobile-specific initialization
+        document.addEventListener('DOMContentLoaded', function() {
+            // Set page-specific theme color for PWA
+            if (window.MobileDevice?.isMobile) {
+                const themeColorMeta = document.querySelector('meta[name="theme-color"]');
+                if (themeColorMeta) {
+                    themeColorMeta.content = '#ed8936'; // LAB orange
+                }
+            }
+            
+            // Add page identifier for navigation
+            document.body.setAttribute('data-area', 'lab');
+            
+            console.log('[LAB] Page initialized for device type:', 
+                       window.MobileDevice?.isMobile ? 'mobile' : 'desktop');
+        });
+    </script>
 </body>
 </html>
