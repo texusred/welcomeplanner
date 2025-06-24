@@ -39,7 +39,12 @@
         {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
         {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
         {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
-        {"timeSlot": "10:00-10:30", "task": "STAGE", "taskName": "Stage Management"},
+        {"timeSlot": "10:00-10:30", "task": "HS", "taskName": "Health & Safety Check"},
+        {"timeSlot": "10:30-11:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "11:00-12:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "12:00-13:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "13:00-14:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "14:00-15:00", "task": "EM", "taskName": "Event Manager"},
         {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
         {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
       ]
@@ -212,16 +217,7 @@
       ]
     }
   ]
-}Slot": "10:00-10:30", "task": "HS", "taskName": "Health & Safety Check"},
-        {"timeSlot": "10:30-11:00", "task": "EM", "taskName": "Event Manager"},
-        {"timeSlot": "11:00-12:00", "task": "EM", "taskName": "Event Manager"},
-        {"timeSlot": "12:00-13:00", "task": "EM", "taskName": "Event Manager"},
-        {"timeSlot": "13:00-14:00", "task": "EM", "taskName": "Event Manager"},
-        {"timeSlot": "14:00-15:00", "task": "EM", "taskName": "Event Manager"},
-        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
-        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
-      ]
-    },
+},
     {
       "name": "Tony",
       "schedule": [
@@ -530,10 +526,15 @@
       ]
     },
     {
-  "name": "Ramees",
-  "schedule": [
-    {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
-    {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
-    {"timeSlot": "10:00-10:30", "task": "STAGE", "taskName": "Stage Management"}
-  ]
-}
+      "name": "Ramees",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "STAGE", "taskName": "Stage Management"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    
