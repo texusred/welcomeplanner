@@ -6,10 +6,6 @@ class StaffRota {
         this.rotaData = null;
         this.currentTime = new Date();
         this.dataLoaded = false;
-        this.selectedTaskTime = null;
-        this.selectedPersonTime = null;
-        this.currentTask = null;
-        this.currentPerson = null;
         
         this.init();
     }
@@ -20,6 +16,7 @@ class StaffRota {
             this.startTimeUpdater();
             await this.loadRotaData();
             this.populateStaffList();
+            this.initializeChristmasFeature();
         } catch (error) {
             console.error('Failed to initialize staff rota:', error);
             this.showToast('Failed to load rota data. Please refresh the page.', 'error');
@@ -46,31 +43,13 @@ class StaffRota {
 
     setupEventListeners() {
         // Task search
-        document.getElementById('taskSelect').addEventListener('change', (e) => {
-            this.handleTaskSelection(e.target.value);
-        });
-
         document.getElementById('searchTaskBtn').addEventListener('click', () => {
             this.searchByTask();
         });
 
-        // Task time selection
-        document.getElementById('updateTaskSearch').addEventListener('click', () => {
-            this.updateTaskSearch();
-        });
-
         // Person search
-        document.getElementById('staffSearch').addEventListener('input', (e) => {
-            this.handlePersonInput(e.target.value);
-        });
-
         document.getElementById('searchPersonBtn').addEventListener('click', () => {
             this.searchByPerson();
-        });
-
-        // Person time selection
-        document.getElementById('updatePersonSearch').addEventListener('click', () => {
-            this.updatePersonSearch();
         });
 
         // Enter key support
@@ -86,62 +65,40 @@ class StaffRota {
             }
         });
 
-        // Clear results
-        document.getElementById('clearResults').addEventListener('click', () => {
-            this.clearResults();
-        });
-
         // Auto-search as user types (debounced)
         let searchTimeout;
         document.getElementById('staffSearch').addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
                 if (e.target.value.trim().length >= 2) {
-                    // Don't auto-search, just show time selector
-                    this.handlePersonInput(e.target.value);
+                    this.searchByPerson();
                 }
-            }, 500);
+            }, 800);
         });
-    }
 
-    handleTaskSelection(taskValue) {
-        this.currentTask = taskValue;
-        const timeSelector = document.getElementById('taskTimeSelector');
-        
-        if (taskValue) {
-            timeSelector.style.display = 'block';
-            // Reset time selection
-            document.getElementById('taskTimeSelect').value = '';
-            this.selectedTaskTime = null;
-        } else {
-            timeSelector.style.display = 'none';
-            this.selectedTaskTime = null;
-        }
-    }
+        // Modal close events
+        document.addEventListener('click', (e) => {
+            if (e.target.classList.contains('modal')) {
+                this.closeModal(e.target.id);
+            }
+            if (e.target.classList.contains('christmas-modal')) {
+                this.closeChristmasModal();
+            }
+        });
 
-    handlePersonInput(personValue) {
-        this.currentPerson = personValue.trim();
-        const timeSelector = document.getElementById('personTimeSelector');
-        
-        if (personValue.trim()) {
-            timeSelector.style.display = 'block';
-            // Reset time selection
-            document.getElementById('personTimeSelect').value = '';
-            this.selectedPersonTime = null;
-        } else {
-            timeSelector.style.display = 'none';
-            this.selectedPersonTime = null;
-        }
-    }
-
-    updateTaskSearch() {
-        this.selectedTaskTime = document.getElementById('taskTimeSelect').value;
-        this.searchByTask();
-    }
-
-    updatePersonSearch() {
-        this.selectedPersonTime = document.getElementById('personTimeSelect').value;
-        this.searchByPerson();
+        // Escape key to close modals
+        document.addEventListener('keydown', (e) => {
+            if (e.key === 'Escape') {
+                const openModal = document.querySelector('.modal[style*="flex"]');
+                if (openModal) {
+                    this.closeModal(openModal.id);
+                }
+                const christmasModal = document.getElementById('christmasModal');
+                if (christmasModal && christmasModal.style.display === 'flex') {
+                    this.closeChristmasModal();
+                }
+            }
+        });
     }
 
     populateStaffList() {
@@ -189,12 +146,6 @@ class StaffRota {
         return { start, end };
     }
 
-    getEffectiveSearchTime() {
-        // For task search, use selectedTaskTime; for person search, use selectedPersonTime
-        const selectedTime = this.selectedTaskTime || this.selectedPersonTime;
-        return selectedTime || this.formatTime(this.currentTime);
-    }
-
     searchByTask() {
         const taskSelect = document.getElementById('taskSelect');
         const selectedTask = taskSelect.value;
@@ -209,25 +160,20 @@ class StaffRota {
             return;
         }
 
-        const searchTime = this.getEffectiveSearchTime();
-        const results = this.findStaffByTaskAtTime(selectedTask, searchTime);
+        const currentTime = this.formatTime(this.currentTime);
+        const results = this.findStaffByTaskAtCurrentTime(selectedTask, currentTime);
 
-        if (results.length === 0) {
-            this.showNoResults();
-            return;
-        }
-
-        this.displayTaskResults(selectedTask, results, searchTime);
+        this.displayTaskResults(selectedTask, results, currentTime);
     }
 
-    findStaffByTaskAtTime(taskName, searchTime) {
+    findStaffByTaskAtCurrentTime(taskName, currentTime) {
         const staffAssigned = [];
 
         this.rotaData.staff.forEach(person => {
             person.schedule.forEach(slot => {
                 if (slot.taskName === taskName) {
-                    // Check if the time slot contains the search time
-                    if (this.timeSlotContainsTime(slot.timeSlot, searchTime)) {
+                    // Check if the time slot contains the current time
+                    if (this.timeSlotContainsTime(slot.timeSlot, currentTime)) {
                         staffAssigned.push({
                             name: person.name,
                             timeSlot: slot.timeSlot,
@@ -261,29 +207,26 @@ class StaffRota {
     }
 
     displayTaskResults(taskName, results, searchTime) {
-        const resultsSection = document.getElementById('resultsSection');
-        const resultsTitle = document.getElementById('resultsTitle');
-        const resultsContent = document.getElementById('resultsContent');
+        const modalTitle = document.getElementById('taskModalTitle');
+        const modalBody = document.getElementById('taskModalBody');
 
-        const timeDisplay = this.selectedTaskTime ? ` at ${searchTime}` : ' (current time)';
-        resultsTitle.textContent = `${taskName}${timeDisplay}`;
+        modalTitle.textContent = `${taskName} (Now)`;
 
         let html = '';
 
         if (results.length === 0) {
             html = `
                 <div class="no-assignment">
-                    <p><strong>No staff assigned to ${taskName} at ${searchTime}</strong></p>
+                    <strong>No staff currently assigned to ${taskName}</strong>
                     <p>This may indicate a coverage gap that needs attention.</p>
                 </div>
             `;
         } else {
             html = `
-                <div class="staff-assignment">
-                    <div class="assignment-header">
-                        <strong>${results.length} staff member${results.length !== 1 ? 's' : ''} assigned</strong>
-                    </div>
-                    <div class="staff-list">
+                <div class="staff-count">
+                    ${results.length} staff member${results.length !== 1 ? 's' : ''} currently assigned
+                </div>
+                <div class="task-results">
             `;
 
             results.forEach(staff => {
@@ -295,18 +238,11 @@ class StaffRota {
                 `;
             });
 
-            html += `
-                    </div>
-                </div>
-            `;
+            html += '</div>';
         }
 
-        resultsContent.innerHTML = html;
-        resultsSection.style.display = 'block';
-        resultsSection.scrollIntoView({ behavior: 'smooth' });
-
-        // Hide no results section
-        document.getElementById('noResults').style.display = 'none';
+        modalBody.innerHTML = html;
+        this.showModal('taskModal');
     }
 
     searchByPerson() {
@@ -330,8 +266,8 @@ class StaffRota {
             return;
         }
 
-        const searchTime = this.getEffectiveSearchTime();
-        this.displayPersonResults(person, searchTime);
+        const currentTime = this.formatTime(this.currentTime);
+        this.displayPersonResults(person, currentTime);
     }
 
     findPersonByName(searchName) {
@@ -344,90 +280,61 @@ class StaffRota {
         });
     }
 
-    displayPersonResults(person, searchTime) {
-        const resultsSection = document.getElementById('resultsSection');
-        const resultsTitle = document.getElementById('resultsTitle');
-        const resultsContent = document.getElementById('resultsContent');
+    displayPersonResults(person, currentTime) {
+        const modalTitle = document.getElementById('personModalTitle');
+        const modalBody = document.getElementById('personModalBody');
 
-        const timeDisplay = this.selectedPersonTime ? ` (checking ${searchTime})` : '';
-        resultsTitle.textContent = `${person.name}'s Schedule${timeDisplay}`;
+        modalTitle.textContent = `${person.name}'s Schedule`;
 
-        // Add status to each schedule item based on search time
+        // Add status to each schedule item based on current time
         const scheduleWithStatus = person.schedule.map(slot => ({
             ...slot,
-            status: this.getSlotStatus(slot.timeSlot, searchTime)
+            status: this.getSlotStatus(slot.timeSlot, currentTime)
         }));
 
         // Sort by time slot
         scheduleWithStatus.sort((a, b) => a.timeSlot.localeCompare(b.timeSlot));
 
+        // Find current, next, and upcoming items
+        const currentItem = scheduleWithStatus.find(s => s.status === 'current');
+        const upcomingItems = scheduleWithStatus.filter(s => s.status === 'upcoming').slice(0, 2);
+
         let html = '<div class="person-schedule">';
 
-        if (this.selectedPersonTime) {
-            // Show specific time results
-            const currentSlot = scheduleWithStatus.find(s => 
-                this.timeSlotContainsTime(s.timeSlot, searchTime)
-            );
+        // Current activity
+        if (currentItem) {
+            html += this.createScheduleItem(currentItem, 'NOW', 'current');
+        }
 
-            if (currentSlot) {
-                html += this.createScheduleItem(currentSlot, 'AT THIS TIME', 'current');
+        // Next activities
+        upcomingItems.forEach((item, index) => {
+            const label = index === 0 ? 'NEXT' : 'THEN';
+            html += this.createScheduleItem(item, label, 'upcoming');
+        });
+
+        // If no current activity, show some context
+        if (!currentItem && upcomingItems.length === 0) {
+            const recentPast = scheduleWithStatus.filter(s => s.status === 'past').slice(-1);
+            if (recentPast.length > 0) {
+                html += this.createScheduleItem(recentPast[0], 'RECENTLY', 'break');
             } else {
                 html += `
                     <div class="schedule-item break">
                         <div class="schedule-icon break"></div>
                         <div class="schedule-details">
-                            <div class="schedule-label">AT THIS TIME</div>
-                            <div class="schedule-task">No assignment</div>
-                            <div class="schedule-time">${searchTime}</div>
+                            <div class="schedule-label">CURRENT</div>
+                            <div class="schedule-task">No current assignment</div>
+                            <div class="schedule-time">Free time</div>
                         </div>
                     </div>
                 `;
-            }
-
-            // Show surrounding context
-            const contextSlots = scheduleWithStatus.filter(s => {
-                const slotStart = this.timeToMinutes(this.parseTimeSlot(s.timeSlot).start);
-                const searchMinutes = this.timeToMinutes(searchTime);
-                return Math.abs(slotStart - searchMinutes) <= 120; // Within 2 hours
-            }).slice(0, 3);
-
-            contextSlots.forEach(item => {
-                if (!this.timeSlotContainsTime(item.timeSlot, searchTime)) {
-                    html += this.createScheduleItem(item, 'CONTEXT', 'upcoming');
-                }
-            });
-
-        } else {
-            // Show current time logic (now, next, then)
-            const currentItem = scheduleWithStatus.find(s => s.status === 'current');
-            const upcomingItems = scheduleWithStatus.filter(s => s.status === 'upcoming').slice(0, 2);
-
-            if (currentItem) {
-                html += this.createScheduleItem(currentItem, 'NOW', 'current');
-            }
-
-            upcomingItems.forEach((item, index) => {
-                const label = index === 0 ? 'NEXT' : 'THEN';
-                html += this.createScheduleItem(item, label, 'upcoming');
-            });
-
-            // If no current activity, show some context
-            if (!currentItem && upcomingItems.length === 0) {
-                const recentPast = scheduleWithStatus.filter(s => s.status === 'past').slice(-1);
-                if (recentPast.length > 0) {
-                    html += this.createScheduleItem(recentPast[0], 'RECENTLY', 'break');
-                }
             }
         }
 
         html += '</div>';
 
-        resultsContent.innerHTML = html;
-        resultsSection.style.display = 'block';
-        resultsSection.scrollIntoView({ behavior: 'smooth' });
-
-        // Hide no results section
-        document.getElementById('noResults').style.display = 'none';
+        modalBody.innerHTML = html;
+        this.showModal('personModal');
     }
 
     getSlotStatus(timeSlot, currentTime) {
@@ -470,31 +377,112 @@ class StaffRota {
         `;
     }
 
-    showNoResults() {
-        document.getElementById('resultsSection').style.display = 'none';
-        document.getElementById('noResults').style.display = 'block';
-        document.getElementById('noResults').scrollIntoView({ behavior: 'smooth' });
+    showModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        
+        // Focus management for accessibility
+        setTimeout(() => {
+            const closeButton = modal.querySelector('.modal-close');
+            if (closeButton) {
+                closeButton.focus();
+            }
+        }, 100);
     }
 
-    clearResults() {
-        document.getElementById('resultsSection').style.display = 'none';
-        document.getElementById('noResults').style.display = 'none';
+    closeModal(modalId) {
+        const modal = document.getElementById(modalId);
+        modal.style.display = 'none';
+        document.body.style.overflow = '';
+    }
+
+    showNoResults() {
+        document.getElementById('noResults').style.display = 'block';
+        document.getElementById('noResults').scrollIntoView({ behavior: 'smooth' });
         
-        // Clear form inputs
-        document.getElementById('taskSelect').value = '';
-        document.getElementById('staffSearch').value = '';
+        // Hide after 5 seconds
+        setTimeout(() => {
+            document.getElementById('noResults').style.display = 'none';
+        }, 5000);
+    }
+
+    // Christmas Easter Egg Functions
+    initializeChristmasFeature() {
+        // Calculate days until Christmas on page load
+        const daysUntil = this.calculateDaysUntilChristmas();
+        document.getElementById('daysUntilChristmas').textContent = daysUntil;
         
-        // Hide time selectors
-        document.getElementById('taskTimeSelector').style.display = 'none';
-        document.getElementById('personTimeSelector').style.display = 'none';
+        // Check Christmas button visibility
+        this.updateChristmasButtonVisibility();
         
-        // Reset time selections
-        this.selectedTaskTime = null;
-        this.selectedPersonTime = null;
-        this.currentTask = null;
-        this.currentPerson = null;
+        // Update button visibility every minute
+        setInterval(() => {
+            this.updateChristmasButtonVisibility();
+        }, 60000);
+    }
+
+    calculateDaysUntilChristmas() {
+        const today = new Date();
+        const currentYear = today.getFullYear();
+        let christmas = new Date(currentYear, 11, 25); // December 25th
         
-        this.showToast('Results cleared', 'info');
+        // If Christmas has passed this year, calculate for next year
+        if (today > christmas) {
+            christmas = new Date(currentYear + 1, 11, 25);
+        }
+        
+        const timeDiff = christmas.getTime() - today.getTime();
+        const daysDiff = Math.ceil(timeDiff / (1000 * 3600 * 24));
+        
+        return daysDiff;
+    }
+
+    isChristmasButtonTime() {
+        const now = new Date();
+        const minutes = now.getMinutes();
+        
+        // Show button between 45 minutes past and on the hour (45-59 minutes)
+        return minutes >= 45;
+    }
+
+    updateChristmasButtonVisibility() {
+        const button = document.querySelector('.christmas-button');
+        if (button) {
+            if (this.isChristmasButtonTime()) {
+                button.style.display = 'flex';
+            } else {
+                button.style.display = 'none';
+            }
+        }
+    }
+
+    startSnowfall() {
+        const snowflakesContainer = document.getElementById('snowflakesContainer');
+        if (snowflakesContainer) {
+            snowflakesContainer.style.display = 'block';
+        }
+    }
+
+    stopSnowfall() {
+        const snowflakesContainer = document.getElementById('snowflakesContainer');
+        if (snowflakesContainer) {
+            snowflakesContainer.style.display = 'none';
+        }
+    }
+
+    showChristmasModal() {
+        const daysUntil = this.calculateDaysUntilChristmas();
+        document.getElementById('daysUntilChristmas').textContent = daysUntil;
+        document.getElementById('christmasModal').style.display = 'flex';
+        document.body.style.overflow = 'hidden';
+        this.startSnowfall();
+    }
+
+    closeChristmasModal() {
+        document.getElementById('christmasModal').style.display = 'none';
+        document.body.style.overflow = '';
+        this.stopSnowfall();
     }
 
     showLoading() {
@@ -572,6 +560,25 @@ class StaffRota {
         } else {
             return 'closed';
         }
+    }
+}
+
+// Global functions for modal controls (called from HTML)
+function closeModal(modalId) {
+    if (window.staffRota) {
+        window.staffRota.closeModal(modalId);
+    }
+}
+
+function showChristmasModal() {
+    if (window.staffRota) {
+        window.staffRota.showChristmasModal();
+    }
+}
+
+function closeChristmasModal() {
+    if (window.staffRota) {
+        window.staffRota.closeChristmasModal();
     }
 }
 

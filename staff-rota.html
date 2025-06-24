@@ -17,7 +17,7 @@
                      alt="ARU Students' Union" 
                      class="aru-logo-img">
             </div>
-            <h1 class="page-title">Staff Rota - Quick Lookup</h1>
+            <h1 class="page-title">Staff Rota</h1>
             <button class="back-button" onclick="window.location.href='index.html'" aria-label="Back to main page">
                 <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                     <path d="19 12H5M12 19l-7-7 7-7"></path>
@@ -35,6 +35,23 @@
             <div class="current-time">
                 <strong>Current Time: <span id="currentTime">--:--</span></strong>
             </div>
+
+            <!-- Find by Person (moved to top) -->
+            <div class="search-group">
+                <label for="staffSearch">Find by Person:</label>
+                <div class="input-row">
+                    <input type="text" id="staffSearch" class="staff-search" 
+                           placeholder="Staff name..." 
+                           list="staffList" autocomplete="off">
+                    <datalist id="staffList">
+                        <!-- Will be populated by JavaScript -->
+                    </datalist>
+                    <button id="searchPersonBtn" class="search-button">Search</button>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider">── OR ──</div>
 
             <!-- Find by Task -->
             <div class="search-group">
@@ -72,89 +89,6 @@
                     </select>
                     <button id="searchTaskBtn" class="search-button">Search</button>
                 </div>
-                
-                <!-- Contextual Time Selector - appears after task selection -->
-                <div class="contextual-time" id="taskTimeSelector" style="display: none;">
-                    <div class="time-controls">
-                        <span class="time-label">Check time:</span>
-                        <select id="taskTimeSelect" class="task-select">
-                            <option value="">Now</option>
-                            <option value="06:00">06:00</option>
-                            <option value="07:00">07:00</option>
-                            <option value="08:00">08:00</option>
-                            <option value="09:00">09:00</option>
-                            <option value="09:15">09:15</option>
-                            <option value="10:00">10:00</option>
-                            <option value="10:30">10:30</option>
-                            <option value="11:00">11:00</option>
-                            <option value="12:00">12:00</option>
-                            <option value="13:00">13:00</option>
-                            <option value="14:00">14:00</option>
-                            <option value="15:00">15:00</option>
-                            <option value="16:00">16:00</option>
-                            <option value="17:00">17:00</option>
-                        </select>
-                        <button id="updateTaskSearch" class="search-button">Update</button>
-                    </div>
-                </div>
-            </div>
-
-            <!-- Divider -->
-            <div class="divider">── OR ──</div>
-
-            <!-- Find by Person -->
-            <div class="search-group">
-                <label for="staffSearch">Find by Person:</label>
-                <div class="input-row">
-                    <input type="text" id="staffSearch" class="staff-search" 
-                           placeholder="Staff name..." 
-                           list="staffList" autocomplete="off">
-                    <datalist id="staffList">
-                        <!-- Will be populated by JavaScript -->
-                    </datalist>
-                    <button id="searchPersonBtn" class="search-button">Search</button>
-                </div>
-                
-                <!-- Contextual Time Selector - appears after person input -->
-                <div class="contextual-time" id="personTimeSelector" style="display: none;">
-                    <div class="time-controls">
-                        <span class="time-label">Check time:</span>
-                        <select id="personTimeSelect" class="task-select">
-                            <option value="">Now</option>
-                            <option value="06:00">06:00</option>
-                            <option value="07:00">07:00</option>
-                            <option value="08:00">08:00</option>
-                            <option value="09:00">09:00</option>
-                            <option value="09:15">09:15</option>
-                            <option value="10:00">10:00</option>
-                            <option value="10:30">10:30</option>
-                            <option value="11:00">11:00</option>
-                            <option value="12:00">12:00</option>
-                            <option value="13:00">13:00</option>
-                            <option value="14:00">14:00</option>
-                            <option value="15:00">15:00</option>
-                            <option value="16:00">16:00</option>
-                            <option value="17:00">17:00</option>
-                        </select>
-                        <button id="updatePersonSearch" class="search-button">Update</button>
-                    </div>
-                </div>
-            </div>
-        </section>
-
-        <!-- Results Section -->
-        <section id="resultsSection" class="results-section" style="display: none;">
-            <div class="results-header">
-                <h3 id="resultsTitle">Results</h3>
-                <button id="clearResults" class="clear-button" aria-label="Clear results">
-                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <line x1="18" y1="6" x2="6" y2="18"></line>
-                        <line x1="6" y1="6" x2="18" y2="18"></line>
-                    </svg>
-                </button>
-            </div>
-            <div id="resultsContent" class="results-content">
-                <!-- Results will be populated here -->
             </div>
         </section>
 
@@ -165,6 +99,68 @@
             <p>Try searching for a different task or staff member.</p>
         </section>
     </main>
+
+    <!-- Person Results Modal -->
+    <div class="modal" id="personModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="personModalTitle">Staff Schedule</h3>
+                <button class="modal-close" onclick="closeModal('personModal')" aria-label="Close modal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="personModalBody">
+                <!-- Person schedule will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Task Results Modal -->
+    <div class="modal" id="taskModal" style="display: none;">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 class="modal-title" id="taskModalTitle">Task Assignment</h3>
+                <button class="modal-close" onclick="closeModal('taskModal')" aria-label="Close modal">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div class="modal-body" id="taskModalBody">
+                <!-- Task results will be populated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Christmas Modal -->
+    <div class="christmas-modal" id="christmasModal" style="display: none;">
+        <div class="christmas-modal-content">
+            <div class="snowflakes" id="snowflakesContainer" style="display: none;" aria-hidden="true">
+                <div class="snowflake"><div class="inner">❅</div></div>
+                <div class="snowflake"><div class="inner">❅</div></div>
+                <div class="snowflake"><div class="inner">❅</div></div>
+                <div class="snowflake"><div class="inner">❅</div></div>
+                <div class="snowflake"><div class="inner">❅</div></div>
+                <div class="snowflake"><div class="inner">❅</div></div>
+                <div class="snowflake"><div class="inner">❅</div></div>
+                <div class="snowflake"><div class="inner">❅</div></div>
+                <div class="snowflake"><div class="inner">❅</div></div>
+                <div class="snowflake"><div class="inner">❅</div></div>
+            </div>
+            <h2>🎄 Ho Ho Ho! 🎄</h2>
+            <p>Only <strong id="daysUntilChristmas">25</strong> days until Christmas!</p>
+            <button class="christmas-close" onclick="closeChristmasModal()">Close</button>
+        </div>
+    </div>
+
+    <!-- Christmas Easter Egg Button - only visible between :45 and :00 minutes -->
+    <button class="christmas-button" onclick="showChristmasModal()" style="display: none;" aria-label="Christmas surprise">
+        <img src="https://cdn-icons-png.flaticon.com/512/347/347052.png" alt="Christmas">
+    </button>
 
     <!-- Loading Indicator -->
     <div id="loadingIndicator" class="loading" style="display: none;">
