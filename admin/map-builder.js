@@ -162,8 +162,8 @@ class MapBuilder {
         this.gridHeight = parseInt(document.getElementById('gridHeight').value);
 
         // Validate dimensions
-        if (this.gridWidth < 6 || this.gridWidth > 20 || this.gridHeight < 6 || this.gridHeight > 20) {
-            alert('Grid dimensions must be between 6 and 20');
+        if (this.gridWidth < 6 || this.gridWidth > 50 || this.gridHeight < 6 || this.gridHeight > 50) {
+            alert('Grid dimensions must be between 6 and 50');
             return;
         }
 
