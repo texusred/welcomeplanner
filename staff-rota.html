@@ -1,0 +1,131 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Staff Rota | ARU Students' Union</title>
+    <link rel="stylesheet" href="staff-rota.css">
+    <meta name="description" content="Quick lookup for staff schedules and task assignments during the Welcome Fair">
+    <meta name="theme-color" content="#00a5b4">
+</head>
+<body>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="assets/images/logo.jpg" 
+                     alt="ARU Students' Union" 
+                     class="aru-logo-img">
+            </div>
+            <h1 class="page-title">Staff Rota - Quick Lookup</h1>
+            <button class="back-button" onclick="window.location.href='index.html'" aria-label="Back to main page">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="19 12H5M12 19l-7-7 7-7"></path>
+                </svg>
+                Back to Main
+            </button>
+        </div>
+    </header>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Search Interface -->
+        <section class="search-section">
+            <!-- Current Time Display -->
+            <div class="current-time">
+                <strong>Current Time: <span id="currentTime">--:--</span></strong>
+            </div>
+
+            <!-- Find by Task -->
+            <div class="search-group">
+                <label for="taskSelect">Find by Task/Activity:</label>
+                <div class="input-row">
+                    <select id="taskSelect" class="task-select">
+                        <option value="">Select task or activity...</option>
+                        <optgroup label="Setup & Management">
+                            <option value="Set Up">Set Up</option>
+                            <option value="Staff Briefing">Staff Briefing</option>
+                            <option value="Event Manager">Event Manager</option>
+                            <option value="Area Manager">Area Manager</option>
+                            <option value="Health & Safety Check">Health & Safety Check</option>
+                            <option value="Pack Down">Pack Down</option>
+                        </optgroup>
+                        <optgroup label="SU Stalls">
+                            <option value="PayPoint">PayPoint</option>
+                            <option value="SU Stall - Here to Help">Here to Help</option>
+                            <option value="SU Stall - Get Involved">Get Involved</option>
+                            <option value="SU Stall - Freebies">Freebies</option>
+                            <option value="Wellbeing Zone">Wellbeing Zone</option>
+                        </optgroup>
+                        <optgroup label="Specialised Roles">
+                            <option value="Societies Hub">Societies Hub</option>
+                            <option value="Attendance Tracking">Attendance Tracking</option>
+                            <option value="Communications">Communications</option>
+                            <option value="Stage Management">Stage Management</option>
+                            <option value="Shop Duties">Shop Duties</option>
+                            <option value="Welcome Desk">Welcome Desk</option>
+                            <option value="Student Support">Student Support</option>
+                        </optgroup>
+                        <optgroup label="Breaks">
+                            <option value="Lunch">Lunch Break</option>
+                        </optgroup>
+                    </select>
+                    <button id="searchTaskBtn" class="search-button">Search</button>
+                </div>
+            </div>
+
+            <!-- Divider -->
+            <div class="divider">── OR ──</div>
+
+            <!-- Find by Person -->
+            <div class="search-group">
+                <label for="staffSearch">Find by Person:</label>
+                <div class="input-row">
+                    <input type="text" id="staffSearch" class="staff-search" 
+                           placeholder="Staff name..." 
+                           list="staffList" autocomplete="off">
+                    <datalist id="staffList">
+                        <!-- Will be populated by JavaScript -->
+                    </datalist>
+                    <button id="searchPersonBtn" class="search-button">Search</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- Results Section -->
+        <section id="resultsSection" class="results-section" style="display: none;">
+            <div class="results-header">
+                <h3 id="resultsTitle">Results</h3>
+                <button id="clearResults" class="clear-button" aria-label="Clear results">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            <div id="resultsContent" class="results-content">
+                <!-- Results will be populated here -->
+            </div>
+        </section>
+
+        <!-- No Results Message -->
+        <section id="noResults" class="no-results" style="display: none;">
+            <div class="no-results-icon">🔍</div>
+            <h3>No results found</h3>
+            <p>Try searching for a different task or staff member.</p>
+        </section>
+    </main>
+
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Loading staff data...</p>
+    </div>
+
+    <!-- Toast Container for notifications -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- JavaScript -->
+    <script src="staff-rota.js"></script>
+</body>
+</html>
