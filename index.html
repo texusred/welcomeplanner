@@ -2,207 +2,231 @@
 <html lang="en">
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no, viewport-fit=cover">
-    <meta name="mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
-    <meta name="apple-mobile-web-app-title" content="Stall Planner">
-    <meta name="theme-color" content="#01A7B9">
-    <meta name="msapplication-TileColor" content="#667eea">
-    <meta name="screen-orientation" content="landscape">
-    <title>Cambridge Stall Planner</title>
-    
-    <!-- PWA Manifest -->
-    <link rel="manifest" href="manifest.json">
-    
-    <!-- Apple touch icons -->
-    <link rel="apple-touch-icon" href="data:image/svg+xml;base64,PHN2ZyB3aWR0aD0iMTkyIiBoZWlnaHQ9IjE5MiIgdmlld0JveD0iMCAwIDE5MiAxOTIiIGZpbGw9Im5vbmUiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyI+CjxyZWN0IHdpZHRoPSIxOTIiIGhlaWdodD0iMTkyIiByeD0iMzIiIGZpbGw9InVybCgjZ3JhZGllbnQpIi8+CjxkZWZzPgo8bGluZWFyR3JhZGllbnQgaWQ9ImdyYWRpZW50IiB4MT0iMCUiIHkxPSIwJSIgeDI9IjEwMCUiIHkyPSIxMDAlIj4KPHN0b3Agb2Zmc2V0PSIwJSIgc3R5bGU9InN0b3AtY29sb3I6IzY2N2VlYSIgLz4KPHN0b3Agb2Zmc2V0PSIxMDAlIiBzdHlsZT0ic3RvcC1jb2xvcjojNzY0YmEyIiAvPgo8L2xpbmVhckdyYWRpZW50Pgo8L2RlZnM+CjxwYXRoIGQ9Ik05NiA2MEw2MCA5NkwzNiA3MkwyNCA5NkwyNCA0OEg3MkwxMDggMTJMMTMyIDM2TDE0NCAyNEwxNDQgNzJIOTZWNjBaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjkiLz4KPHBhdGggZD0iTTk2IDEwOEw2MCAxNDRMMzYgMTIwTDI0IDE0NEwyNCA5Nkg3MkwxMDggNjBMMTMyIDg0TDE0NCA3MkwxNDQgMTIwSDk2VjEwOFoiIGZpbGw9IndoaXRlIiBmaWxsLW9wYWNpdHk9IjAuNyIvPgo8cGF0aCBkPSJNOTYgMTU2TDYwIDE5Mkw2MCA5NkwxMzIgOTZMMTMyIDE5Mkw5NiAxNTZaIiBmaWxsPSJ3aGl0ZSIgZmlsbC1vcGFjaXR5PSIwLjUiLz4KPC9zdmc+">
-    
-    <!-- External Resources -->
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/css/bootstrap.min.css" rel="stylesheet">
-    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" rel="stylesheet">
-    <link href="styles/main.css" rel="stylesheet">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Welcome Fair Stall Finder | ARU Students' Union</title>
+    <link rel="stylesheet" href="styles.css">
+    <meta name="description" content="Find stallholders and their locations at the ARU Students' Union Welcome Fair">
+    <meta name="theme-color" content="#00a5b4">
 </head>
 <body>
-    <!-- Orientation Overlay (will be added by mobile-utils.js) -->
-    
-    <!-- Mobile-first card deck container -->
-    <div class="mobile-container">
-        <!-- Main Header -->
-        <div class="main-header">
-            <h1 class="main-title">
-                <i class="fas fa-map-marked-alt me-3"></i>
-                ARU Students' Union - Welcome Fair Stall Plan
-            </h1>
-            <p class="main-subtitle">
-                Stall Guide for the Welcome Fair 2025 - for use by union staff.
-            </p>
+    <!-- Header -->
+    <header class="header">
+        <div class="header-content">
+            <div class="logo-container">
+                <img src="assets/images/logo.jpg" 
+                     alt="ARU Students' Union" 
+                     class="aru-logo-img">
+            </div>
+            <h1 class="page-title">Welcome Fair Stall Finder</h1>
+            <button class="dark-mode-toggle" onclick="toggleDarkMode()" aria-label="Toggle dark mode">
+                <svg class="toggle-icon sun-icon" viewBox="0 0 496 496" xmlns="http://www.w3.org/2000/svg">
+                    <rect x="152.994" y="58.921" transform="matrix(0.3827 0.9239 -0.9239 0.3827 168.6176 -118.5145)" width="40.001" height="16"/>
+                    <rect x="46.9" y="164.979" transform="matrix(0.9239 0.3827 -0.3827 0.9239 71.29 -12.4346)" width="40.001" height="16"/>
+                    <rect x="46.947" y="315.048" transform="matrix(0.9239 -0.3827 0.3827 0.9239 -118.531 50.2116)" width="40.001" height="16"/>
+                    <rect x="164.966" y="409.112" transform="matrix(-0.9238 -0.3828 0.3828 -0.9238 168.4872 891.7491)" width="16" height="39.999"/>
+                    <rect x="303.031" y="421.036" transform="matrix(-0.3827 -0.9239 0.9239 -0.3827 50.2758 891.6655)" width="40.001" height="16"/>
+                    <rect x="409.088" y="315.018" transform="matrix(-0.9239 -0.3827 0.3827 -0.9239 701.898 785.6559)" width="40.001" height="16"/>
+                    <rect x="409.054" y="165.011" transform="matrix(-0.9239 0.3827 -0.3827 -0.9239 891.6585 168.6574)" width="40.001" height="16"/>
+                    <rect x="315.001" y="46.895" transform="matrix(0.9238 0.3828 -0.3828 0.9238 50.212 -118.5529)" width="16" height="39.999"/>
+                    <path d="M248,88c-88.224,0-160,71.776-160,160s71.776,160,160,160s160-71.776,160-160S336.224,88,248,88z M248,392 c-79.4,0-144-64.6-144-144s64.6-144,144-144s144,64.6,144,144S327.4,392,248,392z"/>
+                    <rect x="240" width="16" height="72"/>
+                    <rect x="62.097" y="90.096" transform="matrix(0.7071 0.7071 -0.7071 0.7071 98.0963 -40.6334)" width="71.999" height="16"/>
+                    <rect y="240" width="72" height="16"/>
+                    <rect x="90.091" y="361.915" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 -113.9157 748.643)" width="16" height="71.999"/>
+                    <rect x="240" y="424" width="16" height="72"/>
+                    <rect x="361.881" y="389.915" transform="matrix(-0.7071 -0.7071 0.7071 -0.7071 397.8562 960.6281)" width="71.999" height="16"/>
+                    <rect x="424" y="240" width="72" height="16"/>
+                    <rect x="389.911" y="62.091" transform="matrix(0.7071 0.7071 -0.7071 0.7071 185.9067 -252.6357)" width="16" height="71.999"/>
+                </svg>
+                <svg class="toggle-icon moon-icon" viewBox="0 0 49.739 49.739" xmlns="http://www.w3.org/2000/svg">
+                    <path d="M25.068,48.889c-9.173,0-18.017-5.06-22.396-13.804C-3.373,23.008,1.164,8.467,13.003,1.979l2.061-1.129l-0.615,2.268 c-1.479,5.459-0.899,11.25,1.633,16.306c2.75,5.493,7.476,9.587,13.305,11.526c5.831,1.939,12.065,1.492,17.559-1.258v0 c0.25-0.125,0.492-0.258,0.734-0.391l2.061-1.13l-0.585,2.252c-1.863,6.873-6.577,12.639-12.933,15.822 C32.639,48.039,28.825,48.888,25.068,48.889z M12.002,4.936c-9.413,6.428-12.756,18.837-7.54,29.253 c5.678,11.34,19.522,15.945,30.864,10.268c5.154-2.582,9.136-7.012,11.181-12.357c-5.632,2.427-11.882,2.702-17.752,0.748 c-6.337-2.108-11.473-6.557-14.463-12.528C11.899,15.541,11.11,10.16,12.002,4.936z"/>
+                </svg>
+            </button>
         </div>
+        <div class="geometric-pattern"></div>
+    </header>
 
-        <!-- Card Deck - Mobile: Stack, Desktop: Grid -->
-        <div class="areas-container">
-            <div class="areas-deck" id="areasDeck">
-                <!-- Ruskin Courtyard Card -->
-                <div class="area-card ruskin-card" data-area="ruskin" onclick="navigateToArea('ruskin')">
-                    <div class="card-background"></div>
-                    <div class="card-content">
-                        <div class="area-icon ruskin-icon">
-                            <i class="fas fa-university"></i>
-                        </div>
-                        <h2 class="area-title">Ruskin Courtyard</h2>
-                        <p class="area-description">
-                            The main central courtyard area hosting societies and external stallholders.
-                        </p>
-                        <div class="area-stats">
-                            <div class="stat-item">
-                                <span class="stat-number" data-count="53">53</span>
-                                <span class="stat-label">Stalls</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">High</span>
-                                <span class="stat-label">Traffic</span>
-                            </div>
-                        </div>
-                        <div class="card-action">
-                            <span class="action-text">Tap to View Layout</span>
-                            <i class="fas fa-arrow-right action-arrow"></i>
-                        </div>
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Search Section -->
+        <section class="search-section">
+            <div class="search-container">
+                <h2 class="search-title">Find Your Stall</h2>
+                <p class="search-subtitle">Search for stallholders to find their location and neighbours</p>
+                
+                <div class="search-input-container">
+                    <input 
+                        type="text" 
+                        id="stallSearch" 
+                        class="search-input" 
+                        placeholder="Type stallholder name..."
+                        autocomplete="off"
+                        aria-label="Search for stallholder"
+                    >
+                    <div class="search-icon">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <circle cx="11" cy="11" r="8"></circle>
+                            <path d="21 21l-4.35-4.35"></path>
+                        </svg>
                     </div>
                 </div>
 
-                <!-- Science Walkway Card -->
-                <div class="area-card science-card" data-area="science" onclick="navigateToArea('science')">
-                    <div class="card-background"></div>
-                    <div class="card-content">
-                        <div class="area-icon science-icon">
-                            <i class="fas fa-flask"></i>
-                        </div>
-                        <h2 class="area-title">Science Walkway</h2>
-                        <p class="area-description">
-                            Hosting Team ARU, university BUCS sports teams.
-                        </p>
-                        <div class="area-stats">
-                            <div class="stat-item">
-                                <span class="stat-number" data-count="31">31</span>
-                                <span class="stat-label">Stalls</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">High</span>
-                                <span class="stat-label">Traffic</span>
-                            </div>
-                        </div>
-                        <div class="card-action">
-                            <span class="action-text">Tap to View Layout</span>
-                            <i class="fas fa-arrow-right action-arrow"></i>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- LAB Courtyard Card -->
-                <div class="area-card lab-card" data-area="lab" onclick="navigateToArea('lab')">
-                    <div class="card-background"></div>
-                    <div class="card-content">
-                        <div class="area-icon lab-icon">
-                            <i class="fas fa-microscope"></i>
-                        </div>
-                        <h2 class="area-title">LAB Courtyard</h2>
-                        <p class="area-description">
-                            Hosting external stallholders and the Students' Union advice stall.
-                        </p>
-                        <div class="area-stats">
-                            <div class="stat-item">
-                                <span class="stat-number" data-count="37">37</span>
-                                <span class="stat-label">Stalls</span>
-                            </div>
-                            <div class="stat-item">
-                                <span class="stat-number">Low</span>
-                                <span class="stat-label">Traffic</span>
-                            </div>
-                        </div>
-                        <div class="card-action">
-                            <span class="action-text">Tap to View Layout</span>
-                            <i class="fas fa-arrow-right action-arrow"></i>
-                        </div>
-                    </div>
-                </div>
+                <!-- Autocomplete Dropdown -->
+                <div id="autocompleteResults" class="autocomplete-results" style="display: none;"></div>
             </div>
 
-            <!-- Card Navigation Dots (Mobile) -->
-            <div class="card-indicators" id="cardIndicators">
-                <span class="indicator active" data-card="0"></span>
-                <span class="indicator" data-card="1"></span>
-                <span class="indicator" data-card="2"></span>
+            <!-- Quick Actions -->
+            <div class="quick-actions">
+                <button id="showAllStalls" class="btn btn-secondary">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="3 9l9-7 9 7v11a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2z"></path>
+                    </svg>
+                    Show All Stalls
+                </button>
+                
+                <!-- ADMIN ACCESS - REMOVABLE FOR PRODUCTION -->
+                <button id="adminAccess" class="btn admin-access-btn">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="12.22 2h-.44a2 2 0 0 0-2 2v.18a2 2 0 0 1-1 1.73l-.43.25a2 2 0 0 1-2 0l-.15-.08a2 2 0 0 0-2.73.73l-.22.38a2 2 0 0 0 .73 2.73l.15.1a2 2 0 0 1 1 1.72v.51a2 2 0 0 1-1 1.74l-.15.09a2 2 0 0 0-.73 2.73l.22.38a2 2 0 0 0 2.73.73l.15-.08a2 2 0 0 1 2 0l.43.25a2 2 0 0 1 1 1.73V20a2 2 0 0 0 2 2h.44a2 2 0 0 0 2-2v-.18a2 2 0 0 1 1-1.73l.43-.25a2 2 0 0 1 2 0l.15.08a2 2 0 0 0 2.73-.73l.22-.39a2 2 0 0 0-.73-2.73l-.15-.08a2 2 0 0 1-1-1.74v-.5a2 2 0 0 1 1-1.74l.15-.09a2 2 0 0 0 .73-2.73l-.22-.38a2 2 0 0 0-2.73-.73l-.15.08a2 2 0 0 1-2 0l-.43-.25a2 2 0 0 1-1-1.73V4a2 2 0 0 0-2-2z"></path>
+                        <circle cx="12" cy="12" r="3"></circle>
+                    </svg>
+                    Admin Tools
+                </button>
             </div>
-        </div>
+        </section>
 
-        <!-- App Info (Mobile: Bottom, Desktop: Footer) -->
-        <div class="app-info">
-            <div class="info-content">
-                <p class="info-text">
-                    <i class="fas fa-lightbulb me-2"></i>
-                    <span class="desktop-only"><strong>Desktop:</strong> Full editing capabilities with drag & drop</span>
-                    <span class="mobile-only"><strong>Mobile:</strong> Optimized viewing experience in landscape mode</span>
-                </p>
-                <div class="app-badges">
-                    <span class="app-badge">
-                        <i class="fas fa-mobile-alt me-1"></i>
-                        Mobile Friendly
-                    </span>
-                    <span class="app-badge">
-                        <i class="fas fa-wifi me-1"></i>
-                        Updated 06/06/25
-                    </span>
-                    <span class="app-badge desktop-only">
-                        <i class="fas fa-edit me-1"></i>
-                        Admin Stall Editing
-                    </span>
-                    <span class="app-badge mobile-only">
-                        <i class="fas fa-eye me-1"></i>
-                        View Mode
-                    </span>
+        <!-- All Stalls View -->
+        <section id="allStallsSection" class="all-stalls-section" style="display: none;">
+            <div class="section-header">
+                <button id="backToSearch" class="btn btn-back">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="19 12H5M12 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to Search
+                </button>
+                <h2>All Stalls</h2>
+            </div>
+            
+            <div class="location-tabs">
+                <button class="location-tab active" data-location="all">All Locations</button>
+                <button class="location-tab" data-location="Ruskin Courtyard">Ruskin Courtyard</button>
+                <button class="location-tab" data-location="Science Walkway">Science Walkway</button>
+                <button class="location-tab" data-location="LAB Courtyard">LAB Courtyard</button>
+            </div>
+
+            <div id="stallsList" class="stalls-grid"></div>
+        </section>
+    </main>
+
+    <!-- Modal for Stall Details -->
+    <div id="stallModal" class="modal" style="display: none;">
+        <div class="modal-overlay"></div>
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modalStallName" class="modal-title"></h3>
+                <button id="closeModal" class="modal-close" aria-label="Close modal">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+            
+            <div class="modal-body">
+                <div class="stall-info">
+                    <div class="info-item">
+                        <strong>Stall Number:</strong>
+                        <span id="modalStallNumber"></span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Location:</strong>
+                        <span id="modalLocation"></span>
+                    </div>
+                    <div class="info-item">
+                        <strong>Group Type:</strong>
+                        <span id="modalGroup"></span>
+                    </div>
+                </div>
+
+                <div class="neighbours-section">
+                    <h4>Neighbouring Stalls</h4>
+                    <div class="neighbours-grid">
+                        <div class="neighbour-item">
+                            <span class="neighbour-label">Left:</span>
+                            <span id="modalLeftNeighbour" class="neighbour-value"></span>
+                        </div>
+                        <div class="neighbour-item">
+                            <span class="neighbour-label">Right:</span>
+                            <span id="modalRightNeighbour" class="neighbour-value"></span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Modal Actions -->
+                <div class="modal-actions">
+                    <button id="viewOnMap" class="btn btn-primary">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"></path>
+                            <circle cx="12" cy="10" r="3"></circle>
+                        </svg>
+                        View on Map
+                    </button>
+                    <button id="shareStall" class="btn btn-secondary" style="display: none;">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"></path>
+                            <polyline points="16 6 12 2 8 6"></polyline>
+                            <line x1="12" y1="2" x2="12" y2="15"></line>
+                        </svg>
+                        Share
+                    </button>
                 </div>
             </div>
         </div>
     </div>
 
-    <!-- Install prompt (for PWA) -->
-    <div class="install-prompt" id="installPrompt">
-        <div class="install-content">
-            <div class="install-icon">
-                <i class="fas fa-download"></i>
-            </div>
-            <div class="install-text">
-                <h4>Install App</h4>
-                <p>Add to home screen for quick access</p>
-            </div>
-            <button class="install-btn" id="installBtn">
-                <i class="fas fa-plus me-1"></i>
-                Install
-            </button>
-            <button class="install-close" id="installClose">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Loading stall data...</p>
     </div>
 
-    <!-- Scripts -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.0/js/bootstrap.bundle.min.js"></script>
-    <script src="js/mobile-utils.js"></script>
-    <script src="js/main.js"></script>
-    
-    <!-- Register Service Worker -->
+    <!-- JavaScript -->
     <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('js/sw.js')
-                    .then(registration => {
-                        console.log('[SW] Registration successful:', registration);
-                    })
-                    .catch(error => {
-                        console.log('[SW] Registration failed:', error);
-                    });
-            });
+        // Dark mode functionality
+        function toggleDarkMode() {
+            const body = document.body;
+            const currentTheme = body.getAttribute('data-theme');
+            const newTheme = currentTheme === 'dark' ? 'light' : 'dark';
+            
+            body.setAttribute('data-theme', newTheme);
+            localStorage.setItem('theme', newTheme);
+            
+            // Update toggle button
+            const toggle = document.querySelector('.dark-mode-toggle');
+            if (newTheme === 'dark') {
+                toggle.classList.add('dark');
+            } else {
+                toggle.classList.remove('dark');
+            }
         }
+
+        // Initialize dark mode based on saved preference
+        function initializeDarkMode() {
+            const savedTheme = localStorage.getItem('theme');
+            const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const theme = savedTheme || (prefersDark ? 'dark' : 'light');
+            
+            document.body.setAttribute('data-theme', theme);
+            
+            const toggle = document.querySelector('.dark-mode-toggle');
+            if (theme === 'dark') {
+                toggle.classList.add('dark');
+            }
+        }
+
+        // Initialize dark mode on page load
+        document.addEventListener('DOMContentLoaded', initializeDarkMode);
     </script>
+    <script src="script.js"></script>
 </body>
 </html>
