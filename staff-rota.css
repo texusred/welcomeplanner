@@ -225,6 +225,40 @@ h4 { font-size: 1rem; }
   transform: translateY(0);
 }
 
+/* Contextual Time Selector */
+.contextual-time {
+  margin-top: 1rem;
+  padding: 1rem;
+  background: rgba(0, 165, 180, 0.05);
+  border-radius: 8px;
+  border: 2px solid rgba(0, 165, 180, 0.2);
+  animation: slideDown 0.3s ease-out;
+}
+
+@keyframes slideDown {
+  from {
+    opacity: 0;
+    transform: translateY(-10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.time-controls {
+  display: flex;
+  gap: 0.75rem;
+  align-items: center;
+}
+
+.time-label {
+  font-weight: 600;
+  color: var(--text-primary);
+  white-space: nowrap;
+  flex-shrink: 0;
+}
+
 /* Divider */
 .divider {
   text-align: center;
@@ -602,6 +636,16 @@ h4 { font-size: 1rem; }
     width: 100%;
   }
 
+  .time-controls {
+    flex-direction: column;
+    gap: 0.75rem;
+    align-items: stretch;
+  }
+
+  .time-label {
+    text-align: center;
+  }
+
   .staff-item {
     flex-direction: column;
     gap: 0.5rem;
@@ -628,6 +672,10 @@ h4 { font-size: 1rem; }
   .no-results {
     padding: 2rem 1rem;
   }
+
+  .staff-list {
+    margin-left: 0;
+  }
 }
 
 @media (max-width: 480px) {
@@ -641,10 +689,6 @@ h4 { font-size: 1rem; }
 
   .aru-logo-img {
     height: 40px;
-  }
-
-  .staff-list {
-    margin-left: 0;
   }
 
   .current-time {
