@@ -40,26 +40,6 @@ A comprehensive web application for locating stallholders at the ARU Students' U
         └── logo.jpg
 ```
 
-## 🚀 Getting Started
-
-1. **Clone the repository**
-   ```bash
-   git clone https://github.com/your-username/aru-stall-finder.git
-   cd aru-stall-finder
-   ```
-
-2. **Serve the files**
-   ```bash
-   # Using Python 3
-   python -m http.server 8000
-   
-   # Using Node.js
-   npx serve .
-   ```
-
-3. **Open in browser**
-   Navigate to `http://localhost:8000`
-
 ## 📱 Usage
 
 ### Finding Stalls (Staff)
@@ -90,14 +70,6 @@ A comprehensive web application for locating stallholders at the ARU Students' U
   "group": "Society"
 }
 ```
-
-## 🔧 Technologies
-
-- **Frontend**: Vanilla JavaScript, CSS Grid/Flexbox
-- **Data**: JSON files
-- **Maps**: Custom HTML/CSS grid layouts
-- **Responsive**: Mobile-first design
-- **Theme**: ARU brand colours with dark mode
 
 ## 📄 Licence
 
