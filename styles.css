@@ -20,14 +20,16 @@
 }
 
 /* Dark mode variables */
-[data-theme="dark"] {
-  --background: #1a1a1a;
-  --aru-white: #2d2d2d;
-  --text-primary: #e5e5e5;
-  --text-secondary: #b0b0b0;
-  --border-light: #404040;
-  --shadow-light: rgba(0, 0, 0, 0.3);
-  --shadow-medium: rgba(0, 0, 0, 0.5);
+@media (prefers-color-scheme: dark) {
+  :root {
+    --background: #1a1a1a;
+    --aru-white: #2d2d2d;
+    --text-primary: #e5e5e5;
+    --text-secondary: #b0b0b0;
+    --border-light: #404040;
+    --shadow-light: rgba(0, 0, 0, 0.3);
+    --shadow-medium: rgba(0, 0, 0, 0.5);
+  }
 }
 
 /* Reset and Base Styles */
@@ -453,7 +455,7 @@ p { margin-bottom: 1rem; }
 .section-header {
   display: flex;
   align-items: center;
-  gap: 1rem;
+  justify-content: space-between;
   margin-bottom: 1.5rem;
 }
 

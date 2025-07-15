@@ -34,6 +34,12 @@ class StallFinder {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
             const data = await response.json();
+            
+            // Validate data before processing
+            if (!Array.isArray(data)) {
+                throw new Error('Invalid data format: expected array');
+            }
+            
             this.stallData = this.processStallData(data);
             this.dataLoaded = true;
             this.hideLoading();
@@ -52,14 +58,37 @@ class StallFinder {
     }
 
     processStallData(data) {
-        return data.map(stall => ({
-            name: stall.name || stall.NAME || '',
-            stallNumber: parseInt(stall.stallNumber || stall['STALL NUMBER']) || 0,
-            location: stall.location || stall.LOCATION || '',
-            group: stall.group || stall.GROUP || '',
-            leftNeighbour: this.findNeighbour(data, parseInt(stall.stallNumber || stall['STALL NUMBER']) - 1, stall.location || stall.LOCATION),
-            rightNeighbour: this.findNeighbour(data, parseInt(stall.stallNumber || stall['STALL NUMBER']) + 1, stall.location || stall.LOCATION)
-        }));
+        return data.map(stall => {
+            // Validate and sanitize stall data
+            if (!stall || typeof stall !== 'object') {
+                console.warn('Invalid stall object:', stall);
+                return null;
+            }
+            
+            const name = this.sanitizeString(stall.name || stall.NAME || '');
+            const location = this.sanitizeString(stall.location || stall.LOCATION || '');
+            const group = this.sanitizeString(stall.group || stall.GROUP || '');
+            const stallNumber = parseInt(stall.stallNumber || stall['STALL NUMBER']) || 0;
+            
+            if (!name || stallNumber <= 0) {
+                console.warn('Invalid stall data:', { name, stallNumber });
+                return null;
+            }
+            
+            return {
+                name,
+                stallNumber,
+                location,
+                group,
+                leftNeighbour: this.findNeighbour(data, stallNumber - 1, location),
+                rightNeighbour: this.findNeighbour(data, stallNumber + 1, location)
+            };
+        }).filter(stall => stall !== null); // Remove invalid entries
+    }
+
+    sanitizeString(str) {
+        if (typeof str !== 'string') return '';
+        return str.trim().replace(/[<>]/g, ''); // Basic sanitization
     }
 
     findNeighbour(data, neighbourNumber, location) {
@@ -72,7 +101,7 @@ class StallFinder {
         });
         
         return neighbour ? {
-            name: neighbour.name || neighbour.NAME,
+            name: this.sanitizeString(neighbour.name || neighbour.NAME),
             stallNumber: neighbourNumber
         } : null;
     }
@@ -175,7 +204,7 @@ class StallFinder {
     }
 
     async handleSearchInput(query) {
-        const trimmedQuery = query.trim().toLowerCase();
+        const trimmedQuery = this.sanitizeString(query);
         
         if (trimmedQuery.length < 1) {
             this.hideAutocomplete();
@@ -183,7 +212,7 @@ class StallFinder {
         }
 
         const results = this.stallData.filter(stall => 
-            stall.name.toLowerCase().includes(trimmedQuery)
+            stall.name.toLowerCase().includes(trimmedQuery.toLowerCase())
         ).slice(0, 8); // Limit to 8 results
 
         this.showAutocompleteResults(results, trimmedQuery);
@@ -192,40 +221,76 @@ class StallFinder {
     showAutocompleteResults(results, query) {
         const autocompleteContainer = document.getElementById('autocompleteResults');
         
+        // Clear previous results
+        autocompleteContainer.innerHTML = '';
+        
         if (results.length === 0) {
             // Better empty state for search
-            autocompleteContainer.innerHTML = `
-                <div class="autocomplete-no-results">
-                    <div class="no-results-icon">🔍</div>
-                    <div class="no-results-text">
-                        <strong>No stallholders found</strong>
-                        <p>Try searching for something else or browse all stalls</p>
-                    </div>
-                    <div class="no-results-actions">
-                        <button class="btn-clear-search" onclick="window.stallFinder.clearSearch()">Clear Search</button>
-                        <button class="btn-browse-all" onclick="window.stallFinder.showAllStalls()">Browse All</button>
-                    </div>
-                </div>
-            `;
+            const noResultsDiv = document.createElement('div');
+            noResultsDiv.className = 'autocomplete-no-results';
+            
+            const iconDiv = document.createElement('div');
+            iconDiv.className = 'no-results-icon';
+            iconDiv.textContent = '🔍';
+            
+            const textDiv = document.createElement('div');
+            textDiv.className = 'no-results-text';
+            textDiv.innerHTML = '<strong>No stallholders found</strong><p>Try searching for something else or browse all stalls</p>';
+            
+            const actionsDiv = document.createElement('div');
+            actionsDiv.className = 'no-results-actions';
+            
+            const clearBtn = document.createElement('button');
+            clearBtn.className = 'btn-clear-search';
+            clearBtn.textContent = 'Clear Search';
+            clearBtn.onclick = () => this.clearSearch();
+            
+            const browseBtn = document.createElement('button');
+            browseBtn.className = 'btn-browse-all';
+            browseBtn.textContent = 'Browse All';
+            browseBtn.onclick = () => this.showAllStalls();
+            
+            actionsDiv.appendChild(clearBtn);
+            actionsDiv.appendChild(browseBtn);
+            
+            noResultsDiv.appendChild(iconDiv);
+            noResultsDiv.appendChild(textDiv);
+            noResultsDiv.appendChild(actionsDiv);
+            
+            autocompleteContainer.appendChild(noResultsDiv);
         } else {
-            autocompleteContainer.innerHTML = results.map((stall, index) => `
-                <div class="autocomplete-item" data-index="${index}" tabindex="0">
-                    <span class="autocomplete-name">${this.highlightMatch(stall.name, query)}</span>
-                    <div class="autocomplete-details">
-                        <span>Stall ${stall.stallNumber}</span>
-                        <span>${stall.location}</span>
-                    </div>
-                </div>
-            `).join('');
-
-            // Add click listeners to autocomplete items
-            autocompleteContainer.querySelectorAll('.autocomplete-item').forEach((item, index) => {
-                if (results[index]) {
-                    item.addEventListener('click', () => {
-                        this.selectStall(results[index]);
-                        this.hideAutocomplete();
-                    });
-                }
+            results.forEach((stall, index) => {
+                const itemDiv = document.createElement('div');
+                itemDiv.className = 'autocomplete-item';
+                itemDiv.dataset.index = index;
+                itemDiv.tabIndex = 0;
+                
+                const nameSpan = document.createElement('span');
+                nameSpan.className = 'autocomplete-name';
+                nameSpan.appendChild(this.createHighlightedText(stall.name, query));
+                
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = 'autocomplete-details';
+                
+                const stallSpan = document.createElement('span');
+                stallSpan.textContent = `Stall ${stall.stallNumber}`;
+                
+                const locationSpan = document.createElement('span');
+                locationSpan.textContent = stall.location;
+                
+                detailsDiv.appendChild(stallSpan);
+                detailsDiv.appendChild(locationSpan);
+                
+                itemDiv.appendChild(nameSpan);
+                itemDiv.appendChild(detailsDiv);
+                
+                // Add click listener
+                itemDiv.addEventListener('click', () => {
+                    this.selectStall(stall);
+                    this.hideAutocomplete();
+                });
+                
+                autocompleteContainer.appendChild(itemDiv);
             });
         }
 
@@ -233,9 +298,36 @@ class StallFinder {
         this.selectedStallIndex = -1;
     }
 
-    highlightMatch(text, query) {
-        const regex = new RegExp(`(${query})`, 'gi');
-        return text.replace(regex, '<strong>$1</strong>');
+    // Safe text highlighting - no XSS vulnerability
+    createHighlightedText(text, query) {
+        const fragment = document.createDocumentFragment();
+        const lowerText = text.toLowerCase();
+        const lowerQuery = query.toLowerCase();
+        
+        let lastIndex = 0;
+        let index = lowerText.indexOf(lowerQuery, lastIndex);
+        
+        while (index !== -1) {
+            // Add text before match
+            if (index > lastIndex) {
+                fragment.appendChild(document.createTextNode(text.substring(lastIndex, index)));
+            }
+            
+            // Add highlighted match
+            const strong = document.createElement('strong');
+            strong.textContent = text.substring(index, index + query.length);
+            fragment.appendChild(strong);
+            
+            lastIndex = index + query.length;
+            index = lowerText.indexOf(lowerQuery, lastIndex);
+        }
+        
+        // Add remaining text
+        if (lastIndex < text.length) {
+            fragment.appendChild(document.createTextNode(text.substring(lastIndex)));
+        }
+        
+        return fragment;
     }
 
     handleKeyNavigation(e) {
@@ -467,41 +559,66 @@ class StallFinder {
         // Sort stalls by stall number
         const sortedStalls = [...this.filteredStalls].sort((a, b) => a.stallNumber - b.stallNumber);
 
-        stallsList.innerHTML = sortedStalls.map(stall => `
-            <div class="stall-card" data-stall-id="${stall.stallNumber}">
-                <div class="stall-card-header">
-                    <h3 class="stall-name">${stall.name}</h3>
-                    <span class="stall-number">${stall.stallNumber}</span>
-                </div>
-                <div class="stall-details">
-                    <div class="stall-location">
-                        <span class="location-badge">${stall.location}</span>
-                    </div>
-                    <div class="stall-group">
-                        <span class="group-badge">${stall.group}</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-
-        // Add click listeners to stall cards
-        stallsList.querySelectorAll('.stall-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const stallId = parseInt(card.dataset.stallId);
-                const stall = this.stallData.find(s => s.stallNumber === stallId);
-                if (stall) {
-                    this.showStallDetails(stall);
-                }
+        // Clear and rebuild stall list using safe DOM methods
+        stallsList.innerHTML = '';
+        
+        sortedStalls.forEach(stall => {
+            const stallCard = document.createElement('div');
+            stallCard.className = 'stall-card';
+            stallCard.dataset.stallId = stall.stallNumber;
+            stallCard.tabIndex = 0;
+            
+            const cardHeader = document.createElement('div');
+            cardHeader.className = 'stall-card-header';
+            
+            const stallName = document.createElement('h3');
+            stallName.className = 'stall-name';
+            stallName.textContent = stall.name;
+            
+            const stallNumber = document.createElement('span');
+            stallNumber.className = 'stall-number';
+            stallNumber.textContent = stall.stallNumber;
+            
+            cardHeader.appendChild(stallName);
+            cardHeader.appendChild(stallNumber);
+            
+            const stallDetails = document.createElement('div');
+            stallDetails.className = 'stall-details';
+            
+            const stallLocation = document.createElement('div');
+            stallLocation.className = 'stall-location';
+            const locationBadge = document.createElement('span');
+            locationBadge.className = 'location-badge';
+            locationBadge.textContent = stall.location;
+            stallLocation.appendChild(locationBadge);
+            
+            const stallGroup = document.createElement('div');
+            stallGroup.className = 'stall-group';
+            const groupBadge = document.createElement('span');
+            groupBadge.className = 'group-badge';
+            groupBadge.textContent = stall.group;
+            stallGroup.appendChild(groupBadge);
+            
+            stallDetails.appendChild(stallLocation);
+            stallDetails.appendChild(stallGroup);
+            
+            stallCard.appendChild(cardHeader);
+            stallCard.appendChild(stallDetails);
+            
+            // Add click listeners
+            stallCard.addEventListener('click', () => {
+                this.showStallDetails(stall);
             });
 
             // Add keyboard navigation
-            card.setAttribute('tabindex', '0');
-            card.addEventListener('keydown', (e) => {
+            stallCard.addEventListener('keydown', (e) => {
                 if (e.key === 'Enter' || e.key === ' ') {
                     e.preventDefault();
-                    card.click();
+                    this.showStallDetails(stall);
                 }
             });
+            
+            stallsList.appendChild(stallCard);
         });
     }
 
@@ -525,14 +642,38 @@ class StallFinder {
             info: 'ℹ'
         };
 
-        toast.innerHTML = `
-            <div class="toast-content">
-                <span class="toast-icon">${iconMap[type] || iconMap.info}</span>
-                <span class="toast-message">${message}</span>
-                ${options.action ? `<button class="toast-action" onclick="this.closest('.toast').remove(); (${options.callback.toString()})()">${options.action}</button>` : ''}
-            </div>
-            <button class="toast-close" onclick="this.closest('.toast').remove()">×</button>
-        `;
+        const toastContent = document.createElement('div');
+        toastContent.className = 'toast-content';
+        
+        const icon = document.createElement('span');
+        icon.className = 'toast-icon';
+        icon.textContent = iconMap[type] || iconMap.info;
+        
+        const messageSpan = document.createElement('span');
+        messageSpan.className = 'toast-message';
+        messageSpan.textContent = message;
+        
+        toastContent.appendChild(icon);
+        toastContent.appendChild(messageSpan);
+        
+        if (options.action && options.callback) {
+            const actionBtn = document.createElement('button');
+            actionBtn.className = 'toast-action';
+            actionBtn.textContent = options.action;
+            actionBtn.onclick = () => {
+                toast.remove();
+                options.callback();
+            };
+            toastContent.appendChild(actionBtn);
+        }
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'toast-close';
+        closeBtn.textContent = '×';
+        closeBtn.onclick = () => toast.remove();
+        
+        toast.appendChild(toastContent);
+        toast.appendChild(closeBtn);
 
         // Add to toast container
         let container = document.getElementById('toastContainer');

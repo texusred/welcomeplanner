@@ -12,13 +12,21 @@
     <!-- Header -->
     <header class="header">
         <div class="header-content">
-            <div class="logo-container">
-                <img src="assets/images/logo.png" 
-                     alt="ARU Students' Union" 
-                     class="aru-logo-img">
+            <div class="header-left">
+                <div class="logo-container">
+                    <img src="../assets/images/logo.png" 
+                         alt="ARU Students' Union" 
+                         class="aru-logo-img">
+                </div>
+                <h1 class="page-title">Map Builder</h1>
+                <div class="admin-badge">ADMIN TOOL</div>
             </div>
-            <h1 class="page-title">Map Builder</h1>
-            <div class="admin-badge">ADMIN TOOL</div>
+            <a href="admin-dashboard.html" class="back-button">
+                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                </svg>
+                Back to Dashboard
+            </a>
         </div>
         <div class="geometric-pattern"></div>
     </header>
@@ -27,13 +35,6 @@
     <main class="main-content">
         <!-- Navigation Bar -->
         <nav class="nav-bar">
-            <button id="backToMain" class="btn btn-back">
-                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="19 12H5M12 19l-7-7 7-7"></path>
-                </svg>
-                Back to Admin Dashboard
-            </button>
-            
             <div class="location-selector">
                 <label for="mapLocation">Select Location:</label>
                 <select id="mapLocation" class="location-select">
@@ -50,7 +51,7 @@
             <div class="welcome-card">
                 <div class="welcome-icon">
                     <svg width="64" height="64" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                        <path d="21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
+                        <path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"></path>
                         <polyline points="3.27,6.96 12,12.01 20.73,6.96"></polyline>
                         <line x1="12" y1="22.08" x2="12" y2="12"></line>
                     </svg>
@@ -77,14 +78,14 @@
                 <div class="location-actions">
                     <button id="loadExisting" class="btn btn-secondary">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
+                            <path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"></path>
                             <polyline points="14,2 14,8 20,8"></polyline>
                         </svg>
                         Load Existing
                     </button>
                     <button id="newMap" class="btn btn-primary">
                         <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                            <path d="12 5v14M5 12h14"></path>
+                            <path d="M12 5v14M5 12h14"></path>
                         </svg>
                         Create New
                     </button>
@@ -202,7 +203,7 @@
                         <div class="control-actions">
                             <button id="backToSetup" class="btn btn-secondary btn-sm">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="19 12H5M12 19l-7-7 7-7"></path>
+                                    <path d="M19 12H5M12 19l-7-7 7-7"></path>
                                 </svg>
                                 Back to Setup
                             </button>
@@ -215,7 +216,7 @@
                             </button>
                             <button id="exportMap" class="btn btn-primary btn-sm">
                                 <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                    <path d="21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
+                                    <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"></path>
                                     <polyline points="7 10 12 15 17 10"></polyline>
                                     <line x1="12" y1="15" x2="12" y2="3"></line>
                                 </svg>
@@ -264,7 +265,7 @@
                         </button>
                         <button id="backToEdit" class="btn btn-back">
                             <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                <path d="19 12H5M12 19l-7-7 7-7"></path>
+                                <path d="M19 12H5M12 19l-7-7 7-7"></path>
                             </svg>
                             Back to Edit
                         </button>

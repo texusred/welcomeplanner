@@ -30,7 +30,14 @@ class StaffRota {
             if (!response.ok) {
                 throw new Error(`HTTP error! status: ${response.status}`);
             }
-            this.rotaData = await response.json();
+            const data = await response.json();
+            
+            // Validate data structure
+            if (!data || !data.staff || !Array.isArray(data.staff)) {
+                throw new Error('Invalid rota data structure');
+            }
+            
+            this.rotaData = this.validateAndSanitizeRotaData(data);
             this.dataLoaded = true;
             this.hideLoading();
         } catch (error) {
@@ -39,6 +46,38 @@ class StaffRota {
             this.showToast('Failed to load rota data. Please check your connection.', 'error');
             throw error;
         }
+    }
+
+    validateAndSanitizeRotaData(data) {
+        // Sanitize staff data
+        const sanitizedStaff = data.staff.map(person => {
+            if (!person || typeof person !== 'object') return null;
+            
+            const name = this.sanitizeString(person.name || '');
+            if (!name) return null;
+            
+            const schedule = Array.isArray(person.schedule) ? person.schedule.map(slot => {
+                if (!slot || typeof slot !== 'object') return null;
+                
+                return {
+                    timeSlot: this.sanitizeString(slot.timeSlot || ''),
+                    task: this.sanitizeString(slot.task || ''),
+                    taskName: this.sanitizeString(slot.taskName || '')
+                };
+            }).filter(slot => slot !== null) : [];
+            
+            return { name, schedule };
+        }).filter(person => person !== null);
+        
+        return {
+            ...data,
+            staff: sanitizedStaff
+        };
+    }
+
+    sanitizeString(str) {
+        if (typeof str !== 'string') return '';
+        return str.trim().replace(/[<>]/g, ''); // Basic sanitization
     }
 
     setupEventListeners() {
@@ -70,7 +109,8 @@ class StaffRota {
         document.getElementById('staffSearch').addEventListener('input', (e) => {
             clearTimeout(searchTimeout);
             searchTimeout = setTimeout(() => {
-                if (e.target.value.trim().length >= 2) {
+                const value = this.sanitizeString(e.target.value);
+                if (value.length >= 2) {
                     this.searchByPerson();
                 }
             }, 800);
@@ -212,42 +252,57 @@ class StaffRota {
 
         modalTitle.textContent = `${taskName} (Now)`;
 
-        let html = '';
+        // Clear previous content
+        modalBody.innerHTML = '';
 
         if (results.length === 0) {
-            html = `
-                <div class="no-assignment">
-                    <strong>No staff currently assigned to ${taskName}</strong>
-                    <p>This may indicate a coverage gap that needs attention.</p>
-                </div>
-            `;
+            const noAssignmentDiv = document.createElement('div');
+            noAssignmentDiv.className = 'no-assignment';
+            
+            const strongEl = document.createElement('strong');
+            strongEl.textContent = `No staff currently assigned to ${taskName}`;
+            
+            const pEl = document.createElement('p');
+            pEl.textContent = 'This may indicate a coverage gap that needs attention.';
+            
+            noAssignmentDiv.appendChild(strongEl);
+            noAssignmentDiv.appendChild(pEl);
+            modalBody.appendChild(noAssignmentDiv);
         } else {
-            html = `
-                <div class="staff-count">
-                    ${results.length} staff member${results.length !== 1 ? 's' : ''} currently assigned
-                </div>
-                <div class="task-results">
-            `;
+            const staffCountDiv = document.createElement('div');
+            staffCountDiv.className = 'staff-count';
+            staffCountDiv.textContent = `${results.length} staff member${results.length !== 1 ? 's' : ''} currently assigned`;
+            modalBody.appendChild(staffCountDiv);
+            
+            const taskResultsDiv = document.createElement('div');
+            taskResultsDiv.className = 'task-results';
 
             results.forEach(staff => {
-                html += `
-                    <div class="staff-item">
-                        <div class="staff-name">${staff.name}</div>
-                        <div class="staff-time">${staff.timeSlot}</div>
-                    </div>
-                `;
+                const staffItemDiv = document.createElement('div');
+                staffItemDiv.className = 'staff-item';
+                
+                const nameDiv = document.createElement('div');
+                nameDiv.className = 'staff-name';
+                nameDiv.textContent = staff.name;
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'staff-time';
+                timeDiv.textContent = staff.timeSlot;
+                
+                staffItemDiv.appendChild(nameDiv);
+                staffItemDiv.appendChild(timeDiv);
+                taskResultsDiv.appendChild(staffItemDiv);
             });
 
-            html += '</div>';
+            modalBody.appendChild(taskResultsDiv);
         }
 
-        modalBody.innerHTML = html;
         this.showModal('taskModal');
     }
 
     searchByPerson() {
         const staffSearch = document.getElementById('staffSearch');
-        const staffName = staffSearch.value.trim();
+        const staffName = this.sanitizeString(staffSearch.value);
 
         if (!staffName) {
             this.showToast('Please enter a staff name', 'warning');
@@ -299,41 +354,62 @@ class StaffRota {
         const currentItem = scheduleWithStatus.find(s => s.status === 'current');
         const upcomingItems = scheduleWithStatus.filter(s => s.status === 'upcoming').slice(0, 2);
 
-        let html = '<div class="person-schedule">';
+        // Clear previous content
+        modalBody.innerHTML = '';
+        
+        const personScheduleDiv = document.createElement('div');
+        personScheduleDiv.className = 'person-schedule';
 
         // Current activity
         if (currentItem) {
-            html += this.createScheduleItem(currentItem, 'NOW', 'current');
+            personScheduleDiv.appendChild(this.createScheduleItem(currentItem, 'NOW', 'current'));
         }
 
         // Next activities
         upcomingItems.forEach((item, index) => {
             const label = index === 0 ? 'NEXT' : 'THEN';
-            html += this.createScheduleItem(item, label, 'upcoming');
+            personScheduleDiv.appendChild(this.createScheduleItem(item, label, 'upcoming'));
         });
 
         // If no current activity, show some context
         if (!currentItem && upcomingItems.length === 0) {
             const recentPast = scheduleWithStatus.filter(s => s.status === 'past').slice(-1);
             if (recentPast.length > 0) {
-                html += this.createScheduleItem(recentPast[0], 'RECENTLY', 'break');
+                personScheduleDiv.appendChild(this.createScheduleItem(recentPast[0], 'RECENTLY', 'break'));
             } else {
-                html += `
-                    <div class="schedule-item break">
-                        <div class="schedule-icon break"></div>
-                        <div class="schedule-details">
-                            <div class="schedule-label">CURRENT</div>
-                            <div class="schedule-task">No current assignment</div>
-                            <div class="schedule-time">Free time</div>
-                        </div>
-                    </div>
-                `;
+                const scheduleItemDiv = document.createElement('div');
+                scheduleItemDiv.className = 'schedule-item break';
+                
+                const iconDiv = document.createElement('div');
+                iconDiv.className = 'schedule-icon break';
+                
+                const detailsDiv = document.createElement('div');
+                detailsDiv.className = 'schedule-details';
+                
+                const labelDiv = document.createElement('div');
+                labelDiv.className = 'schedule-label';
+                labelDiv.textContent = 'CURRENT';
+                
+                const taskDiv = document.createElement('div');
+                taskDiv.className = 'schedule-task';
+                taskDiv.textContent = 'No current assignment';
+                
+                const timeDiv = document.createElement('div');
+                timeDiv.className = 'schedule-time';
+                timeDiv.textContent = 'Free time';
+                
+                detailsDiv.appendChild(labelDiv);
+                detailsDiv.appendChild(taskDiv);
+                detailsDiv.appendChild(timeDiv);
+                
+                scheduleItemDiv.appendChild(iconDiv);
+                scheduleItemDiv.appendChild(detailsDiv);
+                
+                personScheduleDiv.appendChild(scheduleItemDiv);
             }
         }
 
-        html += '</div>';
-
-        modalBody.innerHTML = html;
+        modalBody.appendChild(personScheduleDiv);
         this.showModal('personModal');
     }
 
@@ -365,16 +441,35 @@ class StaffRota {
         const isBreak = item.taskName === 'Lunch';
         const itemClass = isBreak ? 'break' : statusClass;
         
-        return `
-            <div class="schedule-item ${itemClass}">
-                <div class="schedule-icon ${itemClass}"></div>
-                <div class="schedule-details">
-                    <div class="schedule-label">${label}</div>
-                    <div class="schedule-task">${item.taskName}</div>
-                    <div class="schedule-time">${item.timeSlot}</div>
-                </div>
-            </div>
-        `;
+        const scheduleItemDiv = document.createElement('div');
+        scheduleItemDiv.className = `schedule-item ${itemClass}`;
+        
+        const iconDiv = document.createElement('div');
+        iconDiv.className = `schedule-icon ${itemClass}`;
+        
+        const detailsDiv = document.createElement('div');
+        detailsDiv.className = 'schedule-details';
+        
+        const labelDiv = document.createElement('div');
+        labelDiv.className = 'schedule-label';
+        labelDiv.textContent = label;
+        
+        const taskDiv = document.createElement('div');
+        taskDiv.className = 'schedule-task';
+        taskDiv.textContent = item.taskName;
+        
+        const timeDiv = document.createElement('div');
+        timeDiv.className = 'schedule-time';
+        timeDiv.textContent = item.timeSlot;
+        
+        detailsDiv.appendChild(labelDiv);
+        detailsDiv.appendChild(taskDiv);
+        detailsDiv.appendChild(timeDiv);
+        
+        scheduleItemDiv.appendChild(iconDiv);
+        scheduleItemDiv.appendChild(detailsDiv);
+        
+        return scheduleItemDiv;
     }
 
     showModal(modalId) {
@@ -504,13 +599,27 @@ class StaffRota {
             info: 'ℹ'
         };
 
-        toast.innerHTML = `
-            <div class="toast-content">
-                <span class="toast-icon">${iconMap[type] || iconMap.info}</span>
-                <span class="toast-message">${message}</span>
-            </div>
-            <button class="toast-close" onclick="this.closest('.toast').remove()">×</button>
-        `;
+        const toastContent = document.createElement('div');
+        toastContent.className = 'toast-content';
+        
+        const icon = document.createElement('span');
+        icon.className = 'toast-icon';
+        icon.textContent = iconMap[type] || iconMap.info;
+        
+        const messageSpan = document.createElement('span');
+        messageSpan.className = 'toast-message';
+        messageSpan.textContent = message;
+        
+        toastContent.appendChild(icon);
+        toastContent.appendChild(messageSpan);
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'toast-close';
+        closeBtn.textContent = '×';
+        closeBtn.onclick = () => toast.remove();
+        
+        toast.appendChild(toastContent);
+        toast.appendChild(closeBtn);
 
         // Add to toast container
         let container = document.getElementById('toastContainer');
