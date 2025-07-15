@@ -104,18 +104,6 @@ class StaffRota {
             }
         });
 
-        // Auto-search as user types (debounced)
-        let searchTimeout;
-        document.getElementById('staffSearch').addEventListener('input', (e) => {
-            clearTimeout(searchTimeout);
-            searchTimeout = setTimeout(() => {
-                const value = this.sanitizeString(e.target.value);
-                if (value.length >= 2) {
-                    this.searchByPerson();
-                }
-            }, 800);
-        });
-
         // Modal close events
         document.addEventListener('click', (e) => {
             if (e.target.classList.contains('modal')) {
