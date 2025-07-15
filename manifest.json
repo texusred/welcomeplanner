@@ -1,6 +1,6 @@
 {
   "name": "ARU Students' Union Welcome Fair",
-  "short_name": "ARU Fair",
+  "short_name": "Union Fair",
   "description": "Find stallholders and staff schedules at the ARU Students' Union Welcome Fair",
   "start_url": "/",
   "display": "standalone",

@@ -1,7 +1,7 @@
 // ARU Students' Union Welcome Fair - Service Worker
 // Enables offline functionality and app-like behavior
 
-const CACHE_NAME = 'aru-fair-v1';
+const CACHE_NAME = 'aru-fair-v1.1';
 const urlsToCache = [
   '/',
   '/index.html',
