@@ -1,6 +1,5 @@
 // Map Builder - ARU Students' Union
 // Enhanced desktop map creation tool
-// DEBUG VERSION - Added comprehensive logging
 
 class MapBuilder {
     constructor() {
@@ -13,247 +12,104 @@ class MapBuilder {
         this.nextStallId = 1;
         this.controlsMinimized = false;
 
-        console.log('🏗️ MapBuilder constructor started');
         this.init();
     }
 
     init() {
-        console.log('🚀 MapBuilder init() called');
         this.setupEventListeners();
         this.showInterface('welcome');
-        console.log('✅ MapBuilder initialization complete');
     }
 
     setupEventListeners() {
-        console.log('👂 Setting up event listeners...');
-        
-        // Check if all required elements exist before setting up listeners
-        const requiredElements = [
-            'mapLocation',
-            'loadExisting', 
-            'newMap',
-            'createGrid',
-            'backToSetup',
-            'resetGrid',
-            'exportMap',
-            'minimizeControls',
-            'generateCode',
-            'copyCode',
-            'backToEdit',
-            'gridWidth',
-            'gridHeight'
-        ];
+        // Navigation
+        document.getElementById('backToMain').addEventListener('click', () => {
+            window.location.href = 'admin-dashboard.html';
+        });
 
-        console.log('🔍 Checking for required elements...');
-        requiredElements.forEach(elementId => {
-            const element = document.getElementById(elementId);
-            if (element) {
-                console.log(`✅ Found element: ${elementId}`, element);
-            } else {
-                console.error(`❌ Missing element: ${elementId}`);
+        // Location selector
+        document.getElementById('mapLocation').addEventListener('change', (e) => {
+            this.handleLocationChange(e.target.value);
+        });
+
+        // Setup interface
+        document.getElementById('loadExisting').addEventListener('click', () => {
+            this.loadExistingMap();
+        });
+
+        document.getElementById('newMap').addEventListener('click', () => {
+            this.startNewMap();
+        });
+
+        document.getElementById('createGrid').addEventListener('click', () => {
+            this.createGridAndStartEditing();
+        });
+
+        // Editing interface
+        document.getElementById('backToSetup').addEventListener('click', () => {
+            this.backToSetup();
+        });
+
+        document.getElementById('resetGrid').addEventListener('click', () => {
+            this.resetGrid();
+        });
+
+        document.getElementById('exportMap').addEventListener('click', () => {
+            this.goToExport();
+        });
+
+        document.getElementById('minimizeControls').addEventListener('click', () => {
+            this.toggleControlsMinimized();
+        });
+
+        // Export interface
+        document.getElementById('generateCode').addEventListener('click', () => {
+            this.generateCode();
+        });
+
+        document.getElementById('copyCode').addEventListener('click', () => {
+            this.copyCode();
+        });
+
+        document.getElementById('backToEdit').addEventListener('click', () => {
+            this.backToEditing();
+        });
+
+        // Color selection
+        document.addEventListener('click', (e) => {
+            if (e.target.closest('.color-option')) {
+                this.selectColor(e.target.closest('.color-option'));
             }
         });
 
-        // Log all elements with IDs that actually exist
-        const allElementsWithIds = document.querySelectorAll('[id]');
-        console.log('📋 All elements with IDs found in DOM:', 
-            Array.from(allElementsWithIds).map(el => ({
-                id: el.id,
-                tagName: el.tagName,
-                classes: el.className
-            }))
-        );
+        // Grid dimension inputs
+        document.getElementById('gridWidth').addEventListener('change', (e) => {
+            this.gridWidth = parseInt(e.target.value);
+        });
 
-        try {
-            // Location selector
-            const mapLocationElement = document.getElementById('mapLocation');
-            if (mapLocationElement) {
-                console.log('✅ Setting up mapLocation listener');
-                mapLocationElement.addEventListener('change', (e) => {
-                    console.log('📍 Location changed to:', e.target.value);
-                    this.handleLocationChange(e.target.value);
-                });
-            } else {
-                console.error('❌ mapLocation element not found');
+        document.getElementById('gridHeight').addEventListener('change', (e) => {
+            this.gridHeight = parseInt(e.target.value);
+        });
+
+        // Keyboard shortcuts for editing
+        document.addEventListener('keydown', (e) => {
+            if (this.currentInterface === 'editing') {
+                this.handleKeyboardShortcuts(e);
             }
-
-            // Setup interface
-            const loadExistingElement = document.getElementById('loadExisting');
-            if (loadExistingElement) {
-                console.log('✅ Setting up loadExisting listener');
-                loadExistingElement.addEventListener('click', () => {
-                    console.log('📂 Load existing clicked');
-                    this.loadExistingMap();
-                });
-            } else {
-                console.error('❌ loadExisting element not found');
-            }
-
-            const newMapElement = document.getElementById('newMap');
-            if (newMapElement) {
-                console.log('✅ Setting up newMap listener');
-                newMapElement.addEventListener('click', () => {
-                    console.log('🆕 New map clicked');
-                    this.startNewMap();
-                });
-            } else {
-                console.error('❌ newMap element not found');
-            }
-
-            const createGridElement = document.getElementById('createGrid');
-            if (createGridElement) {
-                console.log('✅ Setting up createGrid listener');
-                createGridElement.addEventListener('click', () => {
-                    console.log('🏗️ Create grid clicked');
-                    this.createGridAndStartEditing();
-                });
-            } else {
-                console.error('❌ createGrid element not found');
-            }
-
-            // Editing interface
-            const backToSetupElement = document.getElementById('backToSetup');
-            if (backToSetupElement) {
-                console.log('✅ Setting up backToSetup listener');
-                backToSetupElement.addEventListener('click', () => {
-                    console.log('🔙 Back to setup clicked');
-                    this.backToSetup();
-                });
-            } else {
-                console.error('❌ backToSetup element not found');
-            }
-
-            const resetGridElement = document.getElementById('resetGrid');
-            if (resetGridElement) {
-                console.log('✅ Setting up resetGrid listener');
-                resetGridElement.addEventListener('click', () => {
-                    console.log('🔄 Reset grid clicked');
-                    this.resetGrid();
-                });
-            } else {
-                console.error('❌ resetGrid element not found');
-            }
-
-            const exportMapElement = document.getElementById('exportMap');
-            if (exportMapElement) {
-                console.log('✅ Setting up exportMap listener');
-                exportMapElement.addEventListener('click', () => {
-                    console.log('📤 Export map clicked');
-                    this.goToExport();
-                });
-            } else {
-                console.error('❌ exportMap element not found');
-            }
-
-            const minimizeControlsElement = document.getElementById('minimizeControls');
-            if (minimizeControlsElement) {
-                console.log('✅ Setting up minimizeControls listener');
-                minimizeControlsElement.addEventListener('click', () => {
-                    console.log('🔽 Minimize controls clicked');
-                    this.toggleControlsMinimized();
-                });
-            } else {
-                console.error('❌ minimizeControls element not found');
-            }
-
-            // Export interface
-            const generateCodeElement = document.getElementById('generateCode');
-            if (generateCodeElement) {
-                console.log('✅ Setting up generateCode listener');
-                generateCodeElement.addEventListener('click', () => {
-                    console.log('🔧 Generate code clicked');
-                    this.generateCode();
-                });
-            } else {
-                console.error('❌ generateCode element not found');
-            }
-
-            const copyCodeElement = document.getElementById('copyCode');
-            if (copyCodeElement) {
-                console.log('✅ Setting up copyCode listener');
-                copyCodeElement.addEventListener('click', () => {
-                    console.log('📋 Copy code clicked');
-                    this.copyCode();
-                });
-            } else {
-                console.error('❌ copyCode element not found');
-            }
-
-            const backToEditElement = document.getElementById('backToEdit');
-            if (backToEditElement) {
-                console.log('✅ Setting up backToEdit listener');
-                backToEditElement.addEventListener('click', () => {
-                    console.log('✏️ Back to edit clicked');
-                    this.backToEditing();
-                });
-            } else {
-                console.error('❌ backToEdit element not found');
-            }
-
-            // Color selection
-            document.addEventListener('click', (e) => {
-                if (e.target.closest('.color-option')) {
-                    console.log('🎨 Color option clicked:', e.target.closest('.color-option').dataset.type);
-                    this.selectColor(e.target.closest('.color-option'));
-                }
-            });
-
-            // Grid dimension inputs
-            const gridWidthElement = document.getElementById('gridWidth');
-            if (gridWidthElement) {
-                console.log('✅ Setting up gridWidth listener');
-                gridWidthElement.addEventListener('change', (e) => {
-                    console.log('📏 Grid width changed to:', e.target.value);
-                    this.gridWidth = parseInt(e.target.value);
-                });
-            } else {
-                console.error('❌ gridWidth element not found');
-            }
-
-            const gridHeightElement = document.getElementById('gridHeight');
-            if (gridHeightElement) {
-                console.log('✅ Setting up gridHeight listener');
-                gridHeightElement.addEventListener('change', (e) => {
-                    console.log('📏 Grid height changed to:', e.target.value);
-                    this.gridHeight = parseInt(e.target.value);
-                });
-            } else {
-                console.error('❌ gridHeight element not found');
-            }
-
-            // Keyboard shortcuts for editing
-            document.addEventListener('keydown', (e) => {
-                if (this.currentInterface === 'editing') {
-                    this.handleKeyboardShortcuts(e);
-                }
-            });
-
-            console.log('✅ Event listeners setup complete');
-
-        } catch (error) {
-            console.error('💥 Error in setupEventListeners:', error);
-            console.error('Stack trace:', error.stack);
-        }
+        });
     }
 
     handleLocationChange(location) {
-        console.log('🗺️ handleLocationChange called with:', location);
-        
         if (!location) {
-            console.log('❌ No location provided, showing welcome interface');
             this.showInterface('welcome');
             return;
         }
 
         this.currentLocation = location;
-        console.log('✅ Current location set to:', this.currentLocation);
         this.updateLocationDisplay();
         this.showInterface('setup');
     }
 
     updateLocationDisplay() {
-        console.log('🏷️ updateLocationDisplay called');
-        
         const locationNames = {
             'ruskin-courtyard': 'Ruskin Courtyard',
             'science-walkway': 'Science Walkway',
@@ -261,46 +117,11 @@ class MapBuilder {
         };
 
         const displayName = locationNames[this.currentLocation] || this.currentLocation;
-        console.log('📝 Display name will be:', displayName);
-        
-        const locationNameElement = document.getElementById('locationName');
-        const mapFileNameElement = document.getElementById('mapFileName');
-        
-        if (locationNameElement) {
-            locationNameElement.textContent = displayName;
-            console.log('✅ Updated locationName element');
-        } else {
-            console.error('❌ locationName element not found');
-        }
-        
-        if (mapFileNameElement) {
-            mapFileNameElement.textContent = `maps/${this.currentLocation}.html`;
-            console.log('✅ Updated mapFileName element');
-        } else {
-            console.error('❌ mapFileName element not found');
-        }
+        document.getElementById('locationName').textContent = displayName;
+        document.getElementById('mapFileName').textContent = `maps/${this.currentLocation}.html`;
     }
 
     showInterface(interfaceName) {
-        console.log('🖥️ showInterface called with:', interfaceName);
-        
-        // Check if interface elements exist
-        const interfaces = [
-            'welcomeScreen',
-            'gridSetupInterface', 
-            'editingInterface',
-            'exportInterface'
-        ];
-        
-        interfaces.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                console.log(`✅ Found interface element: ${id}`);
-            } else {
-                console.error(`❌ Missing interface element: ${id}`);
-            }
-        });
-
         // Hide all interfaces
         document.getElementById('welcomeScreen').style.display = 'none';
         document.getElementById('gridSetupInterface').style.display = 'none';
@@ -311,57 +132,42 @@ class MapBuilder {
         switch (interfaceName) {
             case 'welcome':
                 document.getElementById('welcomeScreen').style.display = 'flex';
-                console.log('✅ Showing welcome screen');
                 break;
             case 'setup':
                 document.getElementById('gridSetupInterface').style.display = 'block';
-                console.log('✅ Showing setup interface');
                 break;
             case 'editing':
                 document.getElementById('editingInterface').style.display = 'block';
-                console.log('✅ Showing editing interface');
                 break;
             case 'export':
                 document.getElementById('exportInterface').style.display = 'block';
-                console.log('✅ Showing export interface');
                 break;
-            default:
-                console.error('❌ Unknown interface:', interfaceName);
         }
 
         this.currentInterface = interfaceName;
-        console.log('✅ Current interface set to:', this.currentInterface);
     }
 
     loadExistingMap() {
-        console.log('📂 loadExistingMap called');
         alert(`Loading existing ${this.currentLocation} map would load the saved JSON data. For this demo, click "Create New" to start building.`);
     }
 
     startNewMap() {
-        console.log('🆕 startNewMap called');
         this.resetMapData();
         // Don't change interface - stay on setup to adjust dimensions
         this.updateStatus('Set grid dimensions and click "Create Grid & Start Editing"');
     }
 
     createGridAndStartEditing() {
-        console.log('🏗️ createGridAndStartEditing called');
-        
         this.gridWidth = parseInt(document.getElementById('gridWidth').value);
         this.gridHeight = parseInt(document.getElementById('gridHeight').value);
 
-        console.log('📏 Grid dimensions:', this.gridWidth, 'x', this.gridHeight);
-
         // Validate dimensions
         if (this.gridWidth < 6 || this.gridWidth > 50 || this.gridHeight < 6 || this.gridHeight > 50) {
-            console.error('❌ Invalid grid dimensions');
             alert('Grid dimensions must be between 6 and 50');
             return;
         }
 
         // Transition to full-screen editing
-        console.log('🖥️ Transitioning to editing interface');
         this.showInterface('editing');
         this.renderGrid();
         this.updateGridInfo();
@@ -369,35 +175,19 @@ class MapBuilder {
         
         // Auto-focus first input for quick editing
         setTimeout(() => {
-            const stallNumberElement = document.getElementById('stallNumber');
-            if (stallNumberElement) {
-                stallNumberElement.focus();
-                console.log('✅ Focused on stall number input');
-            } else {
-                console.error('❌ stallNumber input not found for focus');
-            }
+            document.getElementById('stallNumber').focus();
         }, 300);
     }
 
     renderGrid() {
-        console.log('🎨 renderGrid called');
-        
         const canvas = document.getElementById('gridCanvas');
-        if (!canvas) {
-            console.error('❌ gridCanvas element not found');
-            return;
-        }
-        
-        console.log('✅ Found gridCanvas element');
         canvas.style.gridTemplateColumns = `repeat(${this.gridWidth}, 1fr)`;
         canvas.style.gridTemplateRows = `repeat(${this.gridHeight}, 1fr)`;
 
         // Clear existing grid
         canvas.innerHTML = '';
-        console.log('🧹 Cleared existing grid');
         
         // Create cells
-        let cellsCreated = 0;
         for (let y = 0; y < this.gridHeight; y++) {
             for (let x = 0; x < this.gridWidth; x++) {
                 const cell = document.createElement('div');
@@ -426,21 +216,14 @@ class MapBuilder {
                 });
 
                 canvas.appendChild(cell);
-                cellsCreated++;
             }
         }
-        
-        console.log(`✅ Created ${cellsCreated} grid cells`);
 
         // Re-render existing data if any
         this.renderExistingData();
     }
 
     renderExistingData() {
-        console.log('🔄 renderExistingData called');
-        const dataCount = Object.keys(this.gridData).length;
-        console.log(`📊 Rendering ${dataCount} existing data points`);
-        
         Object.values(this.gridData).forEach(cellData => {
             const cell = document.querySelector(`[data-x="${cellData.x}"][data-y="${cellData.y}"]`);
             if (cell) {
@@ -450,8 +233,6 @@ class MapBuilder {
     }
 
     selectColor(option) {
-        console.log('🎨 selectColor called with:', option.dataset.type);
-        
         // Remove selected class from all options
         document.querySelectorAll('.color-option').forEach(opt => {
             opt.classList.remove('selected');
@@ -461,28 +242,16 @@ class MapBuilder {
         option.classList.add('selected');
         this.currentStallType = option.dataset.type;
         
-        console.log('✅ Current stall type set to:', this.currentStallType);
-        
         // Update status
         this.updateStatus(`Selected: ${this.getTypeDisplayName()} - Click cells to apply`);
     }
 
     assignCell(x, y) {
-        console.log(`🎯 assignCell called for position: ${x}, ${y}`);
-        
-        if (this.currentInterface !== 'editing') {
-            console.log('❌ Not in editing interface, ignoring click');
-            return;
-        }
+        if (this.currentInterface !== 'editing') return;
 
         const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
-        const stallNumberElement = document.getElementById('stallNumber');
-        const stallLabelElement = document.getElementById('stallLabel');
-        
-        const stallNumber = stallNumberElement ? stallNumberElement.value : '';
-        const stallLabel = stallLabelElement ? stallLabelElement.value : '';
-        
-        console.log('📝 Current values:', { stallNumber, stallLabel, type: this.currentStallType });
+        const stallNumber = document.getElementById('stallNumber').value;
+        const stallLabel = document.getElementById('stallLabel').value;
         
         // Handle clearing cell
         if (this.currentStallType === 'clear') {
@@ -500,8 +269,6 @@ class MapBuilder {
             id: this.nextStallId++
         };
 
-        console.log('💾 Storing cell data:', cellData);
-
         // Apply visual changes
         this.applyCellData(cell, cellData);
 
@@ -509,9 +276,8 @@ class MapBuilder {
         this.gridData[`${x}-${y}`] = cellData;
 
         // Auto-increment stall number for next assignment
-        if (this.currentStallType.includes('stall') && stallNumber && stallNumberElement) {
-            stallNumberElement.value = parseInt(stallNumber) + 1;
-            console.log('🔢 Auto-incremented stall number to:', parseInt(stallNumber) + 1);
+        if (this.currentStallType.includes('stall') && stallNumber) {
+            document.getElementById('stallNumber').value = parseInt(stallNumber) + 1;
         }
 
         // Brief selection feedback
@@ -542,8 +308,6 @@ class MapBuilder {
     }
 
     clearCell(cell, x, y) {
-        console.log(`🧹 clearCell called for position: ${x}, ${y}`);
-        
         cell.className = 'cell';
         cell.textContent = '';
         delete this.gridData[`${x}-${y}`];
@@ -569,8 +333,6 @@ class MapBuilder {
     }
 
     backToSetup() {
-        console.log('🔙 backToSetup called');
-        
         if (Object.keys(this.gridData).length > 0) {
             if (!confirm('Going back will preserve your current progress. Continue?')) {
                 return;
@@ -580,8 +342,6 @@ class MapBuilder {
     }
 
     resetGrid() {
-        console.log('🔄 resetGrid called');
-        
         if (!confirm('Are you sure you want to reset the entire grid? All progress will be lost.')) {
             return;
         }
@@ -596,23 +356,15 @@ class MapBuilder {
         this.gridData = {};
 
         // Reset inputs
-        const stallNumberElement = document.getElementById('stallNumber');
-        const stallLabelElement = document.getElementById('stallLabel');
-        
-        if (stallNumberElement) stallNumberElement.value = '';
-        if (stallLabelElement) stallLabelElement.value = '';
+        document.getElementById('stallNumber').value = '';
+        document.getElementById('stallLabel').value = '';
 
         this.updateStatus('Grid cleared - click cells to assign colors and numbers');
         this.updateGridInfo();
-        
-        console.log('✅ Grid reset complete');
     }
 
     goToExport() {
-        console.log('📤 goToExport called');
-        
         if (Object.keys(this.gridData).length === 0) {
-            console.log('❌ No data to export');
             alert('Please add at least one stall or element before exporting.');
             return;
         }
@@ -622,23 +374,15 @@ class MapBuilder {
     }
 
     backToEditing() {
-        console.log('✏️ backToEditing called');
         this.showInterface('editing');
         this.updateStatus('Click cells to assign colors and stall numbers');
     }
 
     toggleControlsMinimized() {
-        console.log('🔽 toggleControlsMinimized called');
-        
         this.controlsMinimized = !this.controlsMinimized;
         const controls = document.querySelector('.floating-controls');
         const content = document.getElementById('controlsContent');
         const minimizeBtn = document.getElementById('minimizeControls');
-        
-        if (!controls || !content || !minimizeBtn) {
-            console.error('❌ Required elements for minimize not found');
-            return;
-        }
         
         if (this.controlsMinimized) {
             content.style.display = 'none';
@@ -652,7 +396,6 @@ class MapBuilder {
                 </svg>
             `;
             minimizeBtn.title = 'Expand controls';
-            console.log('✅ Controls minimized');
         } else {
             content.style.display = 'block';
             controls.classList.remove('minimized');
@@ -665,7 +408,6 @@ class MapBuilder {
                 </svg>
             `;
             minimizeBtn.title = 'Minimize controls';
-            console.log('✅ Controls expanded');
         }
     }
 
@@ -724,10 +466,7 @@ class MapBuilder {
     }
 
     generateCode() {
-        console.log('🔧 generateCode called');
-        
         if (Object.keys(this.gridData).length === 0) {
-            console.log('❌ No data to export');
             alert('No data to export. Please add some stalls first.');
             return;
         }
@@ -735,27 +474,16 @@ class MapBuilder {
         const code = this.createMapCode();
         const codeOutput = document.getElementById('codeOutput');
         
-        if (!codeOutput) {
-            console.error('❌ codeOutput element not found');
-            return;
-        }
-        
         codeOutput.textContent = code;
         codeOutput.classList.add('visible');
         
         // Enable copy button
-        const copyCodeBtn = document.getElementById('copyCode');
-        if (copyCodeBtn) {
-            copyCodeBtn.disabled = false;
-        }
+        document.getElementById('copyCode').disabled = false;
         
         this.updateStatus('Code generated successfully!');
-        console.log('✅ Code generation complete');
     }
 
     createMapCode() {
-        console.log('📝 createMapCode called');
-        
         const locationNames = {
             'ruskin-courtyard': 'Ruskin Courtyard',
             'science-walkway': 'Science Walkway',
@@ -1231,18 +959,10 @@ class MapBuilder {
     }
 
     copyCode() {
-        console.log('📋 copyCode called');
-        
         const codeOutput = document.getElementById('codeOutput');
-        if (!codeOutput) {
-            console.error('❌ codeOutput element not found');
-            return;
-        }
-        
         const code = codeOutput.textContent;
         
         if (!code) {
-            console.log('❌ No code to copy');
             alert('Generate code first!');
             return;
         }
@@ -1250,33 +970,25 @@ class MapBuilder {
         navigator.clipboard.writeText(code).then(() => {
             // Visual feedback
             const btn = document.getElementById('copyCode');
-            if (btn) {
-                const originalText = btn.innerHTML;
-                btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
-                btn.style.background = '#22c55e';
-                
-                setTimeout(() => {
-                    btn.innerHTML = originalText;
-                    btn.style.background = '';
-                }, 2000);
-            }
+            const originalText = btn.innerHTML;
+            btn.innerHTML = '<svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="20 6 9 17 4 12"></polyline></svg> Copied!';
+            btn.style.background = '#22c55e';
+            
+            setTimeout(() => {
+                btn.innerHTML = originalText;
+                btn.style.background = '';
+            }, 2000);
             
             this.updateStatus('Code copied to clipboard! Create the HTML file and paste it in.');
-            console.log('✅ Code copied successfully');
         }).catch(() => {
-            console.error('❌ Failed to copy to clipboard');
             alert('Failed to copy to clipboard. Please select and copy the code manually.');
         });
     }
 
     updateStatus(message) {
-        console.log('📢 Status update:', message);
         const statusElement = document.getElementById('canvasStatus');
         if (statusElement) {
             statusElement.textContent = message;
-            console.log('✅ Status element updated');
-        } else {
-            console.error('❌ canvasStatus element not found');
         }
     }
 
@@ -1286,36 +998,25 @@ class MapBuilder {
         
         if (dimensionsElement) {
             dimensionsElement.textContent = `Grid: ${this.gridWidth}×${this.gridHeight}`;
-        } else {
-            console.error('❌ gridDimensions element not found');
         }
         
         if (cellCountElement) {
             const assignedCells = Object.keys(this.gridData).length;
             cellCountElement.textContent = `Cells: ${assignedCells} assigned`;
-        } else {
-            console.error('❌ cellCount element not found');
         }
     }
 
     resetMapData() {
-        console.log('🔄 resetMapData called');
-        
         this.gridData = {};
         this.nextStallId = 1;
         
         // Reset form inputs
-        const stallNumberElement = document.getElementById('stallNumber');
-        const stallLabelElement = document.getElementById('stallLabel');
-        
-        if (stallNumberElement) stallNumberElement.value = '';
-        if (stallLabelElement) stallLabelElement.value = '';
+        document.getElementById('stallNumber').value = '';
+        document.getElementById('stallLabel').value = '';
         
         // Clear grid if it exists
         const canvas = document.getElementById('gridCanvas');
-        if (canvas) {
-            canvas.innerHTML = '';
-        }
+        canvas.innerHTML = '';
         
         // Reset to default color selection
         document.querySelectorAll('.color-option').forEach(opt => {
@@ -1329,55 +1030,21 @@ class MapBuilder {
         
         // Clear export area
         const codeOutput = document.getElementById('codeOutput');
-        if (codeOutput) {
-            codeOutput.textContent = '';
-            codeOutput.classList.remove('visible');
-        }
-        
-        const copyCodeBtn = document.getElementById('copyCode');
-        if (copyCodeBtn) {
-            copyCodeBtn.disabled = true;
-        }
-        
-        console.log('✅ Map data reset complete');
+        codeOutput.textContent = '';
+        codeOutput.classList.remove('visible');
+        document.getElementById('copyCode').disabled = true;
     }
 
     showLoading() {
-        const loadingElement = document.getElementById('loadingIndicator');
-        if (loadingElement) {
-            loadingElement.style.display = 'flex';
-        }
+        document.getElementById('loadingIndicator').style.display = 'flex';
     }
 
     hideLoading() {
-        const loadingElement = document.getElementById('loadingIndicator');
-        if (loadingElement) {
-            loadingElement.style.display = 'none';
-        }
+        document.getElementById('loadingIndicator').style.display = 'none';
     }
 }
 
 // Initialize the map builder when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🌟 DOM loaded, initializing MapBuilder...');
-    
-    // Add extra debugging for DOM state
-    console.log('📊 Document ready state:', document.readyState);
-    console.log('🔗 Current URL:', window.location.href);
-    console.log('📄 Document title:', document.title);
-    
-    // Check if essential elements exist
-    const essentialElements = ['mapLocation', 'welcomeScreen', 'gridSetupInterface'];
-    essentialElements.forEach(id => {
-        const element = document.getElementById(id);
-        console.log(`🔍 Essential element ${id}:`, element ? '✅ Found' : '❌ Missing');
-    });
-    
-    try {
-        window.mapBuilder = new MapBuilder();
-        console.log('🎉 MapBuilder successfully initialized');
-    } catch (error) {
-        console.error('💥 Failed to initialize MapBuilder:', error);
-        console.error('Stack trace:', error.stack);
-    }
+    window.mapBuilder = new MapBuilder();
 });
