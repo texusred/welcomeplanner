@@ -934,3 +934,149 @@ p { margin-bottom: 1rem; }
     gap: 0.5rem;
   }
 }
+
+/* Group Mode Styles */
+.group-mode-toggle {
+  width: 100%;
+  justify-content: center;
+  margin-bottom: 1rem;
+  position: relative;
+}
+
+.group-mode-toggle.active {
+  background: var(--aru-green) !important;
+  color: var(--aru-white) !important;
+  border-color: var(--aru-green) !important;
+}
+
+.group-mode-toggle.active::after {
+  content: 'ACTIVE';
+  position: absolute;
+  top: -8px;
+  right: -8px;
+  background: var(--aru-yellow);
+  color: var(--aru-dark-grey);
+  font-size: 0.6rem;
+  font-weight: bold;
+  padding: 2px 6px;
+  border-radius: 8px;
+  pointer-events: none;
+}
+
+.group-status-display {
+  background: rgba(0, 165, 180, 0.05);
+  border: 2px solid var(--aru-teal);
+  border-radius: 8px;
+  padding: 1rem;
+  text-align: center;
+}
+
+.group-status-display label {
+  font-size: 0.8rem;
+  color: var(--aru-teal);
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.5px;
+  margin-bottom: 0.5rem;
+}
+
+.group-status {
+  font-weight: 600;
+  color: var(--text-primary);
+  font-size: 1rem;
+}
+
+.group-actions {
+  display: flex;
+  gap: 0.5rem;
+  justify-content: center;
+}
+
+.group-actions .btn {
+  flex: 1;
+}
+
+/* Cell selection states */
+.cell.group-selected {
+  border: 3px solid var(--aru-yellow) !important;
+  box-shadow: 0 0 0 2px rgba(242, 228, 0, 0.3) !important;
+  transform: scale(1.05);
+  z-index: 5;
+  animation: groupPulse 2s infinite;
+}
+
+@keyframes groupPulse {
+  0%, 100% { 
+    box-shadow: 0 0 0 2px rgba(242, 228, 0, 0.3);
+  }
+  50% { 
+    box-shadow: 0 0 0 4px rgba(242, 228, 0, 0.6);
+  }
+}
+
+/* Group mode visual feedback */
+.editing-interface.group-mode-active .cell:not(.group-selected):hover {
+  border: 2px dashed var(--aru-yellow);
+  transform: scale(1.02);
+}
+
+.editing-interface.group-mode-active .cell.group-selected:hover {
+  border: 3px solid var(--aru-green) !important;
+  box-shadow: 0 0 0 2px rgba(119, 188, 31, 0.4) !important;
+}
+
+/* Disable normal hover effects in group mode */
+.editing-interface.group-mode-active .cell.hover-preview {
+  display: none;
+}
+
+/* Group controls transitions */
+#normalControls,
+#groupControls {
+  transition: all 0.3s ease;
+}
+
+/* Success button styling */
+.btn-success {
+  background: var(--success-green);
+  color: var(--aru-white);
+}
+
+.btn-success:hover {
+  background: #16a34a;
+  transform: translateY(-2px);
+}
+
+/* Enhanced group status styling */
+.group-status:empty::before {
+  content: 'Click cells to add to group';
+  color: var(--text-secondary);
+  font-style: italic;
+  font-weight: normal;
+}
+
+/* Group mode indicator in status bar */
+.status-bar.group-mode::before {
+  content: 'GROUP MODE: ';
+  color: var(--aru-green);
+  font-weight: bold;
+  text-transform: uppercase;
+  font-size: 0.8rem;
+  letter-spacing: 0.5px;
+}
+
+/* Buttons */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.75rem 1.5rem;
+  border: none;
+  border-radius: 8px;
+  font-size: 0.95rem;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.3s ease;
+  text-decoration: none;
+  min-height: 44px;
+}

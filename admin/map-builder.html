@@ -64,6 +64,7 @@
                         <li>Select a location from the dropdown above</li>
                         <li>Set up your grid dimensions</li>
                         <li>Click cells to assign colors and stall numbers</li>
+                        <li>Use Group Mode to create merged cell areas</li>
                         <li>Export the code and copy into your map files</li>
                     </ol>
                 </div>
@@ -143,57 +144,139 @@
                 </div>
                 
                 <div class="controls-content" id="controlsContent">
-                    <!-- Color Selector -->
+                    <!-- Mode Toggle -->
                     <div class="control-section">
-                        <label>Stall Types:</label>
-                        <div class="color-options">
-                            <div class="color-option selected" data-type="stall-standard" title="Standard Stall">
-                                <span class="color-preview standard"></span>
-                                <span class="color-label">Standard</span>
+                        <button id="groupModeToggle" class="btn btn-secondary group-mode-toggle">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                <rect x="3" y="3" width="6" height="6" rx="1"></rect>
+                                <rect x="15" y="3" width="6" height="6" rx="1"></rect>
+                                <rect x="3" y="15" width="6" height="6" rx="1"></rect>
+                                <rect x="15" y="15" width="6" height="6" rx="1"></rect>
+                            </svg>
+                            Group Mode
+                        </button>
+                    </div>
+
+                    <!-- Normal Mode Controls -->
+                    <div id="normalControls">
+                        <!-- Color Selector -->
+                        <div class="control-section">
+                            <label>Stall Types:</label>
+                            <div class="color-options">
+                                <div class="color-option selected" data-type="stall-standard" title="Standard Stall">
+                                    <span class="color-preview standard"></span>
+                                    <span class="color-label">Standard</span>
+                                </div>
+                                <div class="color-option" data-type="stall-medical" title="Medical Stall">
+                                    <span class="color-preview medical"></span>
+                                    <span class="color-label">Medical</span>
+                                </div>
+                                <div class="color-option" data-type="stall-featured" title="Featured Stall">
+                                    <span class="color-preview featured"></span>
+                                    <span class="color-label">Featured</span>
+                                </div>
                             </div>
-                            <div class="color-option" data-type="stall-medical" title="Medical Stall">
-                                <span class="color-preview medical"></span>
-                                <span class="color-label">Medical</span>
+                        </div>
+                        
+                        <div class="control-section">
+                            <label>Environment:</label>
+                            <div class="color-options">
+                                <div class="color-option" data-type="building" title="Building">
+                                    <span class="color-preview building"></span>
+                                    <span class="color-label">Building</span>
+                                </div>
+                                <div class="color-option" data-type="infrastructure" title="Infrastructure">
+                                    <span class="color-preview infrastructure"></span>
+                                    <span class="color-label">Infrastructure</span>
+                                </div>
+                                <div class="color-option" data-type="empty" title="Empty Space">
+                                    <span class="color-preview empty"></span>
+                                    <span class="color-label">Empty</span>
+                                </div>
+                                <div class="color-option" data-type="clear" title="Clear Cell">
+                                    <span class="color-preview clear"></span>
+                                    <span class="color-label">Clear</span>
+                                </div>
                             </div>
-                            <div class="color-option" data-type="stall-featured" title="Featured Stall">
-                                <span class="color-preview featured"></span>
-                                <span class="color-label">Featured</span>
+                        </div>
+                        
+                        <!-- Number Controls -->
+                        <div class="control-section">
+                            <div class="number-controls">
+                                <div class="input-group">
+                                    <label for="stallNumber">Stall Number</label>
+                                    <input type="number" id="stallNumber" min="1" placeholder="71" class="stall-number-input">
+                                </div>
+                                <div class="input-group">
+                                    <label for="stallLabel">Label (optional)</label>
+                                    <input type="text" id="stallLabel" placeholder="DOOR, BENCH, etc." class="stall-label-input">
+                                </div>
                             </div>
                         </div>
                     </div>
-                    
-                    <div class="control-section">
-                        <label>Environment:</label>
-                        <div class="color-options">
-                            <div class="color-option" data-type="building" title="Building">
-                                <span class="color-preview building"></span>
-                                <span class="color-label">Building</span>
-                            </div>
-                            <div class="color-option" data-type="infrastructure" title="Infrastructure">
-                                <span class="color-preview infrastructure"></span>
-                                <span class="color-label">Infrastructure</span>
-                            </div>
-                            <div class="color-option" data-type="empty" title="Empty Space">
-                                <span class="color-preview empty"></span>
-                                <span class="color-label">Empty</span>
-                            </div>
-                            <div class="color-option" data-type="clear" title="Clear Cell">
-                                <span class="color-preview clear"></span>
-                                <span class="color-label">Clear</span>
+
+                    <!-- Group Mode Controls -->
+                    <div id="groupControls" style="display: none;">
+                        <div class="control-section">
+                            <div class="group-status-display">
+                                <label>Current Selection:</label>
+                                <div id="groupStatus" class="group-status">No cells selected</div>
                             </div>
                         </div>
-                    </div>
-                    
-                    <!-- Number Controls -->
-                    <div class="control-section">
-                        <div class="number-controls">
-                            <div class="input-group">
-                                <label for="stallNumber">Stall Number</label>
-                                <input type="number" id="stallNumber" min="1" placeholder="71" class="stall-number-input">
+
+                        <!-- Color Selector for Groups -->
+                        <div class="control-section">
+                            <label>Group Type:</label>
+                            <div class="color-options">
+                                <div class="color-option selected" data-type="stall-standard" title="Standard Stall">
+                                    <span class="color-preview standard"></span>
+                                    <span class="color-label">Standard</span>
+                                </div>
+                                <div class="color-option" data-type="stall-medical" title="Medical Stall">
+                                    <span class="color-preview medical"></span>
+                                    <span class="color-label">Medical</span>
+                                </div>
+                                <div class="color-option" data-type="stall-featured" title="Featured Stall">
+                                    <span class="color-preview featured"></span>
+                                    <span class="color-label">Featured</span>
+                                </div>
+                                <div class="color-option" data-type="building" title="Building">
+                                    <span class="color-preview building"></span>
+                                    <span class="color-label">Building</span>
+                                </div>
+                                <div class="color-option" data-type="infrastructure" title="Infrastructure">
+                                    <span class="color-preview infrastructure"></span>
+                                    <span class="color-label">Infrastructure</span>
+                                </div>
                             </div>
-                            <div class="input-group">
-                                <label for="stallLabel">Label (optional)</label>
-                                <input type="text" id="stallLabel" placeholder="DOOR, BENCH, etc." class="stall-label-input">
+                        </div>
+
+                        <!-- Group Content -->
+                        <div class="control-section">
+                            <div class="number-controls">
+                                <div class="input-group">
+                                    <label for="stallNumber">Group Number/Text</label>
+                                    <input type="text" id="groupNumber" placeholder="71 or STEPS" class="stall-number-input">
+                                </div>
+                            </div>
+                        </div>
+
+                        <!-- Group Actions -->
+                        <div class="control-section">
+                            <div class="group-actions">
+                                <button id="finishGroup" class="btn btn-success btn-sm">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <polyline points="20 6 9 17 4 12"></polyline>
+                                    </svg>
+                                    Finish Group
+                                </button>
+                                <button id="cancelGroup" class="btn btn-warning btn-sm">
+                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                                    </svg>
+                                    Cancel
+                                </button>
                             </div>
                         </div>
                     </div>

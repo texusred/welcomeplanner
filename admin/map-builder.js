@@ -1,6 +1,5 @@
 // Map Builder - ARU Students' Union
-// Enhanced desktop map creation tool
-// DEBUG VERSION - Added comprehensive logging
+// Enhanced desktop map creation tool with group functionality
 
 class MapBuilder {
     constructor() {
@@ -9,191 +8,134 @@ class MapBuilder {
         this.gridHeight = 12;
         this.gridData = {};
         this.currentStallType = 'stall-standard';
-        this.currentInterface = 'welcome'; // welcome, setup, editing, export
+        this.currentInterface = 'welcome';
         this.nextStallId = 1;
         this.controlsMinimized = false;
+        
+        // Group functionality
+        this.groupMode = false;
+        this.currentGroup = [];
+        this.groups = {}; // groupId -> {cells: [], data: {}}
+        this.nextGroupId = 1;
 
-        console.log('🏗️ MapBuilder constructor started');
         this.init();
     }
 
     init() {
-        console.log('🚀 MapBuilder init() called');
         this.setupEventListeners();
         this.showInterface('welcome');
-        console.log('✅ MapBuilder initialization complete');
     }
 
     setupEventListeners() {
-        console.log('👂 Setting up event listeners...');
-        
-        // Check if all required elements exist before setting up listeners
-        const requiredElements = [
-            'mapLocation',
-            'loadExisting', 
-            'newMap',
-            'createGrid',
-            'backToSetup',
-            'resetGrid',
-            'exportMap',
-            'minimizeControls',
-            'generateCode',
-            'copyCode',
-            'backToEdit',
-            'gridWidth',
-            'gridHeight'
-        ];
-
-        console.log('🔍 Checking for required elements...');
-        requiredElements.forEach(elementId => {
-            const element = document.getElementById(elementId);
-            if (element) {
-                console.log(`✅ Found element: ${elementId}`, element);
-            } else {
-                console.error(`❌ Missing element: ${elementId}`);
-            }
-        });
-
-        // Log all elements with IDs that actually exist
-        const allElementsWithIds = document.querySelectorAll('[id]');
-        console.log('📋 All elements with IDs found in DOM:', 
-            Array.from(allElementsWithIds).map(el => ({
-                id: el.id,
-                tagName: el.tagName,
-                classes: el.className
-            }))
-        );
-
         try {
             // Location selector
             const mapLocationElement = document.getElementById('mapLocation');
             if (mapLocationElement) {
-                console.log('✅ Setting up mapLocation listener');
                 mapLocationElement.addEventListener('change', (e) => {
-                    console.log('📍 Location changed to:', e.target.value);
                     this.handleLocationChange(e.target.value);
                 });
-            } else {
-                console.error('❌ mapLocation element not found');
             }
 
             // Setup interface
             const loadExistingElement = document.getElementById('loadExisting');
             if (loadExistingElement) {
-                console.log('✅ Setting up loadExisting listener');
                 loadExistingElement.addEventListener('click', () => {
-                    console.log('📂 Load existing clicked');
                     this.loadExistingMap();
                 });
-            } else {
-                console.error('❌ loadExisting element not found');
             }
 
             const newMapElement = document.getElementById('newMap');
             if (newMapElement) {
-                console.log('✅ Setting up newMap listener');
                 newMapElement.addEventListener('click', () => {
-                    console.log('🆕 New map clicked');
                     this.startNewMap();
                 });
-            } else {
-                console.error('❌ newMap element not found');
             }
 
             const createGridElement = document.getElementById('createGrid');
             if (createGridElement) {
-                console.log('✅ Setting up createGrid listener');
                 createGridElement.addEventListener('click', () => {
-                    console.log('🏗️ Create grid clicked');
                     this.createGridAndStartEditing();
                 });
-            } else {
-                console.error('❌ createGrid element not found');
             }
 
             // Editing interface
             const backToSetupElement = document.getElementById('backToSetup');
             if (backToSetupElement) {
-                console.log('✅ Setting up backToSetup listener');
                 backToSetupElement.addEventListener('click', () => {
-                    console.log('🔙 Back to setup clicked');
                     this.backToSetup();
                 });
-            } else {
-                console.error('❌ backToSetup element not found');
             }
 
             const resetGridElement = document.getElementById('resetGrid');
             if (resetGridElement) {
-                console.log('✅ Setting up resetGrid listener');
                 resetGridElement.addEventListener('click', () => {
-                    console.log('🔄 Reset grid clicked');
                     this.resetGrid();
                 });
-            } else {
-                console.error('❌ resetGrid element not found');
             }
 
             const exportMapElement = document.getElementById('exportMap');
             if (exportMapElement) {
-                console.log('✅ Setting up exportMap listener');
                 exportMapElement.addEventListener('click', () => {
-                    console.log('📤 Export map clicked');
                     this.goToExport();
                 });
-            } else {
-                console.error('❌ exportMap element not found');
             }
 
             const minimizeControlsElement = document.getElementById('minimizeControls');
             if (minimizeControlsElement) {
-                console.log('✅ Setting up minimizeControls listener');
                 minimizeControlsElement.addEventListener('click', () => {
-                    console.log('🔽 Minimize controls clicked');
                     this.toggleControlsMinimized();
                 });
-            } else {
-                console.error('❌ minimizeControls element not found');
+            }
+
+            // Group mode toggle
+            const groupModeToggle = document.getElementById('groupModeToggle');
+            if (groupModeToggle) {
+                groupModeToggle.addEventListener('click', () => {
+                    this.toggleGroupMode();
+                });
+            }
+
+            // Finish group button
+            const finishGroupBtn = document.getElementById('finishGroup');
+            if (finishGroupBtn) {
+                finishGroupBtn.addEventListener('click', () => {
+                    this.finishCurrentGroup();
+                });
+            }
+
+            // Cancel group button
+            const cancelGroupBtn = document.getElementById('cancelGroup');
+            if (cancelGroupBtn) {
+                cancelGroupBtn.addEventListener('click', () => {
+                    this.cancelCurrentGroup();
+                });
             }
 
             // Export interface
             const generateCodeElement = document.getElementById('generateCode');
             if (generateCodeElement) {
-                console.log('✅ Setting up generateCode listener');
                 generateCodeElement.addEventListener('click', () => {
-                    console.log('🔧 Generate code clicked');
                     this.generateCode();
                 });
-            } else {
-                console.error('❌ generateCode element not found');
             }
 
             const copyCodeElement = document.getElementById('copyCode');
             if (copyCodeElement) {
-                console.log('✅ Setting up copyCode listener');
                 copyCodeElement.addEventListener('click', () => {
-                    console.log('📋 Copy code clicked');
                     this.copyCode();
                 });
-            } else {
-                console.error('❌ copyCode element not found');
             }
 
             const backToEditElement = document.getElementById('backToEdit');
             if (backToEditElement) {
-                console.log('✅ Setting up backToEdit listener');
                 backToEditElement.addEventListener('click', () => {
-                    console.log('✏️ Back to edit clicked');
                     this.backToEditing();
                 });
-            } else {
-                console.error('❌ backToEdit element not found');
             }
 
             // Color selection
             document.addEventListener('click', (e) => {
                 if (e.target.closest('.color-option')) {
-                    console.log('🎨 Color option clicked:', e.target.closest('.color-option').dataset.type);
                     this.selectColor(e.target.closest('.color-option'));
                 }
             });
@@ -201,24 +143,16 @@ class MapBuilder {
             // Grid dimension inputs
             const gridWidthElement = document.getElementById('gridWidth');
             if (gridWidthElement) {
-                console.log('✅ Setting up gridWidth listener');
                 gridWidthElement.addEventListener('change', (e) => {
-                    console.log('📏 Grid width changed to:', e.target.value);
                     this.gridWidth = parseInt(e.target.value);
                 });
-            } else {
-                console.error('❌ gridWidth element not found');
             }
 
             const gridHeightElement = document.getElementById('gridHeight');
             if (gridHeightElement) {
-                console.log('✅ Setting up gridHeight listener');
                 gridHeightElement.addEventListener('change', (e) => {
-                    console.log('📏 Grid height changed to:', e.target.value);
                     this.gridHeight = parseInt(e.target.value);
                 });
-            } else {
-                console.error('❌ gridHeight element not found');
             }
 
             // Keyboard shortcuts for editing
@@ -228,32 +162,137 @@ class MapBuilder {
                 }
             });
 
-            console.log('✅ Event listeners setup complete');
-
         } catch (error) {
-            console.error('💥 Error in setupEventListeners:', error);
-            console.error('Stack trace:', error.stack);
+            console.error('Error in setupEventListeners:', error);
+        }
+    }
+
+    // Group Mode Functions
+    toggleGroupMode() {
+        this.groupMode = !this.groupMode;
+        
+        const groupModeToggle = document.getElementById('groupModeToggle');
+        const groupControls = document.getElementById('groupControls');
+        const normalControls = document.getElementById('normalControls');
+        
+        if (this.groupMode) {
+            // Enable group mode
+            groupModeToggle.textContent = 'Exit Group Mode';
+            groupModeToggle.classList.add('active');
+            if (groupControls) groupControls.style.display = 'block';
+            if (normalControls) normalControls.style.display = 'none';
+            
+            this.updateStatus('Group Mode: Click cells to add to group, then click "Finish Group"');
+        } else {
+            // Disable group mode
+            groupModeToggle.textContent = 'Group Mode';
+            groupModeToggle.classList.remove('active');
+            if (groupControls) groupControls.style.display = 'none';
+            if (normalControls) normalControls.style.display = 'block';
+            
+            this.cancelCurrentGroup();
+            this.updateStatus('Normal Mode: Click cells to assign colors and stall numbers');
+        }
+    }
+
+    finishCurrentGroup() {
+        if (this.currentGroup.length === 0) {
+            this.showToast('No cells selected for group', 'warning');
+            return;
+        }
+
+        // Use the group-specific input field
+        const groupNumberElement = document.getElementById('groupNumber');
+        const groupValue = groupNumberElement ? groupNumberElement.value.trim() : '';
+
+        if (!groupValue) {
+            this.showToast('Please enter a number or label for the group', 'warning');
+            return;
+        }
+
+        // Create group data
+        const groupId = this.nextGroupId++;
+        const groupData = {
+            type: this.currentStallType,
+            number: groupValue,
+            label: groupValue,
+            id: groupId
+        };
+
+        // Store group
+        this.groups[groupId] = {
+            cells: [...this.currentGroup],
+            data: groupData
+        };
+
+        // Apply to all cells in group
+        this.currentGroup.forEach(cellKey => {
+            const [x, y] = cellKey.split('-').map(Number);
+            const cellData = {
+                ...groupData,
+                x: x,
+                y: y,
+                groupId: groupId
+            };
+            
+            this.gridData[cellKey] = cellData;
+            
+            // Update visual
+            const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+            if (cell) {
+                this.applyCellData(cell, cellData);
+                cell.classList.remove('group-selected');
+            }
+        });
+
+        // Auto-increment for next group if it's a number
+        if (this.currentStallType.includes('stall') && !isNaN(groupValue) && groupNumberElement) {
+            groupNumberElement.value = parseInt(groupValue) + 1;
+        }
+
+        this.showToast(`Group created with ${this.currentGroup.length} cells`, 'success');
+        this.currentGroup = [];
+        this.updateGroupStatus();
+        this.updateGridInfo();
+    }
+
+    cancelCurrentGroup() {
+        // Remove visual selection from current group
+        this.currentGroup.forEach(cellKey => {
+            const [x, y] = cellKey.split('-').map(Number);
+            const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+            if (cell) {
+                cell.classList.remove('group-selected');
+            }
+        });
+        
+        this.currentGroup = [];
+        this.updateGroupStatus();
+    }
+
+    updateGroupStatus() {
+        const groupStatus = document.getElementById('groupStatus');
+        if (groupStatus) {
+            if (this.currentGroup.length === 0) {
+                groupStatus.textContent = 'No cells selected';
+            } else {
+                groupStatus.textContent = `${this.currentGroup.length} cells selected`;
+            }
         }
     }
 
     handleLocationChange(location) {
-        console.log('🗺️ handleLocationChange called with:', location);
-        
         if (!location) {
-            console.log('❌ No location provided, showing welcome interface');
             this.showInterface('welcome');
             return;
         }
 
         this.currentLocation = location;
-        console.log('✅ Current location set to:', this.currentLocation);
         this.updateLocationDisplay();
         this.showInterface('setup');
     }
 
     updateLocationDisplay() {
-        console.log('🏷️ updateLocationDisplay called');
-        
         const locationNames = {
             'ruskin-courtyard': 'Ruskin Courtyard',
             'science-walkway': 'Science Walkway',
@@ -261,46 +300,20 @@ class MapBuilder {
         };
 
         const displayName = locationNames[this.currentLocation] || this.currentLocation;
-        console.log('📝 Display name will be:', displayName);
         
         const locationNameElement = document.getElementById('locationName');
         const mapFileNameElement = document.getElementById('mapFileName');
         
         if (locationNameElement) {
             locationNameElement.textContent = displayName;
-            console.log('✅ Updated locationName element');
-        } else {
-            console.error('❌ locationName element not found');
         }
         
         if (mapFileNameElement) {
             mapFileNameElement.textContent = `maps/${this.currentLocation}.html`;
-            console.log('✅ Updated mapFileName element');
-        } else {
-            console.error('❌ mapFileName element not found');
         }
     }
 
     showInterface(interfaceName) {
-        console.log('🖥️ showInterface called with:', interfaceName);
-        
-        // Check if interface elements exist
-        const interfaces = [
-            'welcomeScreen',
-            'gridSetupInterface', 
-            'editingInterface',
-            'exportInterface'
-        ];
-        
-        interfaces.forEach(id => {
-            const element = document.getElementById(id);
-            if (element) {
-                console.log(`✅ Found interface element: ${id}`);
-            } else {
-                console.error(`❌ Missing interface element: ${id}`);
-            }
-        });
-
         // Hide all interfaces
         document.getElementById('welcomeScreen').style.display = 'none';
         document.getElementById('gridSetupInterface').style.display = 'none';
@@ -311,57 +324,41 @@ class MapBuilder {
         switch (interfaceName) {
             case 'welcome':
                 document.getElementById('welcomeScreen').style.display = 'flex';
-                console.log('✅ Showing welcome screen');
                 break;
             case 'setup':
                 document.getElementById('gridSetupInterface').style.display = 'block';
-                console.log('✅ Showing setup interface');
                 break;
             case 'editing':
                 document.getElementById('editingInterface').style.display = 'block';
-                console.log('✅ Showing editing interface');
                 break;
             case 'export':
                 document.getElementById('exportInterface').style.display = 'block';
-                console.log('✅ Showing export interface');
                 break;
-            default:
-                console.error('❌ Unknown interface:', interfaceName);
         }
 
         this.currentInterface = interfaceName;
-        console.log('✅ Current interface set to:', this.currentInterface);
     }
 
     loadExistingMap() {
-        console.log('📂 loadExistingMap called');
         alert(`Loading existing ${this.currentLocation} map would load the saved JSON data. For this demo, click "Create New" to start building.`);
     }
 
     startNewMap() {
-        console.log('🆕 startNewMap called');
         this.resetMapData();
-        // Don't change interface - stay on setup to adjust dimensions
         this.updateStatus('Set grid dimensions and click "Create Grid & Start Editing"');
     }
 
     createGridAndStartEditing() {
-        console.log('🏗️ createGridAndStartEditing called');
-        
         this.gridWidth = parseInt(document.getElementById('gridWidth').value);
         this.gridHeight = parseInt(document.getElementById('gridHeight').value);
 
-        console.log('📏 Grid dimensions:', this.gridWidth, 'x', this.gridHeight);
-
         // Validate dimensions
         if (this.gridWidth < 6 || this.gridWidth > 50 || this.gridHeight < 6 || this.gridHeight > 50) {
-            console.error('❌ Invalid grid dimensions');
             alert('Grid dimensions must be between 6 and 50');
             return;
         }
 
         // Transition to full-screen editing
-        console.log('🖥️ Transitioning to editing interface');
         this.showInterface('editing');
         this.renderGrid();
         this.updateGridInfo();
@@ -372,32 +369,21 @@ class MapBuilder {
             const stallNumberElement = document.getElementById('stallNumber');
             if (stallNumberElement) {
                 stallNumberElement.focus();
-                console.log('✅ Focused on stall number input');
-            } else {
-                console.error('❌ stallNumber input not found for focus');
             }
         }, 300);
     }
 
     renderGrid() {
-        console.log('🎨 renderGrid called');
-        
         const canvas = document.getElementById('gridCanvas');
-        if (!canvas) {
-            console.error('❌ gridCanvas element not found');
-            return;
-        }
+        if (!canvas) return;
         
-        console.log('✅ Found gridCanvas element');
         canvas.style.gridTemplateColumns = `repeat(${this.gridWidth}, 1fr)`;
         canvas.style.gridTemplateRows = `repeat(${this.gridHeight}, 1fr)`;
 
         // Clear existing grid
         canvas.innerHTML = '';
-        console.log('🧹 Cleared existing grid');
         
         // Create cells
-        let cellsCreated = 0;
         for (let y = 0; y < this.gridHeight; y++) {
             for (let x = 0; x < this.gridWidth; x++) {
                 const cell = document.createElement('div');
@@ -406,41 +392,58 @@ class MapBuilder {
                 cell.dataset.y = y;
                 
                 cell.addEventListener('click', () => {
-                    this.assignCell(x, y);
+                    if (this.groupMode) {
+                        this.toggleCellInGroup(x, y);
+                    } else {
+                        this.assignCell(x, y);
+                    }
                 });
 
-                // Add hover preview
+                // Add hover preview for normal mode
                 cell.addEventListener('mouseenter', () => {
-                    if (this.currentStallType !== 'clear') {
+                    if (!this.groupMode && this.currentStallType !== 'clear') {
                         cell.classList.add('hover-preview', this.currentStallType);
                     }
                 });
 
                 cell.addEventListener('mouseleave', () => {
-                    cell.classList.remove('hover-preview', 'stall-standard', 'stall-medical', 'stall-featured', 'building', 'infrastructure', 'empty');
-                    // Re-apply actual data if exists
-                    const cellData = this.gridData[`${x}-${y}`];
-                    if (cellData) {
-                        this.applyCellData(cell, cellData);
+                    if (!this.groupMode) {
+                        cell.classList.remove('hover-preview', 'stall-standard', 'stall-medical', 'stall-featured', 'building', 'infrastructure', 'empty');
+                        // Re-apply actual data if exists
+                        const cellData = this.gridData[`${x}-${y}`];
+                        if (cellData) {
+                            this.applyCellData(cell, cellData);
+                        }
                     }
                 });
 
                 canvas.appendChild(cell);
-                cellsCreated++;
             }
         }
-        
-        console.log(`✅ Created ${cellsCreated} grid cells`);
 
         // Re-render existing data if any
         this.renderExistingData();
     }
 
-    renderExistingData() {
-        console.log('🔄 renderExistingData called');
-        const dataCount = Object.keys(this.gridData).length;
-        console.log(`📊 Rendering ${dataCount} existing data points`);
+    toggleCellInGroup(x, y) {
+        const cellKey = `${x}-${y}`;
+        const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
         
+        if (this.currentGroup.includes(cellKey)) {
+            // Remove from group
+            this.currentGroup = this.currentGroup.filter(key => key !== cellKey);
+            cell.classList.remove('group-selected');
+        } else {
+            // Add to group
+            this.currentGroup.push(cellKey);
+            cell.classList.add('group-selected');
+        }
+        
+        this.updateGroupStatus();
+        this.updateStatus(`Group selection: ${this.currentGroup.length} cells selected`);
+    }
+
+    renderExistingData() {
         Object.values(this.gridData).forEach(cellData => {
             const cell = document.querySelector(`[data-x="${cellData.x}"][data-y="${cellData.y}"]`);
             if (cell) {
@@ -450,8 +453,6 @@ class MapBuilder {
     }
 
     selectColor(option) {
-        console.log('🎨 selectColor called with:', option.dataset.type);
-        
         // Remove selected class from all options
         document.querySelectorAll('.color-option').forEach(opt => {
             opt.classList.remove('selected');
@@ -461,19 +462,16 @@ class MapBuilder {
         option.classList.add('selected');
         this.currentStallType = option.dataset.type;
         
-        console.log('✅ Current stall type set to:', this.currentStallType);
-        
         // Update status
-        this.updateStatus(`Selected: ${this.getTypeDisplayName()} - Click cells to apply`);
+        if (this.groupMode) {
+            this.updateStatus(`Group Mode - Selected: ${this.getTypeDisplayName()} - Click cells to add to group`);
+        } else {
+            this.updateStatus(`Selected: ${this.getTypeDisplayName()} - Click cells to apply`);
+        }
     }
 
     assignCell(x, y) {
-        console.log(`🎯 assignCell called for position: ${x}, ${y}`);
-        
-        if (this.currentInterface !== 'editing') {
-            console.log('❌ Not in editing interface, ignoring click');
-            return;
-        }
+        if (this.currentInterface !== 'editing' || this.groupMode) return;
 
         const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
         const stallNumberElement = document.getElementById('stallNumber');
@@ -481,8 +479,6 @@ class MapBuilder {
         
         const stallNumber = stallNumberElement ? stallNumberElement.value : '';
         const stallLabel = stallLabelElement ? stallLabelElement.value : '';
-        
-        console.log('📝 Current values:', { stallNumber, stallLabel, type: this.currentStallType });
         
         // Handle clearing cell
         if (this.currentStallType === 'clear') {
@@ -500,8 +496,6 @@ class MapBuilder {
             id: this.nextStallId++
         };
 
-        console.log('💾 Storing cell data:', cellData);
-
         // Apply visual changes
         this.applyCellData(cell, cellData);
 
@@ -511,7 +505,6 @@ class MapBuilder {
         // Auto-increment stall number for next assignment
         if (this.currentStallType.includes('stall') && stallNumber && stallNumberElement) {
             stallNumberElement.value = parseInt(stallNumber) + 1;
-            console.log('🔢 Auto-incremented stall number to:', parseInt(stallNumber) + 1);
         }
 
         // Brief selection feedback
@@ -542,17 +535,47 @@ class MapBuilder {
     }
 
     clearCell(cell, x, y) {
-        console.log(`🧹 clearCell called for position: ${x}, ${y}`);
+        const cellKey = `${x}-${y}`;
         
+        // If cell is part of a group, remove the entire group
+        const cellData = this.gridData[cellKey];
+        if (cellData && cellData.groupId) {
+            this.clearGroup(cellData.groupId);
+            return;
+        }
+        
+        // Clear individual cell
         cell.className = 'cell';
         cell.textContent = '';
-        delete this.gridData[`${x}-${y}`];
+        delete this.gridData[cellKey];
         
         // Brief selection feedback
         cell.classList.add('selected');
         setTimeout(() => cell.classList.remove('selected'), 200);
         
         this.updateStatus('Cell cleared');
+        this.updateGridInfo();
+    }
+
+    clearGroup(groupId) {
+        const group = this.groups[groupId];
+        if (!group) return;
+        
+        // Clear all cells in the group
+        group.cells.forEach(cellKey => {
+            const [x, y] = cellKey.split('-').map(Number);
+            const cell = document.querySelector(`[data-x="${x}"][data-y="${y}"]`);
+            if (cell) {
+                cell.className = 'cell';
+                cell.textContent = '';
+            }
+            delete this.gridData[cellKey];
+        });
+        
+        // Remove group
+        delete this.groups[groupId];
+        
+        this.updateStatus(`Group cleared (${group.cells.length} cells)`);
         this.updateGridInfo();
     }
 
@@ -569,8 +592,6 @@ class MapBuilder {
     }
 
     backToSetup() {
-        console.log('🔙 backToSetup called');
-        
         if (Object.keys(this.gridData).length > 0) {
             if (!confirm('Going back will preserve your current progress. Continue?')) {
                 return;
@@ -580,8 +601,6 @@ class MapBuilder {
     }
 
     resetGrid() {
-        console.log('🔄 resetGrid called');
-        
         if (!confirm('Are you sure you want to reset the entire grid? All progress will be lost.')) {
             return;
         }
@@ -592,8 +611,10 @@ class MapBuilder {
             cell.textContent = '';
         });
 
-        // Clear grid data
+        // Clear grid data and groups
         this.gridData = {};
+        this.groups = {};
+        this.currentGroup = [];
 
         // Reset inputs
         const stallNumberElement = document.getElementById('stallNumber');
@@ -604,15 +625,11 @@ class MapBuilder {
 
         this.updateStatus('Grid cleared - click cells to assign colors and numbers');
         this.updateGridInfo();
-        
-        console.log('✅ Grid reset complete');
+        this.updateGroupStatus();
     }
 
     goToExport() {
-        console.log('📤 goToExport called');
-        
         if (Object.keys(this.gridData).length === 0) {
-            console.log('❌ No data to export');
             alert('Please add at least one stall or element before exporting.');
             return;
         }
@@ -622,23 +639,17 @@ class MapBuilder {
     }
 
     backToEditing() {
-        console.log('✏️ backToEditing called');
         this.showInterface('editing');
         this.updateStatus('Click cells to assign colors and stall numbers');
     }
 
     toggleControlsMinimized() {
-        console.log('🔽 toggleControlsMinimized called');
-        
         this.controlsMinimized = !this.controlsMinimized;
         const controls = document.querySelector('.floating-controls');
         const content = document.getElementById('controlsContent');
         const minimizeBtn = document.getElementById('minimizeControls');
         
-        if (!controls || !content || !minimizeBtn) {
-            console.error('❌ Required elements for minimize not found');
-            return;
-        }
+        if (!controls || !content || !minimizeBtn) return;
         
         if (this.controlsMinimized) {
             content.style.display = 'none';
@@ -652,7 +663,6 @@ class MapBuilder {
                 </svg>
             `;
             minimizeBtn.title = 'Expand controls';
-            console.log('✅ Controls minimized');
         } else {
             content.style.display = 'block';
             controls.classList.remove('minimized');
@@ -665,7 +675,6 @@ class MapBuilder {
                 </svg>
             `;
             minimizeBtn.title = 'Minimize controls';
-            console.log('✅ Controls expanded');
         }
     }
 
@@ -683,6 +692,10 @@ class MapBuilder {
                 case 'r':
                     e.preventDefault();
                     this.resetGrid();
+                    break;
+                case 'g':
+                    e.preventDefault();
+                    this.toggleGroupMode();
                     break;
             }
         }
@@ -712,6 +725,16 @@ class MapBuilder {
                 case 'Backspace':
                     this.selectColorByType('clear');
                     break;
+                case 'Escape':
+                    if (this.groupMode) {
+                        this.cancelCurrentGroup();
+                    }
+                    break;
+                case 'Enter':
+                    if (this.groupMode && this.currentGroup.length > 0) {
+                        this.finishCurrentGroup();
+                    }
+                    break;
             }
         }
     }
@@ -724,10 +747,7 @@ class MapBuilder {
     }
 
     generateCode() {
-        console.log('🔧 generateCode called');
-        
         if (Object.keys(this.gridData).length === 0) {
-            console.log('❌ No data to export');
             alert('No data to export. Please add some stalls first.');
             return;
         }
@@ -735,10 +755,7 @@ class MapBuilder {
         const code = this.createMapCode();
         const codeOutput = document.getElementById('codeOutput');
         
-        if (!codeOutput) {
-            console.error('❌ codeOutput element not found');
-            return;
-        }
+        if (!codeOutput) return;
         
         codeOutput.textContent = code;
         codeOutput.classList.add('visible');
@@ -750,12 +767,9 @@ class MapBuilder {
         }
         
         this.updateStatus('Code generated successfully!');
-        console.log('✅ Code generation complete');
     }
 
     createMapCode() {
-        console.log('📝 createMapCode called');
-        
         const locationNames = {
             'ruskin-courtyard': 'Ruskin Courtyard',
             'science-walkway': 'Science Walkway',
@@ -764,8 +778,8 @@ class MapBuilder {
 
         const displayName = locationNames[this.currentLocation] || this.currentLocation;
         
-        // Generate merged cell styles
-        const mergeStyles = this.generateMergedCellStyles();
+        // Generate CSS for grouped cells
+        const groupStyles = this.generateGroupStyles();
         
         let html = `<!DOCTYPE html>
 <html lang="en">
@@ -872,8 +886,8 @@ class MapBuilder {
             z-index: 10;
         }
         
-        /* Merged cell styles */
-        ${mergeStyles}
+        /* Group styles */
+        ${groupStyles}
         
         /* Highlight stall from URL parameter */
         .stall.highlighted {
@@ -1048,162 +1062,126 @@ class MapBuilder {
         return html;
     }
 
-    generateMergedCellStyles() {
+    generateGroupStyles() {
         let styles = '';
-        const processedCells = new Set();
         
-        // Check all cells for merging opportunities
-        for (let y = 0; y < this.gridHeight; y++) {
-            for (let x = 0; x < this.gridWidth; x++) {
-                const cellKey = `${x}-${y}`;
-                if (processedCells.has(cellKey)) continue;
-                
-                const cellData = this.gridData[cellKey];
-                if (!cellData) continue;
-                
-                // Find mergeable groups
-                const mergeGroup = this.findMergeGroup(x, y, cellData);
-                if (mergeGroup.length > 1) {
-                    styles += this.generateMergeCSS(mergeGroup, cellData);
-                    mergeGroup.forEach(pos => processedCells.add(`${pos.x}-${pos.y}`));
-                }
-            }
-        }
-        
-        return styles;
-    }
-
-    findMergeGroup(startX, startY, cellData) {
-        const group = [];
-        const visited = new Set();
-        const queue = [{ x: startX, y: startY }];
-        
-        while (queue.length > 0) {
-            const { x, y } = queue.shift();
-            const key = `${x}-${y}`;
+        // Generate styles for each group
+        Object.values(this.groups).forEach(group => {
+            if (group.cells.length <= 1) return;
             
-            if (visited.has(key)) continue;
-            visited.add(key);
+            const groupClass = `group-${group.data.id}`;
             
-            const currentCell = this.gridData[key];
-            if (!currentCell) continue;
+            // Create selector for all cells in the group
+            const cellSelectors = group.cells.map(cellKey => {
+                const [x, y] = cellKey.split('-');
+                return `[data-x="${x}"][data-y="${y}"]`;
+            }).join(', ');
             
-            // Check if cells should merge
-            if (this.shouldMerge(cellData, currentCell)) {
-                group.push({ x, y });
-                
-                // Check adjacent cells
-                const adjacent = [
-                    { x: x - 1, y }, { x: x + 1, y },
-                    { x, y: y - 1 }, { x, y: y + 1 }
-                ];
-                
-                adjacent.forEach(pos => {
-                    if (pos.x >= 0 && pos.x < this.gridWidth && 
-                        pos.y >= 0 && pos.y < this.gridHeight &&
-                        !visited.has(`${pos.x}-${pos.y}`)) {
-                        queue.push(pos);
-                    }
-                });
-            }
-        }
-        
-        return group;
-    }
-
-    shouldMerge(cell1, cell2) {
-        // Merge building blocks
-        if (cell1.type === 'building' && cell2.type === 'building') {
-            return true;
-        }
-        
-        // Merge stalls with same number
-        if (cell1.type.includes('stall') && cell2.type.includes('stall') && 
-            cell1.number && cell2.number && cell1.number === cell2.number) {
-            return true;
-        }
-        
-        return false;
-    }
-
-    generateMergeCSS(group, cellData) {
-        if (group.length <= 1) return '';
-        
-        const selector = group.map(pos => 
-            `.cell[data-x="${pos.x}"][data-y="${pos.y}"]`
-        ).join(', ');
-        
-        let styles = `
-        ${selector} {
-            border: none;
+            // Remove borders between group cells
+            styles += `
+        ${cellSelectors} {
+            border: none !important;
         }
         `;
-        
-        // Add border only on outer edges
-        group.forEach(pos => {
-            const { x, y } = pos;
-            const cellSelector = `.cell[data-x="${x}"][data-y="${y}"]`;
             
-            const hasLeft = group.some(p => p.x === x - 1 && p.y === y);
-            const hasRight = group.some(p => p.x === x + 1 && p.y === y);
-            const hasTop = group.some(p => p.x === x && p.y === y - 1);
-            const hasBottom = group.some(p => p.x === x && p.y === y + 1);
-            
-            const borderColor = cellData.type === 'building' ? '#4a5568' : 
-                              cellData.type === 'stall-standard' ? '#77bc1f' :
-                              cellData.type === 'stall-medical' ? '#dc2626' :
-                              cellData.type === 'stall-featured' ? '#10b981' : 'transparent';
-            
-            styles += `
-        ${cellSelector} {
-            ${!hasLeft ? `border-left: 2px solid ${borderColor};` : ''}
-            ${!hasRight ? `border-right: 2px solid ${borderColor};` : ''}
-            ${!hasTop ? `border-top: 2px solid ${borderColor};` : ''}
-            ${!hasBottom ? `border-bottom: 2px solid ${borderColor};` : ''}
-        }
-            `;
-        });
-        
-        // For stalls with numbers, hide number on all but center cell
-        if (cellData.type.includes('stall') && cellData.number) {
-            const centerCell = this.findCenterCell(group);
-            group.forEach(pos => {
-                if (pos.x !== centerCell.x || pos.y !== centerCell.y) {
+            // Add outer border for the group
+            group.cells.forEach(cellKey => {
+                const [x, y] = cellKey.split('-').map(Number);
+                const cellSelector = `[data-x="${x}"][data-y="${y}"]`;
+                
+                // Check which sides need borders (edges of the group)
+                const hasLeft = group.cells.includes(`${x-1}-${y}`);
+                const hasRight = group.cells.includes(`${x+1}-${y}`);
+                const hasTop = group.cells.includes(`${x}-${y-1}`);
+                const hasBottom = group.cells.includes(`${x}-${y+1}`);
+                
+                const borderColor = this.getBorderColorForType(group.data.type);
+                
+                let borderStyles = [];
+                if (!hasLeft) borderStyles.push(`border-left: 2px solid ${borderColor}`);
+                if (!hasRight) borderStyles.push(`border-right: 2px solid ${borderColor}`);
+                if (!hasTop) borderStyles.push(`border-top: 2px solid ${borderColor}`);
+                if (!hasBottom) borderStyles.push(`border-bottom: 2px solid ${borderColor}`);
+                
+                if (borderStyles.length > 0) {
                     styles += `
-        .cell[data-x="${pos.x}"][data-y="${pos.y}"] {
-            font-size: 0;
+        ${cellSelector} {
+            ${borderStyles.join(' !important; ')} !important;
         }
                     `;
                 }
             });
             
-            // Make center cell number larger for merged stalls
-            styles += `
-        .cell[data-x="${centerCell.x}"][data-y="${centerCell.y}"] {
-            font-size: 16px;
-            font-weight: bold;
+            // For groups with numbers, only show number in center cell
+            if (group.data.number) {
+                const centerCell = this.findGroupCenter(group.cells);
+                
+                // Hide text in non-center cells
+                group.cells.forEach(cellKey => {
+                    if (cellKey !== centerCell) {
+                        const [x, y] = cellKey.split('-');
+                        styles += `
+        [data-x="${x}"][data-y="${y}"] {
+            font-size: 0 !important;
         }
-            `;
+                        `;
+                    }
+                });
+                
+                // Make center cell number larger
+                const [centerX, centerY] = centerCell.split('-');
+                styles += `
+        [data-x="${centerX}"][data-y="${centerY}"] {
+            font-size: 16px !important;
+            font-weight: bold !important;
         }
+                `;
+            }
+        });
         
         return styles;
     }
 
-    findCenterCell(group) {
-        const minX = Math.min(...group.map(p => p.x));
-        const maxX = Math.max(...group.map(p => p.x));
-        const minY = Math.min(...group.map(p => p.y));
-        const maxY = Math.max(...group.map(p => p.y));
+    getBorderColorForType(type) {
+        const colorMap = {
+            'stall-standard': '#77bc1f',
+            'stall-medical': '#dc2626',
+            'stall-featured': '#10b981',
+            'building': '#4a5568',
+            'infrastructure': '#ffd700',
+            'empty': 'transparent'
+        };
+        return colorMap[type] || 'transparent';
+    }
+
+    findGroupCenter(cells) {
+        // Find geometric center of the group
+        const coords = cells.map(cellKey => {
+            const [x, y] = cellKey.split('-').map(Number);
+            return { x, y, key: cellKey };
+        });
+        
+        const minX = Math.min(...coords.map(c => c.x));
+        const maxX = Math.max(...coords.map(c => c.x));
+        const minY = Math.min(...coords.map(c => c.y));
+        const maxY = Math.max(...coords.map(c => c.y));
         
         const centerX = Math.floor((minX + maxX) / 2);
         const centerY = Math.floor((minY + maxY) / 2);
         
         // Find the cell closest to the calculated center
-        return group.reduce((closest, current) => {
-            const closestDist = Math.abs(closest.x - centerX) + Math.abs(closest.y - centerY);
-            const currentDist = Math.abs(current.x - centerX) + Math.abs(current.y - centerY);
-            return currentDist < closestDist ? current : closest;
-        }, group[0]);
+        let closestCell = coords[0];
+        let minDistance = Infinity;
+        
+        coords.forEach(coord => {
+            const distance = Math.abs(coord.x - centerX) + Math.abs(coord.y - centerY);
+            if (distance < minDistance) {
+                minDistance = distance;
+                closestCell = coord;
+            }
+        });
+        
+        return closestCell.key;
     }
 
     generateCellHTML(cellData) {
@@ -1226,23 +1204,22 @@ class MapBuilder {
             content = 'INF';
         }
 
-        html = `            <div class="${classes.join(' ')}"${dataAttrs}>${content}</div>\n`;
+        // Add group class if part of a group
+        if (cellData.groupId) {
+            classes.push(`group-${cellData.groupId}`);
+        }
+
+        html = `            <div class="${classes.join(' ')}" data-x="${cellData.x}" data-y="${cellData.y}"${dataAttrs}>${content}</div>\n`;
         return html;
     }
 
     copyCode() {
-        console.log('📋 copyCode called');
-        
         const codeOutput = document.getElementById('codeOutput');
-        if (!codeOutput) {
-            console.error('❌ codeOutput element not found');
-            return;
-        }
+        if (!codeOutput) return;
         
         const code = codeOutput.textContent;
         
         if (!code) {
-            console.log('❌ No code to copy');
             alert('Generate code first!');
             return;
         }
@@ -1262,21 +1239,15 @@ class MapBuilder {
             }
             
             this.updateStatus('Code copied to clipboard! Create the HTML file and paste it in.');
-            console.log('✅ Code copied successfully');
         }).catch(() => {
-            console.error('❌ Failed to copy to clipboard');
             alert('Failed to copy to clipboard. Please select and copy the code manually.');
         });
     }
 
     updateStatus(message) {
-        console.log('📢 Status update:', message);
         const statusElement = document.getElementById('canvasStatus');
         if (statusElement) {
             statusElement.textContent = message;
-            console.log('✅ Status element updated');
-        } else {
-            console.error('❌ canvasStatus element not found');
         }
     }
 
@@ -1286,23 +1257,21 @@ class MapBuilder {
         
         if (dimensionsElement) {
             dimensionsElement.textContent = `Grid: ${this.gridWidth}×${this.gridHeight}`;
-        } else {
-            console.error('❌ gridDimensions element not found');
         }
         
         if (cellCountElement) {
             const assignedCells = Object.keys(this.gridData).length;
-            cellCountElement.textContent = `Cells: ${assignedCells} assigned`;
-        } else {
-            console.error('❌ cellCount element not found');
+            const groupCount = Object.keys(this.groups).length;
+            cellCountElement.textContent = `Cells: ${assignedCells} assigned, ${groupCount} groups`;
         }
     }
 
     resetMapData() {
-        console.log('🔄 resetMapData called');
-        
         this.gridData = {};
+        this.groups = {};
+        this.currentGroup = [];
         this.nextStallId = 1;
+        this.nextGroupId = 1;
         
         // Reset form inputs
         const stallNumberElement = document.getElementById('stallNumber');
@@ -1327,6 +1296,11 @@ class MapBuilder {
         }
         this.currentStallType = 'stall-standard';
         
+        // Reset group mode
+        if (this.groupMode) {
+            this.toggleGroupMode();
+        }
+        
         // Clear export area
         const codeOutput = document.getElementById('codeOutput');
         if (codeOutput) {
@@ -1338,8 +1312,6 @@ class MapBuilder {
         if (copyCodeBtn) {
             copyCodeBtn.disabled = true;
         }
-        
-        console.log('✅ Map data reset complete');
     }
 
     showLoading() {
@@ -1355,29 +1327,66 @@ class MapBuilder {
             loadingElement.style.display = 'none';
         }
     }
+
+    showToast(message, type = 'info') {
+        const toast = document.createElement('div');
+        toast.className = `toast toast-${type}`;
+        
+        const iconMap = {
+            success: '✓',
+            error: '✕',
+            warning: '⚠',
+            info: 'ℹ'
+        };
+
+        const toastContent = document.createElement('div');
+        toastContent.className = 'toast-content';
+        
+        const icon = document.createElement('span');
+        icon.className = 'toast-icon';
+        icon.textContent = iconMap[type] || iconMap.info;
+        
+        const messageSpan = document.createElement('span');
+        messageSpan.className = 'toast-message';
+        messageSpan.textContent = message;
+        
+        toastContent.appendChild(icon);
+        toastContent.appendChild(messageSpan);
+        
+        const closeBtn = document.createElement('button');
+        closeBtn.className = 'toast-close';
+        closeBtn.textContent = '×';
+        closeBtn.onclick = () => toast.remove();
+        
+        toast.appendChild(toastContent);
+        toast.appendChild(closeBtn);
+
+        // Add to toast container
+        let container = document.getElementById('toastContainer');
+        if (!container) {
+            container = document.createElement('div');
+            container.id = 'toastContainer';
+            container.className = 'toast-container';
+            document.body.appendChild(container);
+        }
+
+        container.appendChild(toast);
+
+        // Auto remove after 4 seconds
+        setTimeout(() => {
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 4000);
+
+        // Animate in
+        setTimeout(() => {
+            toast.classList.add('toast-show');
+        }, 10);
+    }
 }
 
 // Initialize the map builder when the page loads
 document.addEventListener('DOMContentLoaded', () => {
-    console.log('🌟 DOM loaded, initializing MapBuilder...');
-    
-    // Add extra debugging for DOM state
-    console.log('📊 Document ready state:', document.readyState);
-    console.log('🔗 Current URL:', window.location.href);
-    console.log('📄 Document title:', document.title);
-    
-    // Check if essential elements exist
-    const essentialElements = ['mapLocation', 'welcomeScreen', 'gridSetupInterface'];
-    essentialElements.forEach(id => {
-        const element = document.getElementById(id);
-        console.log(`🔍 Essential element ${id}:`, element ? '✅ Found' : '❌ Missing');
-    });
-    
-    try {
-        window.mapBuilder = new MapBuilder();
-        console.log('🎉 MapBuilder successfully initialized');
-    } catch (error) {
-        console.error('💥 Failed to initialize MapBuilder:', error);
-        console.error('Stack trace:', error.stack);
-    }
+    window.mapBuilder = new MapBuilder();
 });

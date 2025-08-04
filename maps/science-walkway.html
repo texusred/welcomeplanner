@@ -4,12 +4,6 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Science Walkway Map | ARU Students' Union</title>
-    <meta name="description" content="Interactive map for Science Walkway at the ARU Students' Union Welcome Fair">
-    <meta name="theme-color" content="#00a5b4">
-    <link rel="manifest" href="../manifest.json">
-    <meta name="apple-mobile-web-app-capable" content="yes">
-    <meta name="apple-mobile-web-app-status-bar-style" content="default">
-    <meta name="apple-mobile-web-app-title" content="Union Fair">
     <style>
         body {
             margin: 0;
@@ -37,8 +31,8 @@
         
         .courtyard-grid {
             display: grid;
-            grid-template-columns: repeat(12, 1fr);
-            grid-template-rows: repeat(12, 50px);
+            grid-template-columns: repeat(8, 1fr);
+            grid-template-rows: repeat(15, 50px);
             gap: 2px;
             background: #e5e5e5;
             padding: 10px;
@@ -56,20 +50,17 @@
             cursor: pointer;
             transition: all 0.3s ease;
             position: relative;
-            border: 1px solid transparent;
         }
         
         .building {
             background: #4a5568;
             color: white;
             cursor: default;
-            border: 1px solid #4a5568;
         }
         
         .empty {
             background: transparent;
             cursor: default;
-            border: none;
         }
         
         .infrastructure {
@@ -82,19 +73,16 @@
         .stall-standard {
             background: #77bc1f;
             color: white;
-            border: 1px solid #77bc1f;
         }
         
         .stall-medical {
             background: #dc2626;
             color: white;
-            border: 1px solid #dc2626;
         }
         
         .stall-featured {
             background: #10b981;
             color: white;
-            border: 1px solid #10b981;
         }
         
         .stall:hover {
@@ -102,104 +90,6 @@
             box-shadow: 0 4px 12px rgba(0, 165, 180, 0.4);
             z-index: 10;
         }
-        
-        /* Merged cell styles */
-        
-        .cell[data-x="8"][data-y="3"], .cell[data-x="9"][data-y="3"], .cell[data-x="8"][data-y="4"], .cell[data-x="9"][data-y="4"] {
-            border: none;
-        }
-        
-        .cell[data-x="8"][data-y="3"] {
-            border-left: 2px solid #77bc1f;
-            
-            border-top: 2px solid #77bc1f;
-            
-        }
-            
-        .cell[data-x="9"][data-y="3"] {
-            
-            border-right: 2px solid #77bc1f;
-            border-top: 2px solid #77bc1f;
-            
-        }
-            
-        .cell[data-x="8"][data-y="4"] {
-            border-left: 2px solid #77bc1f;
-            
-            
-            border-bottom: 2px solid #77bc1f;
-        }
-            
-        .cell[data-x="9"][data-y="4"] {
-            
-            border-right: 2px solid #77bc1f;
-            
-            border-bottom: 2px solid #77bc1f;
-        }
-            
-        .cell[data-x="9"][data-y="3"] {
-            font-size: 0;
-        }
-                    
-        .cell[data-x="8"][data-y="4"] {
-            font-size: 0;
-        }
-                    
-        .cell[data-x="9"][data-y="4"] {
-            font-size: 0;
-        }
-                    
-        .cell[data-x="8"][data-y="3"] {
-            font-size: 16px;
-            font-weight: bold;
-        }
-            
-        .cell[data-x="9"][data-y="7"], .cell[data-x="10"][data-y="7"], .cell[data-x="9"][data-y="8"], .cell[data-x="10"][data-y="8"], .cell[data-x="9"][data-y="9"], .cell[data-x="10"][data-y="9"] {
-            border: none;
-        }
-        
-        .cell[data-x="9"][data-y="7"] {
-            border-left: 2px solid #4a5568;
-            
-            border-top: 2px solid #4a5568;
-            
-        }
-            
-        .cell[data-x="10"][data-y="7"] {
-            
-            border-right: 2px solid #4a5568;
-            border-top: 2px solid #4a5568;
-            
-        }
-            
-        .cell[data-x="9"][data-y="8"] {
-            border-left: 2px solid #4a5568;
-            
-            
-            
-        }
-            
-        .cell[data-x="10"][data-y="8"] {
-            
-            border-right: 2px solid #4a5568;
-            
-            
-        }
-            
-        .cell[data-x="9"][data-y="9"] {
-            border-left: 2px solid #4a5568;
-            
-            
-            border-bottom: 2px solid #4a5568;
-        }
-            
-        .cell[data-x="10"][data-y="9"] {
-            
-            border-right: 2px solid #4a5568;
-            
-            border-bottom: 2px solid #4a5568;
-        }
-            
         
         /* Highlight stall from URL parameter */
         .stall.highlighted {
@@ -252,8 +142,8 @@
         
         @media (max-width: 768px) {
     .courtyard-grid {
-        grid-template-columns: repeat(12, 1fr);
-        grid-template-rows: repeat(12, 40px);
+        grid-template-columns: repeat(8, 1fr);
+        grid-template-rows: repeat(15, 40px);
     }
 }
     </style>
@@ -265,172 +155,154 @@
         
         <div class="courtyard-grid">
             <!-- Row 1 -->
+            <div class="cell building"></div>
             <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="49">49</div>
+            <div class="cell stall-standard stall" data-stall="49">49</div>
+            <div class="cell stall-standard stall" data-stall="50">50</div>
+            <div class="cell stall-standard stall" data-stall="50">50</div>
             <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
+            <div class="cell building"></div>
 
             <!-- Row 2 -->
+            <div class="cell building"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
+            <div class="cell building"></div>
 
             <!-- Row 3 -->
+            <div class="cell building"></div>
+            <div class="cell stall-standard stall" data-stall="62">62</div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="51">51</div>
+            <div class="cell building"></div>
 
             <!-- Row 4 -->
+            <div class="cell building"></div>
+            <div class="cell stall-standard stall" data-stall="63">63</div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
-            <div class="cell stall-standard stall" data-stall=""></div>
-            <div class="cell stall-standard stall" data-stall=""></div>
             <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell stall-standard stall" data-stall="1">1</div>
-            <div class="cell stall-standard stall" data-stall="1">1</div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="52">52</div>
+            <div class="cell building"></div>
 
             <!-- Row 5 -->
+            <div class="cell building"></div>
+            <div class="cell stall-standard stall" data-stall="64">64</div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
-            <div class="cell stall-standard stall" data-stall=""></div>
-            <div class="cell stall-standard stall" data-stall=""></div>
             <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell stall-standard stall" data-stall="1">1</div>
-            <div class="cell stall-standard stall" data-stall="1">1</div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="53">53</div>
+            <div class="cell building"></div>
 
             <!-- Row 6 -->
-            <div class="cell stall-medical stall" data-stall="2">2</div>
+            <div class="cell building"></div>
+            <div class="cell stall-standard stall" data-stall="65">65</div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="54">54</div>
+            <div class="cell building"></div>
 
             <!-- Row 7 -->
-            <div class="cell stall-medical stall" data-stall="3">3</div>
+            <div class="cell building"></div>
+            <div class="cell stall-standard stall" data-stall="66">66</div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="55">55</div>
+            <div class="cell building"></div>
 
             <!-- Row 8 -->
-            <div class="cell stall-medical stall" data-stall="4">4</div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
             <div class="cell building"></div>
-            <div class="cell building"></div>
+            <div class="cell stall-standard stall" data-stall="67">67</div>
             <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="56">56</div>
+            <div class="cell building"></div>
 
             <!-- Row 9 -->
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
             <div class="cell building"></div>
-            <div class="cell building"></div>
+            <div class="cell stall-standard stall" data-stall="68">68</div>
             <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="57">57</div>
+            <div class="cell building"></div>
 
             <!-- Row 10 -->
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell infrastructure">INF</div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
             <div class="cell building"></div>
-            <div class="cell building"></div>
+            <div class="cell stall-standard stall" data-stall="69">69</div>
             <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="58">58</div>
+            <div class="cell building"></div>
 
             <!-- Row 11 -->
+            <div class="cell building"></div>
+            <div class="cell stall-standard stall" data-stall="70">70</div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="59">59</div>
+            <div class="cell building"></div>
 
             <!-- Row 12 -->
+            <div class="cell building"></div>
+            <div class="cell infrastructure">STEPS</div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="60">60</div>
+            <div class="cell building"></div>
+
+            <!-- Row 13 -->
+            <div class="cell building"></div>
+            <div class="cell infrastructure">STEPS</div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell empty"></div>
+            <div class="cell stall-standard stall" data-stall="61">61</div>
+            <div class="cell building"></div>
+
+            <!-- Row 14 -->
+            <div class="cell building"></div>
+            <div class="cell infrastructure">STEPS</div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
+            <div class="cell building"></div>
+
+            <!-- Row 15 -->
+            <div class="cell building"></div>
+            <div class="cell infrastructure">STEPS</div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
             <div class="cell empty"></div>
-            <div class="cell empty"></div>
-            <div class="cell empty"></div>
+            <div class="cell building"></div>
 
         </div>
         
@@ -443,82 +315,56 @@
         </div>
     </div>
     
-<script>
-        // Dynamic stall data loading
-        let stallData = {};
+    <script>
+        // Stall data for interactivity
+        const stallData = {
+            51: { name: "Stall 51" },
+            52: { name: "Stall 52" },
+            53: { name: "Stall 53" },
+            54: { name: "Stall 54" },
+            55: { name: "Stall 55" },
+            56: { name: "Stall 56" },
+            57: { name: "Stall 57" },
+            58: { name: "Stall 58" },
+            59: { name: "Stall 59" },
+            60: { name: "Stall 60" },
+            61: { name: "Stall 61" },
+            62: { name: "Stall 62" },
+            63: { name: "Stall 63" },
+            64: { name: "Stall 64" },
+            65: { name: "Stall 65" },
+            66: { name: "Stall 66" },
+            67: { name: "Stall 67" },
+            68: { name: "Stall 68" },
+            69: { name: "Stall 69" },
+            70: { name: "Stall 70" },
+            49: { name: "Stall 49" },
+            49: { name: "Stall 49" },
+            50: { name: "Stall 50" },
+            50: { name: "Stall 50" },
+        };
         
-        async function loadStallData() {
-            try {
-                const response = await fetch('../data/stallholders.json');
-                const allStalls = await response.json();
-                
-                // Filter for this location only
-                const locationStalls = allStalls.filter(stall => 
-                    stall.location === "Science Walkway"
-                );
-                
-                // Convert to lookup object
-                locationStalls.forEach(stall => {
-                    stallData[stall.stallNumber] = {
-                        name: stall.name,
-                        group: stall.group
-                    };
-                });
-                
-                console.log('Stall data loaded:', Object.keys(stallData).length, 'stalls');
-                
-                // Set up click handlers AFTER data is loaded
-                setupClickHandlers();
-                
-            } catch (error) {
-                console.error('Failed to load stall data:', error);
-            }
-        }
-        
-        function setupClickHandlers() {
-            // Add click handlers to stalls
-            document.querySelectorAll('.stall-standard, .stall-medical, .stall-featured').forEach(stall => {
-                stall.addEventListener('click', function() {
-                    const stallNum = this.dataset.stall;
-                    console.log('Clicked stall:', stallNum, 'Data available:', !!stallData[stallNum]);
-                    if (stallData[stallNum]) {
-                        document.getElementById('stallName').textContent = stallData[stallNum].name || 'Stall ' + stallNum;
-                        document.getElementById('stallNumber').textContent = stallNum;
-                        document.getElementById('infoPanel').style.display = 'block';
-                    }
-                });
+        // Add click handlers to stalls
+        document.querySelectorAll('.stall-standard, .stall-medical, .stall-featured').forEach(stall => {
+            stall.addEventListener('click', function() {
+                const stallNum = this.dataset.stall;
+                if (stallData[stallNum]) {
+                    document.getElementById('stallName').textContent = stallData[stallNum].name || 'Stall ' + stallNum;
+                    document.getElementById('stallNumber').textContent = stallNum;
+                    document.getElementById('infoPanel').style.display = 'block';
+                }
             });
-        }
+        });
         
-        // Load data when page loads
-        loadStallData();
-        
-        // Highlight stall from URL parameter (runs immediately - doesn't need data)
-        console.log('Starting highlight check...');
+        // Highlight stall from URL parameter
         const urlParams = new URLSearchParams(window.location.search);
         const highlightStall = urlParams.get('highlight');
-        console.log('URL highlight parameter:', highlightStall);
-        console.log('Current URL:', window.location.href);
-        
         if (highlightStall) {
-            console.log('Looking for stall element with data-stall="' + highlightStall + '"');
             const stallElement = document.querySelector('[data-stall="' + highlightStall + '"]');
-            console.log('Found stall element:', stallElement);
-            
             if (stallElement) {
-                console.log('Adding highlighted class...');
                 stallElement.classList.add('highlighted');
                 stallElement.scrollIntoView({ behavior: 'smooth', block: 'center' });
-                console.log('Highlighting applied successfully');
-            } else {
-                console.log('Stall element not found! Available stalls on page:');
-                const allStalls = document.querySelectorAll('[data-stall]');
-                allStalls.forEach(stall => {
-                    console.log('  - Stall:', stall.dataset.stall);
-                });
             }
-        } else {
-            console.log('No highlight parameter found in URL');
         }
     </script>
 </body>
