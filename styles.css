@@ -95,6 +95,13 @@ p { margin-bottom: 1rem; }
   gap: 1rem;
 }
 
+.union-logo-img {
+  height: 60px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+}
+
 .location-selector {
   display: flex;
   align-items: center;
