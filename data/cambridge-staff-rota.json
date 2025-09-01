@@ -1,0 +1,538 @@
+{
+  "eventInfo": {
+    "title": "Welcome Fair 2024 - Cambridge",
+    "date": "Wednesday",
+    "fairOpen": "10:30",
+    "fairClose": "15:00"
+  },
+  "timeSlots": [
+    "06:00", "07:00", "08:00", "09:00", "09:15", "10:00", "10:30", 
+    "11:00", "12:00", "13:00", "14:00", "15:00", "16:00", "17:00"
+  ],
+  "taskLegend": {
+    "S": "Set Up",
+    "B": "Staff Briefing",
+    "HS": "Health & Safety Check",
+    "EM": "Event Manager",
+    "AM": "Area Manager",
+    "PD": "Pack Down",
+    "H2H": "SU Stall - Here to Help",
+    "GI": "SU Stall - Get Involved",
+    "F": "SU Stall - Freebies",
+    "PP": "PayPoint",
+    "WZ": "Wellbeing Zone",
+    "SOC": "Societies Hub",
+    "TAP": "Attendance Tracking",
+    "C": "Communications",
+    "L": "Lunch",
+    "SHOP": "Shop Duties",
+    "STAGE": "Stage Management",
+    "WELCOME DESK": "Welcome Desk",
+    "ST": "Student Support"
+  },
+  "staff": [
+    {
+      "name": "Abi",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "HS", "taskName": "Health & Safety Check"},
+        {"timeSlot": "10:30-11:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "11:00-12:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "12:00-13:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "13:00-14:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "14:00-15:00", "task": "EM", "taskName": "Event Manager"}
+      ]
+    },
+    {
+      "name": "Tony",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "10:30-11:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "11:00-12:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "12:00-13:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "13:00-14:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "14:00-15:00", "task": "EM", "taskName": "Event Manager"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Ramees",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "STAGE", "taskName": "Stage Management"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Rebecca",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "11:00-12:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "14:00-15:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Rhys",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "AM", "taskName": "Area Manager"},
+        {"timeSlot": "11:00-12:00", "task": "AM", "taskName": "Area Manager"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "AM", "taskName": "Area Manager"},
+        {"timeSlot": "14:00-15:00", "task": "AM", "taskName": "Area Manager"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Rohan",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "14:00-15:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Rose",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "11:00-12:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "12:00-13:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Ross",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "11:00-12:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "14:00-15:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Russell",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "11:00-12:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "SOC", "taskName": "Societies Hub"},
+        {"timeSlot": "14:00-15:00", "task": "SOC", "taskName": "Societies Hub"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Sarah Baxter-Jones",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "11:00-12:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "14:00-15:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Sarah Rothera",
+      "schedule": [
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "11:00-12:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "12:00-13:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Sreya",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "ST", "taskName": "Student Support"},
+        {"timeSlot": "10:30-11:00", "task": "ST", "taskName": "Student Support"},
+        {"timeSlot": "11:00-12:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "12:00-13:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Sue",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "11:00-12:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "12:00-13:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Tom",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "11:00-12:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "12:00-13:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Alexis",
+      "schedule": [
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "PP", "taskName": "PayPoint"},
+        {"timeSlot": "11:00-12:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "PP", "taskName": "PayPoint"},
+        {"timeSlot": "14:00-15:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Aliza",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "AM", "taskName": "Area Manager"},
+        {"timeSlot": "11:00-12:00", "task": "AM", "taskName": "Area Manager"},
+        {"timeSlot": "12:00-13:00", "task": "AM", "taskName": "Area Manager"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "AM", "taskName": "Area Manager"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Demi",
+      "schedule": [
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "11:00-12:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "12:00-13:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Emily M.",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "11:00-12:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "12:00-13:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "13:00-14:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "14:00-15:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Emily S.",
+      "schedule": [
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "SOC", "taskName": "Societies Hub"},
+        {"timeSlot": "11:00-12:00", "task": "SOC", "taskName": "Societies Hub"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "14:00-15:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Emma",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "11:00-12:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "14:00-15:00", "task": "H2H", "taskName": "SU Stall - Here to Help"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Gawdham",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "STAGE", "taskName": "Stage Management"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Harvey",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "11:00-12:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "12:00-13:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "13:00-14:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "14:00-15:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "James",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "WELCOME DESK", "taskName": "Welcome Desk"},
+        {"timeSlot": "10:30-11:00", "task": "PP", "taskName": "PayPoint"},
+        {"timeSlot": "11:00-12:00", "task": "PP", "taskName": "PayPoint"},
+        {"timeSlot": "12:00-13:00", "task": "PP", "taskName": "PayPoint"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "PP", "taskName": "PayPoint"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Jeena",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "11:00-12:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "12:00-13:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Jo B",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "11:00-12:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "12:00-13:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Jo L",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "GI", "taskName": "SU Stall - Get Involved"},
+        {"timeSlot": "11:00-12:00", "task": "GI", "taskName": "SU Stall - Get Involved"}
+      ]
+    },
+    {
+      "name": "John",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "11:00-12:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "12:00-13:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Julie",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "11:00-12:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "12:00-13:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "13:00-14:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "14:00-15:00", "task": "SHOP", "taskName": "Shop Duties"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Katie",
+      "schedule": [
+        {"timeSlot": "06:00-07:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "07:00-08:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "08:00-09:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "11:00-12:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "12:00-13:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "13:00-14:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "14:00-15:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Kim",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "11:00-12:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "12:00-13:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "TAP", "taskName": "Attendance Tracking"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Mal",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "11:00-12:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "12:00-13:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "F", "taskName": "SU Stall - Freebies"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Minh",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "11:00-12:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "12:00-13:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "13:00-14:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "14:00-15:00", "task": "C", "taskName": "Communications"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    },
+    {
+      "name": "Nicola",
+      "schedule": [
+        {"timeSlot": "09:00-09:15", "task": "B", "taskName": "Staff Briefing"},
+        {"timeSlot": "09:15-10:00", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:00-10:30", "task": "S", "taskName": "Set Up"},
+        {"timeSlot": "10:30-11:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "11:00-12:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "12:00-13:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "13:00-14:00", "task": "L", "taskName": "Lunch"},
+        {"timeSlot": "14:00-15:00", "task": "WZ", "taskName": "Wellbeing Zone"},
+        {"timeSlot": "15:00-16:00", "task": "PD", "taskName": "Pack Down"},
+        {"timeSlot": "16:00-17:00", "task": "PD", "taskName": "Pack Down"}
+      ]
+    }
+  ]
+}

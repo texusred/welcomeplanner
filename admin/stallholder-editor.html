@@ -4,24 +4,29 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Stallholder Editor | ARU Students' Union</title>
+    <link href="https://fonts.googleapis.com/css2?family=Atkinson+Hyperlegible:wght@400;700&display=swap" rel="stylesheet">
+    <meta name="theme-color" content="#D7FB59">
     <style>
-        /* ARU Brand Colors */
+        /* ARU Brand Colors - New Brand */
         :root {
-            --aru-teal: #00a5b4;
-            --aru-green: #77bc1f;
-            --aru-yellow: #f2e400;
-            --aru-dark-grey: #595959;
-            --aru-light-grey: #dbdbe0;
-            --aru-white: #ffffff;
-            --shadow-light: rgba(0, 165, 180, 0.1);
-            --shadow-medium: rgba(0, 165, 180, 0.2);
-            --text-primary: var(--aru-dark-grey);
-            --text-secondary: #757575;
+            --brilliant-green: #D7FB59;
+            --union-black: #000000;
+            --union-white: #ffffff;
+            --union-red: #EF3955;
+            --union-aqua: #7CF9CB;
+            --union-fuscia: #EA46E5;
+            --union-blue: #83B0FF;
+            --union-orange: #F36D21;
+            --union-lilac: #D4BAF9;
+            --shadow-light: rgba(0, 0, 0, 0.1);
+            --shadow-medium: rgba(0, 0, 0, 0.2);
+            --text-primary: var(--union-black);
+            --text-secondary: #333333;
             --background: #fafafa;
             --border-light: #e0e0e0;
-            --success-green: #22c55e;
-            --warning-orange: #f59e0b;
-            --error-red: #ef4444;
+            --success-green: var(--brilliant-green);
+            --warning-orange: var(--union-orange);
+            --error-red: var(--union-red);
         }
 
         * {
@@ -31,7 +36,7 @@
         }
 
         body {
-            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            font-family: 'Atkinson Hyperlegible', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
             background: var(--background);
             color: var(--text-primary);
             line-height: 1.6;
@@ -40,8 +45,8 @@
 
         /* Header */
         .header {
-            background: linear-gradient(135deg, var(--aru-teal) 0%, var(--aru-green) 100%);
-            color: var(--aru-white);
+            background: var(--brilliant-green);
+            color: var(--union-black);
             padding: 1.5rem 1rem;
             position: relative;
             overflow: hidden;
@@ -77,25 +82,26 @@
         }
 
         .back-button {
-            background: rgba(255, 255, 255, 0.2);
-            color: var(--aru-white);
-            border: 2px solid rgba(255, 255, 255, 0.3);
+            background: var(--union-black);
+            color: var(--brilliant-green);
+            border: 3px solid var(--union-black);
             padding: 0.75rem 1.5rem;
             border-radius: 12px;
             font-size: 1rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             display: flex;
             align-items: center;
             gap: 0.5rem;
             text-decoration: none;
-            backdrop-filter: blur(10px);
+            font-family: 'Atkinson Hyperlegible', sans-serif;
         }
 
         .back-button:hover {
-            background: rgba(255, 255, 255, 0.3);
-            border-color: rgba(255, 255, 255, 0.5);
+            background: var(--brilliant-green);
+            color: var(--union-black);
+            border-color: var(--union-black);
             transform: translateY(-2px);
             box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
         }
@@ -109,7 +115,7 @@
 
         /* Controls */
         .controls-section {
-            background: var(--aru-white);
+            background: var(--union-white);
             padding: 1.5rem;
             border-radius: 12px;
             box-shadow: 0 4px 16px var(--shadow-light);
@@ -118,6 +124,7 @@
             grid-template-columns: 1fr auto;
             gap: 2rem;
             align-items: end;
+            border: 3px solid var(--union-black);
         }
 
         .search-filters {
@@ -133,23 +140,24 @@
         }
 
         .input-group label {
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-primary);
             font-size: 0.9rem;
         }
 
         .search-input, .filter-select {
             padding: 0.75rem;
-            border: 2px solid var(--border-light);
+            border: 3px solid var(--brilliant-green);
             border-radius: 8px;
             font-size: 1rem;
-            background: var(--aru-white);
+            background: var(--union-white);
+            font-family: 'Atkinson Hyperlegible', sans-serif;
         }
 
         .search-input:focus, .filter-select:focus {
             outline: none;
-            border-color: var(--aru-teal);
-            box-shadow: 0 0 0 3px rgba(0, 165, 180, 0.1);
+            border-color: var(--union-black);
+            box-shadow: 0 0 0 3px rgba(215, 251, 89, 0.3);
         }
 
         .control-actions {
@@ -159,15 +167,16 @@
 
         /* Table Container */
         .table-container {
-            background: var(--aru-white);
+            background: var(--union-white);
             border-radius: 12px;
             box-shadow: 0 4px 16px var(--shadow-light);
             overflow: hidden;
+            border: 3px solid var(--union-black);
         }
 
         .table-header {
-            background: var(--aru-teal);
-            color: var(--aru-white);
+            background: var(--union-black);
+            color: var(--brilliant-green);
             padding: 1rem 1.5rem;
             display: flex;
             justify-content: space-between;
@@ -176,7 +185,7 @@
 
         .table-title {
             font-size: 1.2rem;
-            font-weight: 600;
+            font-weight: 700;
             margin: 0;
         }
 
@@ -205,7 +214,7 @@
 
         .stallholder-table th {
             background: #f8f9fa;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-primary);
             position: sticky;
             top: 0;
@@ -213,7 +222,7 @@
         }
 
         .stallholder-table tr:hover {
-            background: rgba(0, 165, 180, 0.05);
+            background: rgba(215, 251, 89, 0.1);
         }
 
         .editable-cell {
@@ -227,24 +236,24 @@
         }
 
         .editable-cell:hover {
-            background: rgba(0, 165, 180, 0.1);
-            border-color: var(--aru-teal);
+            background: rgba(215, 251, 89, 0.2);
+            border-color: var(--brilliant-green);
         }
 
         .editable-cell:focus {
             outline: none;
-            background: var(--aru-white);
-            border-color: var(--aru-teal);
-            box-shadow: 0 0 0 3px rgba(0, 165, 180, 0.2);
+            background: var(--union-white);
+            border-color: var(--union-black);
+            box-shadow: 0 0 0 3px rgba(215, 251, 89, 0.3);
         }
 
         .stall-number {
-            background: var(--aru-teal);
-            color: var(--aru-white);
+            background: var(--union-black);
+            color: var(--brilliant-green);
             padding: 0.25rem 0.75rem;
             border-radius: 20px;
             font-size: 0.9rem;
-            font-weight: 600;
+            font-weight: 700;
             min-width: 40px;
             text-align: center;
             display: inline-block;
@@ -257,12 +266,13 @@
             background: transparent;
             cursor: pointer;
             min-width: 140px;
+            font-family: 'Atkinson Hyperlegible', sans-serif;
         }
 
         .location-select:focus, .group-select:focus {
             outline: none;
-            border-color: var(--aru-teal);
-            box-shadow: 0 0 0 3px rgba(0, 165, 180, 0.1);
+            border-color: var(--union-black);
+            box-shadow: 0 0 0 3px rgba(215, 251, 89, 0.3);
         }
 
         .row-actions {
@@ -284,15 +294,15 @@
         }
 
         .stallholder-card {
-            background: var(--aru-white);
-            border: 2px solid var(--border-light);
+            background: var(--union-white);
+            border: 3px solid var(--brilliant-green);
             border-radius: 12px;
             padding: 1.5rem;
             transition: all 0.3s ease;
         }
 
         .stallholder-card:hover {
-            border-color: var(--aru-teal);
+            border-color: var(--union-red);
             box-shadow: 0 4px 16px var(--shadow-light);
         }
 
@@ -305,17 +315,17 @@
         }
 
         .card-stall-number {
-            background: var(--aru-teal);
-            color: var(--aru-white);
+            background: var(--union-black);
+            color: var(--brilliant-green);
             padding: 0.5rem 1rem;
             border-radius: 20px;
-            font-weight: 600;
+            font-weight: 700;
             flex-shrink: 0;
         }
 
         .card-name {
             flex: 1;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-primary);
         }
 
@@ -329,7 +339,7 @@
 
         .card-field label {
             display: block;
-            font-weight: 600;
+            font-weight: 700;
             color: var(--text-primary);
             margin-bottom: 0.5rem;
             font-size: 0.9rem;
@@ -339,23 +349,24 @@
         .card-select {
             width: 100%;
             padding: 0.75rem;
-            border: 2px solid var(--border-light);
+            border: 3px solid var(--brilliant-green);
             border-radius: 8px;
             font-size: 1rem;
-            background: var(--aru-white);
+            background: var(--union-white);
+            font-family: 'Atkinson Hyperlegible', sans-serif;
         }
 
         .card-input:focus,
         .card-select:focus {
             outline: none;
-            border-color: var(--aru-teal);
-            box-shadow: 0 0 0 3px rgba(0, 165, 180, 0.1);
+            border-color: var(--union-black);
+            box-shadow: 0 0 0 3px rgba(215, 251, 89, 0.3);
         }
 
         .card-actions {
             margin-top: 1.5rem;
             padding-top: 1rem;
-            border-top: 1px solid var(--border-light);
+            border-top: 3px solid var(--brilliant-green);
             display: flex;
             justify-content: flex-end;
         }
@@ -366,14 +377,15 @@
             align-items: center;
             gap: 0.5rem;
             padding: 0.75rem 1.5rem;
-            border: none;
+            border: 3px solid;
             border-radius: 8px;
             font-size: 0.95rem;
-            font-weight: 600;
+            font-weight: 700;
             cursor: pointer;
             transition: all 0.3s ease;
             text-decoration: none;
             min-height: 44px;
+            font-family: 'Atkinson Hyperlegible', sans-serif;
         }
 
         .btn-sm {
@@ -383,55 +395,68 @@
         }
 
         .btn-primary {
-            background: var(--aru-teal);
-            color: var(--aru-white);
+            background: var(--union-black);
+            color: var(--brilliant-green);
+            border-color: var(--union-black);
         }
 
         .btn-primary:hover {
-            background: #008a96;
+            background: var(--brilliant-green);
+            color: var(--union-black);
+            border-color: var(--union-black);
             transform: translateY(-2px);
-            box-shadow: 0 4px 16px rgba(0, 165, 180, 0.3);
+            box-shadow: 0 4px 16px rgba(215, 251, 89, 0.3);
         }
 
         .btn-success {
             background: var(--success-green);
-            color: var(--aru-white);
+            color: var(--union-black);
+            border-color: var(--success-green);
         }
 
         .btn-success:hover {
-            background: #16a34a;
+            background: var(--union-aqua);
+            color: var(--union-black);
+            border-color: var(--union-aqua);
             transform: translateY(-2px);
         }
 
         .btn-warning {
             background: var(--warning-orange);
-            color: var(--aru-white);
+            color: var(--union-white);
+            border-color: var(--warning-orange);
         }
 
         .btn-warning:hover {
-            background: #d97706;
+            background: var(--union-fuscia);
+            color: var(--union-white);
+            border-color: var(--union-fuscia);
             transform: translateY(-2px);
         }
 
         .btn-danger {
             background: var(--error-red);
-            color: var(--aru-white);
+            color: var(--union-white);
+            border-color: var(--error-red);
         }
 
         .btn-danger:hover {
-            background: #dc2626;
+            background: var(--union-black);
+            color: var(--error-red);
+            border-color: var(--union-black);
             transform: translateY(-2px);
         }
 
         .btn-secondary {
-            background: var(--aru-white);
-            color: var(--aru-teal);
-            border: 2px solid var(--aru-teal);
+            background: var(--union-white);
+            color: var(--union-black);
+            border-color: var(--union-black);
         }
 
         .btn-secondary:hover {
-            background: var(--aru-teal);
-            color: var(--aru-white);
+            background: var(--union-red);
+            color: var(--union-white);
+            border-color: var(--union-red);
             transform: translateY(-2px);
         }
 
@@ -459,10 +484,10 @@
         }
 
         .toast {
-            background: var(--aru-white);
+            background: var(--union-white);
             border-radius: 12px;
             box-shadow: 0 8px 32px var(--shadow-medium);
-            border-left: 4px solid var(--aru-teal);
+            border-left: 4px solid var(--union-black);
             padding: 1rem;
             display: flex;
             align-items: center;
@@ -477,10 +502,10 @@
             opacity: 1;
         }
 
-        .toast-success { border-left-color: #22c55e; }
-        .toast-error { border-left-color: #ef4444; }
-        .toast-warning { border-left-color: #f59e0b; }
-        .toast-info { border-left-color: var(--aru-teal); }
+        .toast-success { border-left-color: var(--success-green); }
+        .toast-error { border-left-color: var(--error-red); }
+        .toast-warning { border-left-color: var(--warning-orange); }
+        .toast-info { border-left-color: var(--union-black); }
 
         .toast-content {
             flex: 1;
@@ -490,14 +515,14 @@
         }
 
         .toast-icon {
-            font-weight: bold;
+            font-weight: 700;
             font-size: 1.1rem;
         }
 
-        .toast-success .toast-icon { color: #22c55e; }
-        .toast-error .toast-icon { color: #ef4444; }
-        .toast-warning .toast-icon { color: #f59e0b; }
-        .toast-info .toast-icon { color: var(--aru-teal); }
+        .toast-success .toast-icon { color: var(--success-green); }
+        .toast-error .toast-icon { color: var(--error-red); }
+        .toast-warning .toast-icon { color: var(--warning-orange); }
+        .toast-info .toast-icon { color: var(--union-black); }
 
         .toast-message {
             color: var(--text-primary);
@@ -518,8 +543,8 @@
         }
 
         .toast-close:hover {
-            background: var(--aru-light-grey);
-            color: var(--text-primary);
+            background: var(--brilliant-green);
+            color: var(--union-black);
         }
 
         /* Loading */
@@ -532,8 +557,8 @@
         .loading-spinner {
             width: 40px;
             height: 40px;
-            border: 4px solid var(--aru-light-grey);
-            border-top: 4px solid var(--aru-teal);
+            border: 4px solid var(--border-light);
+            border-top: 4px solid var(--union-black);
             border-radius: 50%;
             animation: spin 1s linear infinite;
             margin: 0 auto 1rem;
@@ -599,7 +624,7 @@
     <header class="header">
         <div class="header-content">
             <div class="header-left">
-                <img src="assets/images/logo.png" 
+                <img src="assets/images/unionlogo.png" 
                      alt="ARU Students' Union" 
                      class="aru-logo-img">
                 <h1 class="page-title">Stallholder Editor</h1>
@@ -835,7 +860,7 @@
                 const tbody = document.getElementById('stallholdersTableBody');
 
                 if (this.filteredStallholders.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #757575; padding: 2rem;">No stallholders found</td></tr>';
+                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #333333; padding: 2rem;">No stallholders found</td></tr>';
                     return;
                 }
 
@@ -846,7 +871,7 @@
                             <td>
                                 <div class="editable-cell" contenteditable="true" 
                                      data-field="stallNumber" data-index="${actualIndex}"
-                                     style="background: var(--aru-teal); color: white; text-align: center; border-radius: 20px; padding: 0.25rem 0.75rem; min-width: 60px;">
+                                     style="background: var(--union-black); color: var(--brilliant-green); text-align: center; border-radius: 20px; padding: 0.25rem 0.75rem; min-width: 60px;">
                                     ${stall.stallNumber}
                                 </div>
                             </td>
@@ -890,7 +915,7 @@
                 const container = document.getElementById('cardsContainer');
 
                 if (this.filteredStallholders.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; color: #757575; padding: 2rem;">No stallholders found</div>';
+                    container.innerHTML = '<div style="text-align: center; color: #333333; padding: 2rem;">No stallholders found</div>';
                     return;
                 }
 
@@ -1097,3 +1122,4 @@
     </script>
 </body>
 </html>
+                                
