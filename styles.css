@@ -857,3 +857,10 @@ p { margin-bottom: 1rem; }
     padding: 0.75rem;
   }
 }
+
+.union-logo-img {
+  height: 60px;
+  width: auto;
+  max-width: 200px;
+  object-fit: contain;
+}
