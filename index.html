@@ -7,14 +7,19 @@
     <link rel="stylesheet" href="styles.css">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;600;700;800&display=swap" rel="stylesheet">
     <meta name="description" content="Staff schedules and stallholder management for UNION events">
+    <meta name="theme-color" content="#D7FB59">
+    <link rel="manifest" href="manifest.json">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <meta name="apple-mobile-web-app-title" content="Union Staff"
 </head>
 <body>
     <header class="header">
         <div class="header-content">
             <div class="logo">
-    <img src="assets/images/unionlogo.png" alt="UNION" class="union-logo-img">
-    <h1 class="page-title">Staff Rota & Event Management</h1>
-</div>
+                <div class="union-logo">UNION</div>
+                <h1 class="page-title">Staff Rota & Event Management</h1>
+            </div>
             <div class="header-controls">
                 <div class="location-selector">
                     <select id="campusSelect" class="location-select">
@@ -93,7 +98,7 @@
                 </div>
             </div>
 
-           <div class="stallholder-card">
+            <div class="stallholder-card">
                 <div class="stallholder-header">
                     <h3>Management</h3>
                     <p>Admin tools</p>
@@ -141,5 +146,14 @@
     </div>
 
     <script src="script.js"></script>
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () => {
+                navigator.serviceWorker.register('/sw.js')
+                    .then(registration => console.log('SW registered'))
+                    .catch(registrationError => console.log('SW registration failed'));
+            });
+        }
+    </script>
 </body>
 </html>

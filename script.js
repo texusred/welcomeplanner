@@ -360,7 +360,9 @@ class UnionEventManager {
 
     showAllStallholders() {
         if (!this.stallholderData) return;
-        this.displayStallholderGrid(this.stallholderData);
+        
+        // Navigate to full-screen stallholder list
+        this.showFullScreenStallholderList();
     }
 
     displayStallholderResults(results) {
@@ -452,7 +454,80 @@ class UnionEventManager {
         }
     }
 
-    clearResults() {
+    showFullScreenStallholderList() {
+        const main = document.querySelector('.main-content');
+        const originalContent = main.innerHTML;
+        
+        main.innerHTML = `
+            <div class="fullscreen-stallholder-list">
+                <div class="list-header">
+                    <button class="back-button" onclick="window.eventManager.returnToMain('${originalContent.replace(/'/g, "\\'")}')">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                        Back
+                    </button>
+                    <h2>All Stallholders - ${this.currentLocation.charAt(0).toUpperCase() + this.currentLocation.slice(1)}</h2>
+                    <input type="text" id="fullListSearch" class="search-input" placeholder="Search stallholders...">
+                </div>
+                <div class="stallholder-full-grid">
+                    <div class="grid-header">
+                        <span>Name</span>
+                        <span>Stall #</span>
+                        <span>Location</span>
+                        <span>Group</span>
+                    </div>
+                    <div id="fullGridResults"></div>
+                </div>
+            </div>
+        `;
+        
+        this.displayFullStallholderGrid(this.stallholderData);
+        this.setupFullListSearch();
+    }
+
+    returnToMain(originalContent) {
+        document.querySelector('.main-content').innerHTML = originalContent;
+        this.setupEventListeners(); // Re-setup event listeners
+    }
+
+    displayFullStallholderGrid(stallholders) {
+        const container = document.getElementById('fullGridResults');
+        
+        let html = '';
+        stallholders.forEach(stall => {
+            html += `
+                <div class="stallholder-full-row" onclick="window.eventManager.showStallholderModal(${stall.stallNumber})">
+                    <span>${stall.name}</span>
+                    <span>${stall.stallNumber}</span>
+                    <span>${stall.location}</span>
+                    <span>${stall.group}</span>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+
+    setupFullListSearch() {
+        document.getElementById('fullListSearch').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            if (query.length === 0) {
+                this.displayFullStallholderGrid(this.stallholderData);
+                return;
+            }
+            
+            const filtered = this.stallholderData.filter(stall => 
+                stall.name.toLowerCase().includes(query) ||
+                stall.location.toLowerCase().includes(query) ||
+                stall.group.toLowerCase().includes(query) ||
+                stall.stallNumber.toString().includes(query)
+            );
+            
+            this.displayFullStallholderGrid(filtered);
+        });
+    }
         this.clearStaffResults();
         this.clearStallholderResults();
         document.getElementById('staffSearch').value = '';
