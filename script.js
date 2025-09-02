@@ -361,97 +361,7 @@ class UnionEventManager {
     showAllStallholders() {
         if (!this.stallholderData) return;
         
-        // Navigate to full-screen stallholder list
         this.showFullScreenStallholderList();
-    }
-
-    displayStallholderResults(results) {
-        const container = document.getElementById('stallholderResults');
-        
-        if (results.length === 0) {
-            container.innerHTML = `
-                <div class="no-results">
-                    <div class="placeholder-icon">❌</div>
-                    <p>No stallholders found</p>
-                </div>
-            `;
-            return;
-        }
-
-        let html = '<div class="stallholder-search-results">';
-        results.forEach(stall => {
-            html += `
-                <div class="stallholder-item" onclick="window.eventManager.showStallholderModal(${stall.stallNumber})">
-                    <div class="stallholder-info">
-                        <strong>${stall.name}</strong>
-                        <small>Stall #${stall.stallNumber} - ${stall.location}</small>
-                    </div>
-                </div>
-            `;
-        });
-        html += '</div>';
-        
-        container.innerHTML = html;
-    }
-
-    displayStallholderGrid(stallholders) {
-        const container = document.getElementById('stallholderResults');
-        
-        let html = `
-            <div class="stallholder-grid">
-                <div class="grid-header">
-                    <span>Name</span>
-                    <span>Stall #</span>
-                    <span>Location</span>
-                </div>
-        `;
-
-        stallholders.forEach(stall => {
-            html += `
-                <div class="stallholder-row" onclick="window.eventManager.showStallholderModal(${stall.stallNumber})">
-                    <span>${stall.name}</span>
-                    <span>${stall.stallNumber}</span>
-                    <span>${stall.location}</span>
-                </div>
-            `;
-        });
-
-        html += '</div>';
-        container.innerHTML = html;
-    }
-
-    clearStallholderResults() {
-        document.getElementById('stallholderResults').innerHTML = `
-            <div class="results-placeholder">
-                <div class="placeholder-icon">🏪</div>
-                <p>Type to search stallholders or view complete list</p>
-            </div>
-        `;
-    }
-
-    showStallholderModal(stallNumber) {
-        const stall = this.stallholderData.find(s => s.stallNumber === stallNumber);
-        if (!stall) return;
-
-        document.getElementById('modalStallName').textContent = stall.name;
-        document.getElementById('modalStallNumber').textContent = stall.stallNumber;
-        document.getElementById('modalStallLocation').textContent = stall.location;
-        document.getElementById('modalStallGroup').textContent = stall.group;
-        
-        document.getElementById('stallModal').style.display = 'flex';
-    }
-
-    hideModal() {
-        document.getElementById('stallModal').style.display = 'none';
-    }
-
-    handleEditStallholders() {
-        const password = prompt('Enter admin password:');
-        if (password === 'union2024') {
-            window.open('admin/stallholder-editor.html', '_blank');
-        } else if (password !== null) {
-            this.showToast('Incorrect password', 'error');
-        }
     }
 
     showFullScreenStallholderList() {
@@ -461,7 +371,7 @@ class UnionEventManager {
         main.innerHTML = `
             <div class="fullscreen-stallholder-list">
                 <div class="list-header">
-                    <button class="back-button" onclick="window.eventManager.returnToMain('${originalContent.replace(/'/g, "\\'")}')">
+                    <button class="back-button" onclick="window.eventManager.returnToMain()">
                         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                             <path d="M19 12H5M12 19l-7-7 7-7"></path>
                         </svg>
@@ -482,12 +392,15 @@ class UnionEventManager {
             </div>
         `;
         
+        // Store original content for return
+        this.originalMainContent = originalContent;
+        
         this.displayFullStallholderGrid(this.stallholderData);
         this.setupFullListSearch();
     }
 
-    returnToMain(originalContent) {
-        document.querySelector('.main-content').innerHTML = originalContent;
+    returnToMain() {
+        document.querySelector('.main-content').innerHTML = this.originalMainContent;
         this.setupEventListeners(); // Re-setup event listeners
     }
 
@@ -528,6 +441,71 @@ class UnionEventManager {
             this.displayFullStallholderGrid(filtered);
         });
     }
+
+    displayStallholderResults(results) {
+        const container = document.getElementById('stallholderResults');
+        
+        if (results.length === 0) {
+            container.innerHTML = `
+                <div class="no-results">
+                    <div class="placeholder-icon">❌</div>
+                    <p>No stallholders found</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '<div class="stallholder-search-results">';
+        results.forEach(stall => {
+            html += `
+                <div class="stallholder-item" onclick="window.eventManager.showStallholderModal(${stall.stallNumber})">
+                    <div class="stallholder-info">
+                        <strong>${stall.name}</strong>
+                        <small>Stall #${stall.stallNumber} - ${stall.location}</small>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        
+        container.innerHTML = html;
+    }
+
+    clearStallholderResults() {
+        document.getElementById('stallholderResults').innerHTML = `
+            <div class="results-placeholder">
+                <div class="placeholder-icon">🏪</div>
+                <p>Type to search stallholders or view complete list</p>
+            </div>
+        `;
+    }
+
+    showStallholderModal(stallNumber) {
+        const stall = this.stallholderData.find(s => s.stallNumber === stallNumber);
+        if (!stall) return;
+
+        document.getElementById('modalStallName').textContent = stall.name;
+        document.getElementById('modalStallNumber').textContent = stall.stallNumber;
+        document.getElementById('modalStallLocation').textContent = stall.location;
+        document.getElementById('modalStallGroup').textContent = stall.group;
+        
+        document.getElementById('stallModal').style.display = 'flex';
+    }
+
+    hideModal() {
+        document.getElementById('stallModal').style.display = 'none';
+    }
+
+    handleEditStallholders() {
+        const password = prompt('Enter admin password:');
+        if (password === 'union2024') {
+            window.open('admin/stallholder-editor.html', '_blank');
+        } else if (password !== null) {
+            this.showToast('Incorrect password', 'error');
+        }
+    }
+
+    clearResults() {
         this.clearStaffResults();
         this.clearStallholderResults();
         document.getElementById('staffSearch').value = '';
