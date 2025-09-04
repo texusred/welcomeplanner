@@ -1,15 +1,10 @@
-// Freshers Fair Stall Finder - JavaScript
-// ARU Students' Union
-
-class StallFinder {
+class UnionEventManager {
     constructor() {
-        this.stallData = [];
-        this.filteredStalls = [];
-        this.currentView = 'search';
-        this.currentFilter = 'all';
-        this.selectedStallIndex = -1;
+        this.currentLocation = 'cambridge';
+        this.staffData = null;
+        this.stallholderData = null;
+        this.currentTime = new Date();
         this.dataLoaded = false;
-        this.searchDebounceTimer = null;
         
         this.init();
     }
@@ -17,103 +12,128 @@ class StallFinder {
     async init() {
         try {
             this.setupEventListeners();
-            // Don't load data immediately - wait for first user interaction
+            this.startTimeUpdater();
+            await this.loadData();
+            this.dataLoaded = true;
         } catch (error) {
-            console.error('Failed to initialize app:', error);
-            this.showToast('Failed to initialize app. Please refresh the page.', 'error');
+            console.error('Failed to initialize:', error);
+            this.showToast('Failed to load data. Please refresh the page.', 'error');
         }
     }
 
-    async loadStallData() {
-        if (this.dataLoaded) return; // Already loaded
-        
+    async loadData() {
         try {
             this.showLoading();
-            const response = await fetch('data/stallholders.json');
-            if (!response.ok) {
-                throw new Error(`HTTP error! status: ${response.status}`);
+            
+            const [staffResponse, stallholderResponse] = await Promise.all([
+                fetch(`data/${this.currentLocation}-staff-rota.json`),
+                fetch(`data/${this.currentLocation}-stallholders.json`)
+            ]);
+
+            if (!staffResponse.ok || !stallholderResponse.ok) {
+                throw new Error('Failed to fetch data');
             }
-            const data = await response.json();
-            this.stallData = this.processStallData(data);
-            this.dataLoaded = true;
+
+            const staffData = await staffResponse.json();
+            const stallholderData = await stallholderResponse.json();
+
+            this.staffData = this.validateAndSanitizeStaffData(staffData);
+            this.stallholderData = this.validateAndSanitizeStallholderData(stallholderData);
+            
             this.hideLoading();
+            this.updateLocationDisplay();
         } catch (error) {
-            console.error('Error loading stall data:', error);
+            console.error('Error loading data:', error);
             this.hideLoading();
-            this.showToast('Failed to load stall data. Please check your connection and try again.', 'error', {
-                action: 'Retry',
-                callback: () => {
-                    this.dataLoaded = false;
-                    this.loadStallData();
-                }
-            });
+            this.showToast('Failed to load data. Please check your connection.', 'error');
             throw error;
         }
     }
 
-    processStallData(data) {
-        return data.map(stall => ({
-            name: stall.name || stall.NAME || '',
-            stallNumber: parseInt(stall.stallNumber || stall['STALL NUMBER']) || 0,
-            location: stall.location || stall.LOCATION || '',
-            group: stall.group || stall.GROUP || '',
-            leftNeighbour: this.findNeighbour(data, parseInt(stall.stallNumber || stall['STALL NUMBER']) - 1, stall.location || stall.LOCATION),
-            rightNeighbour: this.findNeighbour(data, parseInt(stall.stallNumber || stall['STALL NUMBER']) + 1, stall.location || stall.LOCATION)
-        }));
+    validateAndSanitizeStaffData(data) {
+        if (!data || !data.staff || !Array.isArray(data.staff)) {
+            throw new Error('Invalid staff data structure');
+        }
+
+        const sanitizedStaff = data.staff.map(person => {
+            if (!person || typeof person !== 'object') return null;
+            
+            const name = this.sanitizeString(person.name || '');
+            if (!name) return null;
+            
+            const schedule = Array.isArray(person.schedule) ? 
+                person.schedule.map(slot => {
+                    if (!slot || typeof slot !== 'object') return null;
+                    return {
+                        timeSlot: this.sanitizeString(slot.timeSlot || ''),
+                        task: this.sanitizeString(slot.task || ''),
+                        taskName: this.sanitizeString(slot.taskName || '')
+                    };
+                }).filter(Boolean) : [];
+
+            return { name, schedule };
+        }).filter(Boolean);
+
+        return { staff: sanitizedStaff };
     }
 
-    findNeighbour(data, neighbourNumber, location) {
-        if (!neighbourNumber || neighbourNumber <= 0) return null;
-        
-        const neighbour = data.find(stall => {
-            const stallNum = parseInt(stall.stallNumber || stall['STALL NUMBER']);
-            const stallLoc = stall.location || stall.LOCATION;
-            return stallNum === neighbourNumber && stallLoc === location;
-        });
-        
-        return neighbour ? {
-            name: neighbour.name || neighbour.NAME,
-            stallNumber: neighbourNumber
-        } : null;
+    validateAndSanitizeStallholderData(data) {
+        if (!Array.isArray(data)) {
+            throw new Error('Invalid stallholder data format');
+        }
+
+        return data.map(stall => {
+            if (!stall || typeof stall !== 'object') return null;
+            
+            const name = this.sanitizeString(stall.name || '');
+            const location = this.sanitizeString(stall.location || '');
+            const group = this.sanitizeString(stall.group || '');
+            const stallNumber = parseInt(stall.stallNumber) || 0;
+
+            if (!name || stallNumber <= 0) return null;
+
+            return { name, stallNumber, location, group };
+        }).filter(Boolean);
+    }
+
+    sanitizeString(str) {
+        if (typeof str !== 'string') return '';
+        return str.trim().replace(/[<>]/g, '');
     }
 
     setupEventListeners() {
-        // Search functionality
-        const searchInput = document.getElementById('stallSearch');
-        const autocompleteResults = document.getElementById('autocompleteResults');
-        
-        searchInput.addEventListener('input', (e) => {
-            this.handleSearchInputDebounced(e.target.value);
+        // Location switcher
+        document.getElementById('campusSelect').addEventListener('change', async (e) => {
+            this.currentLocation = e.target.value;
+            await this.loadData();
+            this.clearResults();
         });
 
-        searchInput.addEventListener('keydown', (e) => {
-            this.handleKeyNavigation(e);
+        // Staff search
+        const staffSearchInput = document.getElementById('staffSearch');
+        staffSearchInput.addEventListener('input', (e) => {
+            this.handleStaffSearch(e.target.value);
         });
 
-        // Click outside to close autocomplete
-        document.addEventListener('click', (e) => {
-            if (!e.target.closest('.search-input-container')) {
-                this.hideAutocomplete();
-            }
+        // Location filter
+        document.getElementById('locationFilter').addEventListener('change', (e) => {
+            this.handleLocationFilter(e.target.value);
         });
 
-        // Show all stalls button
-        document.getElementById('showAllStalls').addEventListener('click', async () => {
-            await this.ensureDataLoaded();
-            this.showAllStalls();
+        // Stallholder search
+        const stallholderSearchInput = document.getElementById('stallholderSearch');
+        stallholderSearchInput.addEventListener('input', (e) => {
+            this.handleStallholderSearch(e.target.value);
         });
 
-        // Back to search button
-        document.getElementById('backToSearch').addEventListener('click', () => {
-            this.showSearchView();
+        // List all stallholders
+        document.getElementById('listAllStallholders').addEventListener('click', () => {
+            this.showAllStallholders();
         });
 
-        // Location filter tabs
-        document.querySelectorAll('.location-tab').forEach(tab => {
-            tab.addEventListener('click', async (e) => {
-                await this.ensureDataLoaded();
-                this.filterByLocation(e.target.dataset.location);
-            });
+        // Edit stallholders with password
+        document.getElementById('editStallholdersBtn').addEventListener('click', () => {
+            this.handleEditStallholders();
         });
 
         // Modal functionality
@@ -126,383 +146,371 @@ class StallFinder {
                 this.hideModal();
             }
         });
-
-        // View on Map functionality
-        document.getElementById('viewOnMap').addEventListener('click', () => {
-            this.handleViewOnMap();
-        });
-
-        // Share functionality
-        document.getElementById('shareStall').addEventListener('click', () => {
-            this.handleShareStall();
-        });
-
-        // ADMIN ACCESS - REMOVABLE FOR PRODUCTION
-        const adminAccessBtn = document.getElementById('adminAccess');
-        if (adminAccessBtn) {
-            adminAccessBtn.addEventListener('click', () => {
-                this.handleAdminAccess();
-            });
-        }
-
-        // Escape key to close modal
-        document.addEventListener('keydown', (e) => {
-            if (e.key === 'Escape') {
-                this.hideModal();
-            }
-        });
     }
 
-    // Ensure data is loaded before performing operations
-    async ensureDataLoaded() {
-        if (!this.dataLoaded) {
-            await this.loadStallData();
-        }
+    startTimeUpdater() {
+        this.updateCurrentTime();
+        setInterval(() => {
+            this.updateCurrentTime();
+        }, 1000);
     }
 
-    // Debounced search input handler
-    handleSearchInputDebounced(query) {
-        // Clear existing timer
-        if (this.searchDebounceTimer) {
-            clearTimeout(this.searchDebounceTimer);
-        }
-
-        // Set new timer
-        this.searchDebounceTimer = setTimeout(async () => {
-            await this.ensureDataLoaded();
-            this.handleSearchInput(query);
-        }, 300); // Wait 300ms after user stops typing
+    updateCurrentTime() {
+        const now = new Date();
+        const timeStr = now.toLocaleTimeString('en-GB', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: false 
+        });
+        document.getElementById('currentTime').textContent = timeStr;
+        this.currentTime = now;
     }
 
-    async handleSearchInput(query) {
-        const trimmedQuery = query.trim().toLowerCase();
-        
-        if (trimmedQuery.length < 1) {
-            this.hideAutocomplete();
+    updateLocationDisplay() {
+        const locationName = this.currentLocation.charAt(0).toUpperCase() + this.currentLocation.slice(1);
+        document.title = `Staff Rota & Event Management - ${locationName} | UNION`;
+    }
+
+    handleStaffSearch(query) {
+        if (!this.staffData || query.length < 2) {
+            this.clearStaffResults();
             return;
         }
 
-        const results = this.stallData.filter(stall => 
-            stall.name.toLowerCase().includes(trimmedQuery)
-        ).slice(0, 8); // Limit to 8 results
+        const searchTerm = query.toLowerCase();
+        const matchingStaff = this.staffData.staff.filter(person => 
+            person.name.toLowerCase().includes(searchTerm)
+        );
 
-        this.showAutocompleteResults(results, trimmedQuery);
+        if (matchingStaff.length === 0) {
+            this.showNoStaffResults(query);
+        } else if (matchingStaff.length === 1) {
+            this.showStaffSchedule(matchingStaff[0]);
+        } else {
+            this.showStaffList(matchingStaff);
+        }
     }
 
-    showAutocompleteResults(results, query) {
-        const autocompleteContainer = document.getElementById('autocompleteResults');
-        
-        if (results.length === 0) {
-            // Better empty state for search
-            autocompleteContainer.innerHTML = `
-                <div class="autocomplete-no-results">
-                    <div class="no-results-icon">🔍</div>
-                    <div class="no-results-text">
-                        <strong>No stallholders found</strong>
-                        <p>Try searching for something else or browse all stalls</p>
+    handleLocationFilter(location) {
+        if (!this.staffData || !location) {
+            this.clearStaffResults();
+            return;
+        }
+
+        const staffAtLocation = this.staffData.staff.filter(person => 
+            person.schedule.some(slot => slot.taskName === location)
+        );
+
+        this.showLocationStaff(location, staffAtLocation);
+    }
+
+    showStaffSchedule(person) {
+        const currentTimeStr = this.currentTime.toLocaleTimeString('en-GB', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: false 
+        });
+
+        let scheduleHTML = `
+            <div class="staff-schedule">
+                <h4>Schedule for ${person.name}</h4>
+                <div class="schedule-table">
+                    <div class="schedule-header">
+                        <span>Time</span>
+                        <span>Task</span>
+                        <span>Status</span>
                     </div>
-                    <div class="no-results-actions">
-                        <button class="btn-clear-search" onclick="window.stallFinder.clearSearch()">Clear Search</button>
-                        <button class="btn-browse-all" onclick="window.stallFinder.showAllStalls()">Browse All</button>
-                    </div>
+        `;
+
+        person.schedule.forEach(slot => {
+            const status = this.getShiftStatus(slot.timeSlot);
+            const statusClass = status.toLowerCase().replace(' ', '-');
+            
+            scheduleHTML += `
+                <div class="schedule-row ${statusClass}">
+                    <span>${slot.timeSlot}</span>
+                    <span>${slot.taskName}</span>
+                    <span class="status-${statusClass}">${status}</span>
                 </div>
             `;
-        } else {
-            autocompleteContainer.innerHTML = results.map((stall, index) => `
-                <div class="autocomplete-item" data-index="${index}" tabindex="0">
-                    <span class="autocomplete-name">${this.highlightMatch(stall.name, query)}</span>
-                    <div class="autocomplete-details">
-                        <span>Stall ${stall.stallNumber}</span>
-                        <span>${stall.location}</span>
+        });
+
+        scheduleHTML += `</div></div>`;
+        document.getElementById('staffResults').innerHTML = scheduleHTML;
+    }
+
+    showLocationStaff(location, staffList) {
+        let html = `
+            <div class="location-staff">
+                <h4>Staff at: ${location}</h4>
+                <div class="staff-list">
+        `;
+
+        staffList.forEach(person => {
+            const shifts = person.schedule
+                .filter(slot => slot.taskName === location)
+                .map(slot => slot.timeSlot)
+                .join(', ');
+            
+            const currentStatus = this.getPersonCurrentStatus(person);
+            
+            html += `
+                <div class="staff-item">
+                    <div class="staff-info">
+                        <strong>${person.name}</strong>
+                        <small>${shifts}</small>
                     </div>
+                    <span class="status-${currentStatus.toLowerCase()}">${currentStatus}</span>
                 </div>
-            `).join('');
+            `;
+        });
 
-            // Add click listeners to autocomplete items
-            autocompleteContainer.querySelectorAll('.autocomplete-item').forEach((item, index) => {
-                if (results[index]) {
-                    item.addEventListener('click', () => {
-                        this.selectStall(results[index]);
-                        this.hideAutocomplete();
-                    });
-                }
-            });
-        }
-
-        autocompleteContainer.style.display = 'block';
-        this.selectedStallIndex = -1;
+        html += `</div></div>`;
+        document.getElementById('staffResults').innerHTML = html;
     }
 
-    highlightMatch(text, query) {
-        const regex = new RegExp(`(${query})`, 'gi');
-        return text.replace(regex, '<strong>$1</strong>');
-    }
-
-    handleKeyNavigation(e) {
-        const autocompleteContainer = document.getElementById('autocompleteResults');
-        const items = autocompleteContainer.querySelectorAll('.autocomplete-item');
+    getShiftStatus(timeSlot) {
+        const [startTime] = timeSlot.split('-');
+        const currentTimeStr = this.currentTime.toLocaleTimeString('en-GB', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: false 
+        });
         
-        if (items.length === 0) return;
-
-        switch (e.key) {
-            case 'ArrowDown':
-                e.preventDefault();
-                this.selectedStallIndex = Math.min(this.selectedStallIndex + 1, items.length - 1);
-                this.updateSelection(items);
-                break;
-                
-            case 'ArrowUp':
-                e.preventDefault();
-                this.selectedStallIndex = Math.max(this.selectedStallIndex - 1, -1);
-                this.updateSelection(items);
-                break;
-                
-            case 'Enter':
-                e.preventDefault();
-                if (this.selectedStallIndex >= 0 && items[this.selectedStallIndex]) {
-                    items[this.selectedStallIndex].click();
-                }
-                break;
-                
-            case 'Escape':
-                this.hideAutocomplete();
-                break;
+        if (timeSlot.includes(currentTimeStr.substring(0, 5))) {
+            return 'ACTIVE';
+        } else if (startTime > currentTimeStr.substring(0, 5)) {
+            return 'Upcoming';
+        } else {
+            return 'Complete';
         }
     }
 
-    updateSelection(items) {
-        items.forEach((item, index) => {
-            item.classList.toggle('highlighted', index === this.selectedStallIndex);
+    getPersonCurrentStatus(person) {
+        const currentTimeStr = this.currentTime.toLocaleTimeString('en-GB', { 
+            hour: '2-digit', 
+            minute: '2-digit',
+            hour12: false 
+        });
+
+        for (let slot of person.schedule) {
+            if (slot.timeSlot.includes(currentTimeStr.substring(0, 5))) {
+                return 'ACTIVE';
+            }
+        }
+        return 'Off shift';
+    }
+
+    showStaffList(staffList) {
+        let html = `
+            <div class="staff-search-results">
+                <h4>Found ${staffList.length} staff members:</h4>
+                <div class="staff-list">
+        `;
+
+        staffList.forEach(person => {
+            const currentStatus = this.getPersonCurrentStatus(person);
+            html += `
+                <div class="staff-item clickable" onclick="window.eventManager.showStaffSchedule(${JSON.stringify(person).replace(/"/g, '&quot;')})">
+                    <div class="staff-info">
+                        <strong>${person.name}</strong>
+                    </div>
+                    <span class="status-${currentStatus.toLowerCase()}">${currentStatus}</span>
+                </div>
+            `;
+        });
+
+        html += `</div></div>`;
+        document.getElementById('staffResults').innerHTML = html;
+    }
+
+    showNoStaffResults(query) {
+        document.getElementById('staffResults').innerHTML = `
+            <div class="no-results">
+                <div class="placeholder-icon">❌</div>
+                <h3>No staff found</h3>
+                <p>No staff member named "${query}" found</p>
+            </div>
+        `;
+    }
+
+    clearStaffResults() {
+        document.getElementById('staffResults').innerHTML = `
+            <div class="results-placeholder">
+                <div class="placeholder-icon">👥</div>
+                <h3>Search Staff or Location</h3>
+                <p>Search for a staff member to see their full schedule, or filter by location to see all staff working there</p>
+            </div>
+        `;
+    }
+
+    handleStallholderSearch(query) {
+        if (!this.stallholderData || query.length < 2) {
+            this.clearStallholderResults();
+            return;
+        }
+
+        const searchTerm = query.toLowerCase();
+        const results = this.stallholderData.filter(stall => 
+            stall.name.toLowerCase().includes(searchTerm)
+        );
+
+        this.displayStallholderResults(results);
+    }
+
+    showAllStallholders() {
+        if (!this.stallholderData) return;
+        
+        this.showFullScreenStallholderList();
+    }
+
+    showFullScreenStallholderList() {
+        const main = document.querySelector('.main-content');
+        const originalContent = main.innerHTML;
+        
+        main.innerHTML = `
+            <div class="fullscreen-stallholder-list">
+                <div class="list-header">
+                    <button class="back-button" onclick="window.eventManager.returnToMain()">
+                        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <path d="M19 12H5M12 19l-7-7 7-7"></path>
+                        </svg>
+                        Back
+                    </button>
+                    <h2>All Stallholders - ${this.currentLocation.charAt(0).toUpperCase() + this.currentLocation.slice(1)}</h2>
+                    <input type="text" id="fullListSearch" class="search-input" placeholder="Search stallholders...">
+                </div>
+                <div class="stallholder-full-grid">
+                    <div class="grid-header">
+                        <span>Name</span>
+                        <span>Stall #</span>
+                        <span>Location</span>
+                        <span>Group</span>
+                    </div>
+                    <div id="fullGridResults"></div>
+                </div>
+            </div>
+        `;
+        
+        // Store original content for return
+        this.originalMainContent = originalContent;
+        
+        this.displayFullStallholderGrid(this.stallholderData);
+        this.setupFullListSearch();
+    }
+
+    returnToMain() {
+        document.querySelector('.main-content').innerHTML = this.originalMainContent;
+        this.setupEventListeners(); // Re-setup event listeners
+    }
+
+    displayFullStallholderGrid(stallholders) {
+        const container = document.getElementById('fullGridResults');
+        
+        let html = '';
+        stallholders.forEach(stall => {
+            html += `
+                <div class="stallholder-full-row" onclick="window.eventManager.showStallholderModal(${stall.stallNumber})">
+                    <span>${stall.name}</span>
+                    <span>${stall.stallNumber}</span>
+                    <span>${stall.location}</span>
+                    <span>${stall.group}</span>
+                </div>
+            `;
+        });
+        
+        container.innerHTML = html;
+    }
+
+    setupFullListSearch() {
+        document.getElementById('fullListSearch').addEventListener('input', (e) => {
+            const query = e.target.value.toLowerCase();
+            
+            if (query.length === 0) {
+                this.displayFullStallholderGrid(this.stallholderData);
+                return;
+            }
+            
+            const filtered = this.stallholderData.filter(stall => 
+                stall.name.toLowerCase().includes(query) ||
+                stall.location.toLowerCase().includes(query) ||
+                stall.group.toLowerCase().includes(query) ||
+                stall.stallNumber.toString().includes(query)
+            );
+            
+            this.displayFullStallholderGrid(filtered);
         });
     }
 
-    hideAutocomplete() {
-        document.getElementById('autocompleteResults').style.display = 'none';
-        this.selectedStallIndex = -1;
+    displayStallholderResults(results) {
+        const container = document.getElementById('stallholderResults');
+        
+        if (results.length === 0) {
+            container.innerHTML = `
+                <div class="no-results">
+                    <div class="placeholder-icon">❌</div>
+                    <p>No stallholders found</p>
+                </div>
+            `;
+            return;
+        }
+
+        let html = '<div class="stallholder-search-results">';
+        results.forEach(stall => {
+            html += `
+                <div class="stallholder-item" onclick="window.eventManager.showStallholderModal(${stall.stallNumber})">
+                    <div class="stallholder-info">
+                        <strong>${stall.name}</strong>
+                        <small>Stall #${stall.stallNumber} - ${stall.location}</small>
+                    </div>
+                </div>
+            `;
+        });
+        html += '</div>';
+        
+        container.innerHTML = html;
     }
 
-    clearSearch() {
-        document.getElementById('stallSearch').value = '';
-        this.hideAutocomplete();
-        document.getElementById('stallSearch').focus();
+    clearStallholderResults() {
+        document.getElementById('stallholderResults').innerHTML = `
+            <div class="results-placeholder">
+                <div class="placeholder-icon">🏪</div>
+                <p>Type to search stallholders or view complete list</p>
+            </div>
+        `;
     }
 
-    selectStall(stall) {
-        this.showStallDetails(stall);
-        document.getElementById('stallSearch').value = stall.name;
-    }
+    showStallholderModal(stallNumber) {
+        const stall = this.stallholderData.find(s => s.stallNumber === stallNumber);
+        if (!stall) return;
 
-    showStallDetails(stall) {
-        // Store current stall for "View on Map" and "Share" functionality
-        this.currentStall = stall;
-
-        // Populate modal with stall details
         document.getElementById('modalStallName').textContent = stall.name;
         document.getElementById('modalStallNumber').textContent = stall.stallNumber;
-        document.getElementById('modalLocation').textContent = stall.location;
-        document.getElementById('modalGroup').textContent = stall.group;
-
-        // Handle neighbours
-        const leftNeighbour = document.getElementById('modalLeftNeighbour');
-        const rightNeighbour = document.getElementById('modalRightNeighbour');
-
-        if (stall.leftNeighbour) {
-            leftNeighbour.textContent = `${stall.leftNeighbour.name} (Stall ${stall.leftNeighbour.stallNumber})`;
-            leftNeighbour.classList.remove('no-neighbour');
-        } else {
-            leftNeighbour.textContent = 'No neighbouring stall';
-            leftNeighbour.classList.add('no-neighbour');
-        }
-
-        if (stall.rightNeighbour) {
-            rightNeighbour.textContent = `${stall.rightNeighbour.name} (Stall ${stall.rightNeighbour.stallNumber})`;
-            rightNeighbour.classList.remove('no-neighbour');
-        } else {
-            rightNeighbour.textContent = 'No neighbouring stall';
-            rightNeighbour.classList.add('no-neighbour');
-        }
-
-        // Show/hide share button based on Web Share API support
-        const shareButton = document.getElementById('shareStall');
-        if (navigator.share) {
-            shareButton.style.display = 'block';
-        } else {
-            shareButton.style.display = 'none';
-        }
-
-        this.showModal();
-    }
-
-    // Handle View on Map functionality
-    handleViewOnMap() {
-        if (!this.currentStall) return;
-
-        // Hide current modal
-        this.hideModal();
-
-        // Navigate to appropriate map based on location
-        const location = this.currentStall.location;
-        const stallNumber = this.currentStall.stallNumber;
-
-        // Generate map filename from location
-        const mapFile = location.toLowerCase().replace(/\s+/g, '-') + '.html';
+        document.getElementById('modalStallLocation').textContent = stall.location;
+        document.getElementById('modalStallGroup').textContent = stall.group;
         
-        // Navigate to map with highlight parameter
-        window.location.href = `maps/${mapFile}?highlight=${stallNumber}`;
-    }
-
-    // Handle Share Stallholder functionality
-    async handleShareStall() {
-        if (!this.currentStall || !navigator.share) return;
-
-        try {
-            await navigator.share({
-                title: `${this.currentStall.name} - ARU Welcome Fair`,
-                text: `Check out ${this.currentStall.name} at the ARU Students' Union Welcome Fair! Find them at Stall #${this.currentStall.stallNumber} in ${this.currentStall.location}.`,
-                url: window.location.href
-            });
-            
-            this.showToast('Stall shared successfully!', 'success');
-        } catch (error) {
-            if (error.name !== 'AbortError') { // User cancelled
-                console.error('Error sharing:', error);
-                this.showToast('Unable to share. You can copy the URL instead.', 'info');
-            }
-        }
-    }
-
-    // ADMIN ACCESS FUNCTIONALITY - REMOVABLE FOR PRODUCTION
-    handleAdminAccess() {
-        // Simple confirmation to prevent accidental access
-        const confirmed = confirm('Access admin tools? This is for authorized users only.');
-        
-        if (confirmed) {
-            // Navigate to admin dashboard
-            window.location.href = 'admin/admin-dashboard.html';
-        }
-    }
-
-    showModal() {
-        const modal = document.getElementById('stallModal');
-        modal.style.display = 'flex';
-        
-        // Prevent body scroll
-        document.body.style.overflow = 'hidden';
-        
-        // Focus management for accessibility
-        setTimeout(() => {
-            document.getElementById('closeModal').focus();
-        }, 100);
+        document.getElementById('stallModal').style.display = 'flex';
     }
 
     hideModal() {
-        const modal = document.getElementById('stallModal');
-        modal.style.display = 'none';
-        
-        // Restore body scroll
-        document.body.style.overflow = '';
-        
-        // Return focus to search input
-        document.getElementById('stallSearch').focus();
+        document.getElementById('stallModal').style.display = 'none';
     }
 
-    async showAllStalls() {
-        await this.ensureDataLoaded();
-        
-        this.currentView = 'all';
-        this.currentFilter = 'all';
-        this.filteredStalls = [...this.stallData];
-        
-        document.querySelector('.search-section').style.display = 'none';
-        document.getElementById('allStallsSection').style.display = 'block';
-        
-        this.updateLocationTabs();
-        this.renderStallsList();
-    }
-
-    showSearchView() {
-        this.currentView = 'search';
-        
-        document.querySelector('.search-section').style.display = 'block';
-        document.getElementById('allStallsSection').style.display = 'none';
-        
-        // Clear search input and refocus
-        const searchInput = document.getElementById('stallSearch');
-        searchInput.value = '';
-        searchInput.focus();
-        this.hideAutocomplete();
-    }
-
-    filterByLocation(location) {
-        this.currentFilter = location;
-        
-        if (location === 'all') {
-            this.filteredStalls = [...this.stallData];
-        } else {
-            this.filteredStalls = this.stallData.filter(stall => stall.location === location);
+    handleEditStallholders() {
+        const password = prompt('Enter admin password:');
+        if (password === 'union2024') {
+            window.open('admin/stallholder-editor.html', '_blank');
+        } else if (password !== null) {
+            this.showToast('Incorrect password', 'error');
         }
-        
-        this.updateLocationTabs();
-        this.renderStallsList();
     }
 
-    updateLocationTabs() {
-        document.querySelectorAll('.location-tab').forEach(tab => {
-            tab.classList.toggle('active', tab.dataset.location === this.currentFilter);
-        });
-    }
-
-    renderStallsList() {
-        const stallsList = document.getElementById('stallsList');
-        
-        if (this.filteredStalls.length === 0) {
-            stallsList.innerHTML = `
-                <div class="no-results">
-                    <p>No stalls found for this location.</p>
-                </div>
-            `;
-            return;
-        }
-
-        // Sort stalls by stall number
-        const sortedStalls = [...this.filteredStalls].sort((a, b) => a.stallNumber - b.stallNumber);
-
-        stallsList.innerHTML = sortedStalls.map(stall => `
-            <div class="stall-card" data-stall-id="${stall.stallNumber}">
-                <div class="stall-card-header">
-                    <h3 class="stall-name">${stall.name}</h3>
-                    <span class="stall-number">${stall.stallNumber}</span>
-                </div>
-                <div class="stall-details">
-                    <div class="stall-location">
-                        <span class="location-badge">${stall.location}</span>
-                    </div>
-                    <div class="stall-group">
-                        <span class="group-badge">${stall.group}</span>
-                    </div>
-                </div>
-            </div>
-        `).join('');
-
-        // Add click listeners to stall cards
-        stallsList.querySelectorAll('.stall-card').forEach(card => {
-            card.addEventListener('click', (e) => {
-                const stallId = parseInt(card.dataset.stallId);
-                const stall = this.stallData.find(s => s.stallNumber === stallId);
-                if (stall) {
-                    this.showStallDetails(stall);
-                }
-            });
-
-            // Add keyboard navigation
-            card.setAttribute('tabindex', '0');
-            card.addEventListener('keydown', (e) => {
-                if (e.key === 'Enter' || e.key === ' ') {
-                    e.preventDefault();
-                    card.click();
-                }
-            });
-        });
+    clearResults() {
+        this.clearStaffResults();
+        this.clearStallholderResults();
+        document.getElementById('staffSearch').value = '';
+        document.getElementById('locationFilter').value = '';
+        document.getElementById('stallholderSearch').value = '';
     }
 
     showLoading() {
@@ -513,78 +521,22 @@ class StallFinder {
         document.getElementById('loadingIndicator').style.display = 'none';
     }
 
-    // Toast notification system for better error/success messages
-    showToast(message, type = 'info', options = {}) {
+    showToast(message, type = 'info') {
         const toast = document.createElement('div');
         toast.className = `toast toast-${type}`;
+        toast.textContent = message;
         
-        const iconMap = {
-            success: '✓',
-            error: '✕',
-            warning: '⚠',
-            info: 'ℹ'
-        };
-
-        toast.innerHTML = `
-            <div class="toast-content">
-                <span class="toast-icon">${iconMap[type] || iconMap.info}</span>
-                <span class="toast-message">${message}</span>
-                ${options.action ? `<button class="toast-action" onclick="this.closest('.toast').remove(); (${options.callback.toString()})()">${options.action}</button>` : ''}
-            </div>
-            <button class="toast-close" onclick="this.closest('.toast').remove()">×</button>
-        `;
-
-        // Add to toast container
-        let container = document.getElementById('toastContainer');
-        if (!container) {
-            container = document.createElement('div');
-            container.id = 'toastContainer';
-            container.className = 'toast-container';
-            document.body.appendChild(container);
-        }
-
-        container.appendChild(toast);
-
-        // Auto remove after 5 seconds (unless it has an action)
-        if (!options.action) {
-            setTimeout(() => {
-                if (toast.parentNode) {
-                    toast.remove();
-                }
-            }, 5000);
-        }
-
-        // Animate in
+        document.body.appendChild(toast);
+        
+        setTimeout(() => toast.classList.add('toast-show'), 10);
         setTimeout(() => {
-            toast.classList.add('toast-show');
-        }, 10);
-    }
-
-    // Utility method for debugging
-    getStallByNumber(stallNumber) {
-        return this.stallData.find(stall => stall.stallNumber === stallNumber);
-    }
-
-    // Utility method to get all locations
-    getLocations() {
-        return [...new Set(this.stallData.map(stall => stall.location))];
+            if (toast.parentNode) {
+                toast.remove();
+            }
+        }, 3000);
     }
 }
 
-// Initialize the app when DOM is loaded
 document.addEventListener('DOMContentLoaded', () => {
-    window.stallFinder = new StallFinder();
+    window.eventManager = new UnionEventManager();
 });
-
-// Service Worker registration for offline capability (optional)
-if ('serviceWorker' in navigator) {
-    window.addEventListener('load', () => {
-        navigator.serviceWorker.register('/sw.js')
-            .then(registration => {
-                console.log('SW registered: ', registration);
-            })
-            .catch(registrationError => {
-                console.log('SW registration failed: ', registrationError);
-            });
-    });
-}

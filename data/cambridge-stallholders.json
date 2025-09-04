@@ -1,0 +1,644 @@
+[
+  {
+    "name": "PayPoint",
+    "stallNumber": 1,
+    "location": "Ruskin Courtyard",
+    "group": "SU"
+  },
+  {
+    "name": "Esports",
+    "stallNumber": 2,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Criminology & Policing",
+    "stallNumber": 3,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Optics",
+    "stallNumber": 4,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Nursing",
+    "stallNumber": 5,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Placements",
+    "stallNumber": 6,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Biomedical",
+    "stallNumber": 7,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Business",
+    "stallNumber": 8,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Law",
+    "stallNumber": 9,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Anglian Bards Guild",
+    "stallNumber": 10,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Film",
+    "stallNumber": 11,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Christian Union",
+    "stallNumber": 12,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "LGBT+",
+    "stallNumber": 13,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Performing Arts",
+    "stallNumber": 14,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Philosophy",
+    "stallNumber": 15,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Psych",
+    "stallNumber": 16,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Dance",
+    "stallNumber": 17,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "International Students",
+    "stallNumber": 18,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Computer Science",
+    "stallNumber": 19,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Society Committee",
+    "stallNumber": 20,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Education",
+    "stallNumber": 21,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Social Work",
+    "stallNumber": 22,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Liberation Committee",
+    "stallNumber": 23,
+    "location": "Ruskin Courtyard",
+    "group": "SU"
+  },
+  {
+    "name": "Football",
+    "stallNumber": 24,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Basketball",
+    "stallNumber": 25,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Netball",
+    "stallNumber": 26,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Hockey",
+    "stallNumber": 27,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Cricket",
+    "stallNumber": 28,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Rugby",
+    "stallNumber": 29,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Cheer Leading",
+    "stallNumber": 30,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Volleyball",
+    "stallNumber": 31,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Badminton",
+    "stallNumber": 32,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Handball",
+    "stallNumber": 33,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Tennis",
+    "stallNumber": 34,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Table Tennis",
+    "stallNumber": 35,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Boxing",
+    "stallNumber": 36,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Martial Arts",
+    "stallNumber": 37,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Swimming",
+    "stallNumber": 38,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Surfing",
+    "stallNumber": 39,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Archery",
+    "stallNumber": 40,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Boxing Club",
+    "stallNumber": 41,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Baseball",
+    "stallNumber": 42,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Barbie",
+    "stallNumber": 43,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Running",
+    "stallNumber": 44,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Ski & Snow Board",
+    "stallNumber": 45,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Rock",
+    "stallNumber": 46,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Environmental",
+    "stallNumber": 47,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Conservative",
+    "stallNumber": 48,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Chess",
+    "stallNumber": 49,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Anime & Manga",
+    "stallNumber": 50,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Board Games",
+    "stallNumber": 51,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Photography",
+    "stallNumber": 52,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Book Club",
+    "stallNumber": 53,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Music",
+    "stallNumber": 54,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Drama",
+    "stallNumber": 55,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Art",
+    "stallNumber": 56,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Climbing",
+    "stallNumber": 57,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "War Gaming",
+    "stallNumber": 58,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Radio",
+    "stallNumber": 59,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Airsoft",
+    "stallNumber": 60,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "DnD",
+    "stallNumber": 61,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Kpop",
+    "stallNumber": 62,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Anime & Manga Club",
+    "stallNumber": 63,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Gaming",
+    "stallNumber": 64,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Alternative Music",
+    "stallNumber": 65,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Pub Quiz",
+    "stallNumber": 66,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Mature Students",
+    "stallNumber": 67,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Jewish",
+    "stallNumber": 68,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Catholic",
+    "stallNumber": 69,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Islamic",
+    "stallNumber": 70,
+    "location": "Science Walkway",
+    "group": "Society"
+  },
+  {
+    "name": "Adult Nursing",
+    "stallNumber": 71,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Cybersecurity",
+    "stallNumber": 72,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Medicine",
+    "stallNumber": 73,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Animal Behaviour & Welfare",
+    "stallNumber": 74,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Engineering",
+    "stallNumber": 75,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Forensic Science",
+    "stallNumber": 76,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Health & Social Care",
+    "stallNumber": 77,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Geography",
+    "stallNumber": 78,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Paramedicine",
+    "stallNumber": 79,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Biology",
+    "stallNumber": 80,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Built Environment",
+    "stallNumber": 81,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Science",
+    "stallNumber": 82,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Mathematics",
+    "stallNumber": 83,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Veterinary Nursing",
+    "stallNumber": 84,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Sport & Exercise",
+    "stallNumber": 85,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Physiotherapy",
+    "stallNumber": 86,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Mental Health Nursing",
+    "stallNumber": 87,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Diagnostic Radiography",
+    "stallNumber": 88,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Diagnostic Radiography Club",
+    "stallNumber": 89,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Applied Sport & Exercise Science",
+    "stallNumber": 90,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Therapeutic Radiography",
+    "stallNumber": 91,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Operating Department Practice",
+    "stallNumber": 92,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Occupational Therapy",
+    "stallNumber": 93,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Midwifery",
+    "stallNumber": 94,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Child Nursing",
+    "stallNumber": 95,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Learning Disability Nursing",
+    "stallNumber": 96,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Optometry",
+    "stallNumber": 97,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Paramedic Science",
+    "stallNumber": 98,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Biomedical Science",
+    "stallNumber": 99,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Medical Science",
+    "stallNumber": 100,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Pharmacy",
+    "stallNumber": 101,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Prosthetics & Orthotics",
+    "stallNumber": 102,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Speech & Language Therapy",
+    "stallNumber": 103,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Audiology",
+    "stallNumber": 104,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Dietetics",
+    "stallNumber": 105,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Psychology",
+    "stallNumber": 106,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Criminology",
+    "stallNumber": 107,
+    "location": "LAB Courtyard",
+    "group": "Society"
+  }
+]
