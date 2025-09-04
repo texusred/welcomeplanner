@@ -1,3 +1,9 @@
+// Location configuration for different campuses
+const LOCATION_CONFIG = {
+    cambridge: ['Ruskin Courtyard', 'LAB Courtyard', 'Science Walkway'],
+    chelmsford: ['Central Walkway']
+};
+
 class UnionEventManager {
     constructor() {
         this.currentLocation = 'cambridge';
@@ -82,6 +88,8 @@ class UnionEventManager {
             throw new Error('Invalid stallholder data format');
         }
 
+        const validLocations = LOCATION_CONFIG[this.currentLocation] || [];
+
         return data.map(stall => {
             if (!stall || typeof stall !== 'object') return null;
             
@@ -92,7 +100,19 @@ class UnionEventManager {
 
             if (!name || stallNumber <= 0) return null;
 
-            return { name, stallNumber, location, group };
+            // Auto-migrate location data for current campus
+            let validatedLocation = location;
+            if (!validLocations.includes(location)) {
+                // For Chelmsford, migrate any invalid location to Central Walkway
+                if (this.currentLocation === 'chelmsford') {
+                    validatedLocation = 'Central Walkway';
+                } else {
+                    // For Cambridge, default to Ruskin Courtyard if invalid
+                    validatedLocation = validLocations.includes(location) ? location : 'Ruskin Courtyard';
+                }
+            }
+
+            return { name, stallNumber, location: validatedLocation, group };
         }).filter(Boolean);
     }
 
@@ -131,7 +151,7 @@ class UnionEventManager {
             this.showAllStallholders();
         });
 
-        // Edit stallholders with password
+        // Edit stallholders with password - now passes campus context
         document.getElementById('editStallholdersBtn').addEventListener('click', () => {
             this.handleEditStallholders();
         });
@@ -499,7 +519,9 @@ class UnionEventManager {
     handleEditStallholders() {
         const password = prompt('Enter admin password:');
         if (password === 'union2024') {
-            window.open('admin/stallholder-editor.html', '_blank');
+            // Pass current campus to the editor via URL parameter
+            const editorUrl = `admin/stallholder-editor.html?campus=${this.currentLocation}`;
+            window.open(editorUrl, '_blank');
         } else if (password !== null) {
             this.showToast('Incorrect password', 'error');
         }
