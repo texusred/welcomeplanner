@@ -81,6 +81,39 @@
             margin: 0;
         }
 
+        .header-controls {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+        }
+
+        .campus-selector {
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+
+        .campus-selector label {
+            font-weight: 700;
+            color: var(--union-black);
+        }
+
+        .campus-select {
+            padding: 0.5rem 1rem;
+            border: 3px solid var(--union-black);
+            border-radius: 8px;
+            background: var(--union-white);
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            font-family: inherit;
+        }
+
+        .campus-select:hover {
+            background: var(--union-black);
+            color: var(--brilliant-green);
+        }
+
         .back-button {
             background: var(--union-black);
             color: var(--brilliant-green);
@@ -569,6 +602,79 @@
             100% { transform: rotate(360deg); }
         }
 
+        /* Export Modal */
+        .export-modal {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 1000;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .export-modal .modal-overlay {
+            background: rgba(0, 0, 0, 0.5);
+            width: 100%;
+            height: 100%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .export-modal .modal-content {
+            background: var(--union-white);
+            border-radius: 12px;
+            border: 3px solid var(--union-black);
+            max-width: 600px;
+            width: 100%;
+            max-height: 90vh;
+            overflow-y: auto;
+        }
+
+        .export-modal .modal-header {
+            background: var(--brilliant-green);
+            color: var(--union-black);
+            padding: 1.5rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .export-modal .modal-header h3 {
+            margin: 0;
+            font-weight: 700;
+        }
+
+        .export-modal .modal-close {
+            background: none;
+            border: none;
+            font-size: 1.5rem;
+            font-weight: bold;
+            cursor: pointer;
+            color: var(--union-black);
+            padding: 0;
+            width: 30px;
+            height: 30px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            transition: background 0.2s ease;
+        }
+
+        .export-modal .modal-close:hover {
+            background: rgba(0, 0, 0, 0.1);
+        }
+
+        .export-modal .modal-body {
+            padding: 1.5rem;
+        }
+
         /* Responsive */
         @media (max-width: 1024px) {
             .controls-section {
@@ -624,17 +730,26 @@
     <header class="header">
         <div class="header-content">
             <div class="header-left">
-                <img src="assets/images/unionlogo.png" 
+                <img src="../assets/images/unionlogo.png" 
                      alt="ARU Students' Union" 
                      class="aru-logo-img">
                 <h1 class="page-title">Stallholder Editor</h1>
             </div>
-            <a href="index.html" class="back-button">
-                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                    <path d="19 12H5M12 19l-7-7 7-7"></path>
-                </svg>
-                Back to Dashboard
-            </a>
+            <div class="header-controls">
+                <div class="campus-selector">
+                    <label for="campusSelect">Campus:</label>
+                    <select id="campusSelect" class="campus-select">
+                        <option value="cambridge">Cambridge</option>
+                        <option value="chelmsford">Chelmsford</option>
+                    </select>
+                </div>
+                <a href="../index.html" class="back-button">
+                    <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="19 12H5M12 19l-7-7 7-7"></path>
+                    </svg>
+                    Back to Dashboard
+                </a>
+            </div>
         </div>
     </header>
 
@@ -653,9 +768,7 @@
                     <label for="filterLocation">Filter by Location</label>
                     <select id="filterLocation" class="filter-select">
                         <option value="">All Locations</option>
-                        <option value="Ruskin Courtyard">Ruskin Courtyard</option>
-                        <option value="Science Walkway">Science Walkway</option>
-                        <option value="LAB Courtyard">LAB Courtyard</option>
+                        <!-- Options will be populated dynamically based on campus -->
                     </select>
                 </div>
             </div>
@@ -705,53 +818,165 @@
                         </tr>
                     </thead>
                     <tbody id="stallholdersTableBody">
-                        <!-- Data will be populated here -->
+                        <!-- Data will be populated here dynamically -->
                     </tbody>
                 </table>
             </div>
 
             <!-- Mobile/Tablet Card View -->
             <div class="cards-container" id="cardsContainer">
-                <!-- Cards will be populated here -->
+                <!-- Cards will be populated here dynamically -->
             </div>
         </section>
     </main>
 
     <script>
+        // Location configuration for different campuses
+        const LOCATION_CONFIG = {
+            cambridge: ['Ruskin Courtyard', 'LAB Courtyard', 'Science Walkway'],
+            chelmsford: ['Central Walkway']
+        };
+
         class StallholderEditor {
             constructor() {
                 this.stallholders = [];
                 this.filteredStallholders = [];
                 this.nextStallId = 1;
+                this.currentCampus = 'cambridge'; // Default
+                this.hasUnsavedChanges = false;
                 
                 this.init();
             }
 
             async init() {
                 try {
+                    this.detectCampusFromURL();
+                    this.setupCampusSelector();
                     await this.loadData();
                     this.setupEventListeners();
                     this.render();
+                    this.setupAutoSaveReminder();
                 } catch (error) {
                     console.error('Failed to initialize:', error);
                     this.showToast('Failed to load data. Please refresh the page.', 'error');
                 }
             }
 
+            detectCampusFromURL() {
+                // Check URL parameter for campus
+                const urlParams = new URLSearchParams(window.location.search);
+                const campusParam = urlParams.get('campus');
+                
+                if (campusParam && LOCATION_CONFIG[campusParam]) {
+                    this.currentCampus = campusParam;
+                }
+                
+                // Update campus selector to match
+                document.getElementById('campusSelect').value = this.currentCampus;
+            }
+
+            setupCampusSelector() {
+                document.getElementById('campusSelect').addEventListener('change', async (e) => {
+                    if (this.hasUnsavedChanges) {
+                        if (!confirm('You have unsaved changes. Switch campus anyway?')) {
+                            e.target.value = this.currentCampus;
+                            return;
+                        }
+                    }
+                    this.currentCampus = e.target.value;
+                    await this.loadData();
+                    this.render();
+                });
+            }
+
             async loadData() {
                 try {
-                    const response = await fetch('../data/stallholders.json');
+                    this.showLoading();
+                    
+                    // Load from the correct campus-specific file
+                    const response = await fetch(`../data/${this.currentCampus}-stallholders.json`);
                     if (!response.ok) throw new Error('Failed to fetch data');
                     
-                    this.stallholders = await response.json();
+                    const data = await response.json();
+                    this.stallholders = this.validateAndSanitizeData(data);
                     this.filteredStallholders = [...this.stallholders];
                     this.nextStallId = Math.max(...this.stallholders.map(s => s.stallNumber || 0)) + 1;
+                    this.hasUnsavedChanges = false;
                     
-                    document.getElementById('loadingIndicator').style.display = 'none';
-                    document.getElementById('tableContainer').style.display = 'block';
+                    this.hideLoading();
+                    this.updateTitle();
+                    this.updateLocationFilter();
                 } catch (error) {
+                    this.hideLoading();
+                    this.showToast(`Failed to load ${this.currentCampus} data. Please check your connection.`, 'error');
                     throw error;
                 }
+            }
+
+            validateAndSanitizeData(data) {
+                if (!Array.isArray(data)) {
+                    throw new Error('Invalid data format: expected array');
+                }
+                
+                const validLocations = LOCATION_CONFIG[this.currentCampus] || [];
+                
+                return data.map(stall => {
+                    if (!stall || typeof stall !== 'object') {
+                        console.warn('Invalid stall object:', stall);
+                        return null;
+                    }
+                    
+                    const name = this.sanitizeString(stall.name || '');
+                    const location = this.sanitizeString(stall.location || '');
+                    const group = this.sanitizeString(stall.group || '');
+                    const stallNumber = parseInt(stall.stallNumber) || 0;
+                    
+                    if (!name || stallNumber <= 0) {
+                        console.warn('Invalid stall data:', { name, stallNumber });
+                        return null;
+                    }
+                    
+                    // Auto-migrate location data for current campus
+                    let validatedLocation = location;
+                    if (!validLocations.includes(location)) {
+                        // For Chelmsford, migrate any invalid location to Central Walkway
+                        if (this.currentCampus === 'chelmsford') {
+                            validatedLocation = 'Central Walkway';
+                        } else {
+                            // For Cambridge, default to Ruskin Courtyard if invalid
+                            validatedLocation = validLocations.includes(location) ? location : 'Ruskin Courtyard';
+                        }
+                    }
+                    
+                    return { name, stallNumber, location: validatedLocation, group };
+                }).filter(stall => stall !== null);
+            }
+
+            sanitizeString(str) {
+                if (typeof str !== 'string') return '';
+                return str.trim().replace(/[<>]/g, ''); // Basic sanitization
+            }
+
+            updateTitle() {
+                const campusName = this.currentCampus.charAt(0).toUpperCase() + this.currentCampus.slice(1);
+                document.querySelector('.page-title').textContent = `Stallholder Editor - ${campusName}`;
+                document.querySelector('.table-title').textContent = `${campusName} Stallholders`;
+            }
+
+            updateLocationFilter() {
+                const filterSelect = document.getElementById('filterLocation');
+                const validLocations = LOCATION_CONFIG[this.currentCampus] || [];
+                
+                // Clear existing options except "All Locations"
+                filterSelect.innerHTML = '<option value="">All Locations</option>';
+                
+                // Add campus-specific location options
+                validLocations.forEach(location => {
+                    const option = document.createElement('option');
+                    option.value = location;
+                    option.textContent = location;
+                    filterSelect.appendChild(option);
+                });
             }
 
             setupEventListeners() {
@@ -774,10 +999,18 @@
                 document.getElementById('exportData').addEventListener('click', () => {
                     this.exportData();
                 });
+
+                // Add quick save shortcut
+                document.addEventListener('keydown', (e) => {
+                    if ((e.ctrlKey || e.metaKey) && e.key === 's') {
+                        e.preventDefault();
+                        this.exportData();
+                    }
+                });
             }
 
             handleSearch(query) {
-                const searchTerm = query.toLowerCase().trim();
+                const searchTerm = this.sanitizeString(query).toLowerCase();
                 const locationFilter = document.getElementById('filterLocation').value;
 
                 this.filteredStallholders = this.stallholders.filter(stall => {
@@ -795,7 +1028,7 @@
             }
 
             handleFilter(location) {
-                const searchTerm = document.getElementById('searchStalls').value.toLowerCase().trim();
+                const searchTerm = this.sanitizeString(document.getElementById('searchStalls').value).toLowerCase();
 
                 this.filteredStallholders = this.stallholders.filter(stall => {
                     const matchesSearch = !searchTerm || 
@@ -812,23 +1045,30 @@
             }
 
             addNewStall() {
+                const validLocations = LOCATION_CONFIG[this.currentCampus] || [];
+                const defaultLocation = validLocations[0] || 'Ruskin Courtyard';
+
                 const newStall = {
                     name: "New Stallholder",
                     stallNumber: this.nextStallId++,
-                    location: "Ruskin Courtyard",
+                    location: defaultLocation,
                     group: "Society"
                 };
 
                 this.stallholders.push(newStall);
+                this.hasUnsavedChanges = true;
+                this.updateSaveStatus();
                 this.handleSearch(document.getElementById('searchStalls').value);
-                this.showToast('New stallholder added successfully!', 'success');
+                this.showToast('New stallholder added - remember to export!', 'warning');
             }
 
             deleteStall(index) {
                 if (confirm('Are you sure you want to delete this stallholder?')) {
                     this.stallholders.splice(index, 1);
+                    this.hasUnsavedChanges = true;
+                    this.updateSaveStatus();
                     this.handleSearch(document.getElementById('searchStalls').value);
-                    this.showToast('Stallholder deleted successfully!', 'success');
+                    this.showToast('Stallholder deleted - remember to export!', 'warning');
                 }
             }
 
@@ -842,9 +1082,37 @@
                     }
                 }
                 
+                // Validate location against current campus
+                if (field === 'location') {
+                    const validLocations = LOCATION_CONFIG[this.currentCampus] || [];
+                    if (!validLocations.includes(value)) {
+                        this.showToast(`Invalid location for ${this.currentCampus}!`, 'error');
+                        return false;
+                    }
+                }
+                
+                // Sanitize the value
+                if (typeof value === 'string') {
+                    value = this.sanitizeString(value);
+                }
+                
                 this.stallholders[index][field] = value;
-                this.showToast('Changes saved!', 'success');
+                this.hasUnsavedChanges = true;
+                this.updateSaveStatus();
+                this.showToast('Changes made locally - remember to export!', 'warning');
                 return true;
+            }
+
+            updateSaveStatus() {
+                // Add visual indicator for unsaved changes
+                const header = document.querySelector('.page-title');
+                if (this.hasUnsavedChanges) {
+                    header.style.color = '#F36D21'; // Orange warning color
+                    header.textContent = header.textContent.replace(' *', '') + ' *';
+                } else {
+                    header.style.color = '';
+                    header.textContent = header.textContent.replace(' *', '');
+                }
             }
 
             render() {
@@ -859,116 +1127,261 @@
             renderTable() {
                 const tbody = document.getElementById('stallholdersTableBody');
 
+                // Clear previous content
+                tbody.innerHTML = '';
+
                 if (this.filteredStallholders.length === 0) {
-                    tbody.innerHTML = '<tr><td colspan="5" style="text-align: center; color: #333333; padding: 2rem;">No stallholders found</td></tr>';
+                    const tr = document.createElement('tr');
+                    const td = document.createElement('td');
+                    td.colSpan = 5;
+                    td.style.textAlign = 'center';
+                    td.style.color = '#757575';
+                    td.style.padding = '2rem';
+                    td.textContent = 'No stallholders found';
+                    tr.appendChild(td);
+                    tbody.appendChild(tr);
                     return;
                 }
 
-                tbody.innerHTML = this.filteredStallholders.map((stall, displayIndex) => {
+                this.filteredStallholders.forEach((stall, displayIndex) => {
                     const actualIndex = this.stallholders.indexOf(stall);
-                    return `
-                        <tr>
-                            <td>
-                                <div class="editable-cell" contenteditable="true" 
-                                     data-field="stallNumber" data-index="${actualIndex}"
-                                     style="background: var(--union-black); color: var(--brilliant-green); text-align: center; border-radius: 20px; padding: 0.25rem 0.75rem; min-width: 60px;">
-                                    ${stall.stallNumber}
-                                </div>
-                            </td>
-                            <td>
-                                <div class="editable-cell" contenteditable="true" 
-                                     data-field="name" data-index="${actualIndex}">
-                                    ${stall.name}
-                                </div>
-                            </td>
-                            <td>
-                                <select class="location-select" data-field="location" data-index="${actualIndex}">
-                                    <option value="Ruskin Courtyard" ${stall.location === 'Ruskin Courtyard' ? 'selected' : ''}>Ruskin Courtyard</option>
-                                    <option value="Science Walkway" ${stall.location === 'Science Walkway' ? 'selected' : ''}>Science Walkway</option>
-                                    <option value="LAB Courtyard" ${stall.location === 'LAB Courtyard' ? 'selected' : ''}>LAB Courtyard</option>
-                                </select>
-                            </td>
-                            <td>
-                                <select class="group-select" data-field="group" data-index="${actualIndex}">
-                                    <option value="Society" ${stall.group === 'Society' ? 'selected' : ''}>Society</option>
-                                    <option value="SU" ${stall.group === 'SU' ? 'selected' : ''}>SU</option>
-                                </select>
-                            </td>
-                            <td>
-                                <div class="row-actions">
-                                    <button class="btn btn-sm btn-danger" onclick="editor.deleteStall(${actualIndex})">
-                                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                            <polyline points="3 6 5 6 21 6"></polyline>
-                                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                        </svg>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                    const tr = document.createElement('tr');
+                    
+                    // Stall Number Cell
+                    const stallNumCell = document.createElement('td');
+                    const stallNumDiv = document.createElement('div');
+                    stallNumDiv.className = 'editable-cell';
+                    stallNumDiv.contentEditable = true;
+                    stallNumDiv.dataset.field = 'stallNumber';
+                    stallNumDiv.dataset.index = actualIndex;
+                    stallNumDiv.style.background = 'var(--union-black)';
+                    stallNumDiv.style.color = 'var(--brilliant-green)';
+                    stallNumDiv.style.textAlign = 'center';
+                    stallNumDiv.style.borderRadius = '20px';
+                    stallNumDiv.style.padding = '0.25rem 0.75rem';
+                    stallNumDiv.style.minWidth = '60px';
+                    stallNumDiv.textContent = stall.stallNumber;
+                    stallNumCell.appendChild(stallNumDiv);
+                    
+                    // Name Cell
+                    const nameCell = document.createElement('td');
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'editable-cell';
+                    nameDiv.contentEditable = true;
+                    nameDiv.dataset.field = 'name';
+                    nameDiv.dataset.index = actualIndex;
+                    nameDiv.textContent = stall.name;
+                    nameCell.appendChild(nameDiv);
+                    
+                    // Location Cell
+                    const locationCell = document.createElement('td');
+                    const locationSelect = document.createElement('select');
+                    locationSelect.className = 'location-select';
+                    locationSelect.dataset.field = 'location';
+                    locationSelect.dataset.index = actualIndex;
+                    
+                    const validLocations = LOCATION_CONFIG[this.currentCampus] || [];
+                    validLocations.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc;
+                        option.textContent = loc;
+                        option.selected = stall.location === loc;
+                        locationSelect.appendChild(option);
+                    });
+                    locationCell.appendChild(locationSelect);
+                    
+                    // Group Cell
+                    const groupCell = document.createElement('td');
+                    const groupSelect = document.createElement('select');
+                    groupSelect.className = 'group-select';
+                    groupSelect.dataset.field = 'group';
+                    groupSelect.dataset.index = actualIndex;
+                    
+                    const groups = ['Society', 'SU'];
+                    groups.forEach(grp => {
+                        const option = document.createElement('option');
+                        option.value = grp;
+                        option.textContent = grp;
+                        option.selected = stall.group === grp;
+                        groupSelect.appendChild(option);
+                    });
+                    groupCell.appendChild(groupSelect);
+                    
+                    // Actions Cell
+                    const actionsCell = document.createElement('td');
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'row-actions';
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn btn-sm btn-danger';
+                    deleteBtn.innerHTML = `
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
                     `;
-                }).join('');
+                    deleteBtn.addEventListener('click', () => this.deleteStall(actualIndex));
+                    
+                    actionsDiv.appendChild(deleteBtn);
+                    actionsCell.appendChild(actionsDiv);
+                    
+                    tr.appendChild(stallNumCell);
+                    tr.appendChild(nameCell);
+                    tr.appendChild(locationCell);
+                    tr.appendChild(groupCell);
+                    tr.appendChild(actionsCell);
+                    
+                    tbody.appendChild(tr);
+                });
 
                 this.setupTableListeners();
             }
 
             renderCards() {
                 const container = document.getElementById('cardsContainer');
+                
+                // Clear previous content
+                container.innerHTML = '';
 
                 if (this.filteredStallholders.length === 0) {
-                    container.innerHTML = '<div style="text-align: center; color: #333333; padding: 2rem;">No stallholders found</div>';
+                    const noResultsDiv = document.createElement('div');
+                    noResultsDiv.style.textAlign = 'center';
+                    noResultsDiv.style.color = '#757575';
+                    noResultsDiv.style.padding = '2rem';
+                    noResultsDiv.textContent = 'No stallholders found';
+                    container.appendChild(noResultsDiv);
                     return;
                 }
 
-                container.innerHTML = this.filteredStallholders.map((stall, displayIndex) => {
+                this.filteredStallholders.forEach((stall, displayIndex) => {
                     const actualIndex = this.stallholders.indexOf(stall);
-                    return `
-                        <div class="stallholder-card">
-                            <div class="card-header">
-                                <div class="card-stall-number">${stall.stallNumber}</div>
-                                <div class="card-name">${stall.name}</div>
-                            </div>
-                            
-                            <div class="card-field">
-                                <label>Name</label>
-                                <input type="text" class="card-input" value="${stall.name}" 
-                                       data-field="name" data-index="${actualIndex}">
-                            </div>
-                            
-                            <div class="card-field">
-                                <label>Stall Number</label>
-                                <input type="number" class="card-input" value="${stall.stallNumber}" 
-                                       data-field="stallNumber" data-index="${actualIndex}">
-                            </div>
-                            
-                            <div class="card-field">
-                                <label>Location</label>
-                                <select class="card-select" data-field="location" data-index="${actualIndex}">
-                                    <option value="Ruskin Courtyard" ${stall.location === 'Ruskin Courtyard' ? 'selected' : ''}>Ruskin Courtyard</option>
-                                    <option value="Science Walkway" ${stall.location === 'Science Walkway' ? 'selected' : ''}>Science Walkway</option>
-                                    <option value="LAB Courtyard" ${stall.location === 'LAB Courtyard' ? 'selected' : ''}>LAB Courtyard</option>
-                                </select>
-                            </div>
-                            
-                            <div class="card-field">
-                                <label>Group</label>
-                                <select class="card-select" data-field="group" data-index="${actualIndex}">
-                                    <option value="Society" ${stall.group === 'Society' ? 'selected' : ''}>Society</option>
-                                    <option value="SU" ${stall.group === 'SU' ? 'selected' : ''}>SU</option>
-                                </select>
-                            </div>
-                            
-                            <div class="card-actions">
-                                <button class="btn btn-sm btn-danger" onclick="editor.deleteStall(${actualIndex})">
-                                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-                                        <polyline points="3 6 5 6 21 6"></polyline>
-                                        <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
-                                    </svg>
-                                    Delete
-                                </button>
-                            </div>
-                        </div>
+                    
+                    const cardDiv = document.createElement('div');
+                    cardDiv.className = 'stallholder-card';
+                    
+                    // Card Header
+                    const headerDiv = document.createElement('div');
+                    headerDiv.className = 'card-header';
+                    
+                    const stallNumDiv = document.createElement('div');
+                    stallNumDiv.className = 'card-stall-number';
+                    stallNumDiv.textContent = stall.stallNumber;
+                    
+                    const nameDiv = document.createElement('div');
+                    nameDiv.className = 'card-name';
+                    nameDiv.textContent = stall.name;
+                    
+                    headerDiv.appendChild(stallNumDiv);
+                    headerDiv.appendChild(nameDiv);
+                    
+                    // Name Field
+                    const nameFieldDiv = document.createElement('div');
+                    nameFieldDiv.className = 'card-field';
+                    
+                    const nameLabel = document.createElement('label');
+                    nameLabel.textContent = 'Name';
+                    
+                    const nameInput = document.createElement('input');
+                    nameInput.type = 'text';
+                    nameInput.className = 'card-input';
+                    nameInput.value = stall.name;
+                    nameInput.dataset.field = 'name';
+                    nameInput.dataset.index = actualIndex;
+                    
+                    nameFieldDiv.appendChild(nameLabel);
+                    nameFieldDiv.appendChild(nameInput);
+                    
+                    // Stall Number Field
+                    const numFieldDiv = document.createElement('div');
+                    numFieldDiv.className = 'card-field';
+                    
+                    const numLabel = document.createElement('label');
+                    numLabel.textContent = 'Stall Number';
+                    
+                    const numInput = document.createElement('input');
+                    numInput.type = 'number';
+                    numInput.className = 'card-input';
+                    numInput.value = stall.stallNumber;
+                    numInput.dataset.field = 'stallNumber';
+                    numInput.dataset.index = actualIndex;
+                    
+                    numFieldDiv.appendChild(numLabel);
+                    numFieldDiv.appendChild(numInput);
+                    
+                    // Location Field
+                    const locFieldDiv = document.createElement('div');
+                    locFieldDiv.className = 'card-field';
+                    
+                    const locLabel = document.createElement('label');
+                    locLabel.textContent = 'Location';
+                    
+                    const locSelect = document.createElement('select');
+                    locSelect.className = 'card-select';
+                    locSelect.dataset.field = 'location';
+                    locSelect.dataset.index = actualIndex;
+                    
+                    const validLocations = LOCATION_CONFIG[this.currentCampus] || [];
+                    validLocations.forEach(loc => {
+                        const option = document.createElement('option');
+                        option.value = loc;
+                        option.textContent = loc;
+                        option.selected = stall.location === loc;
+                        locSelect.appendChild(option);
+                    });
+                    
+                    locFieldDiv.appendChild(locLabel);
+                    locFieldDiv.appendChild(locSelect);
+                    
+                    // Group Field
+                    const groupFieldDiv = document.createElement('div');
+                    groupFieldDiv.className = 'card-field';
+                    
+                    const groupLabel = document.createElement('label');
+                    groupLabel.textContent = 'Group';
+                    
+                    const groupSelect = document.createElement('select');
+                    groupSelect.className = 'card-select';
+                    groupSelect.dataset.field = 'group';
+                    groupSelect.dataset.index = actualIndex;
+                    
+                    const groups = ['Society', 'SU'];
+                    groups.forEach(grp => {
+                        const option = document.createElement('option');
+                        option.value = grp;
+                        option.textContent = grp;
+                        option.selected = stall.group === grp;
+                        groupSelect.appendChild(option);
+                    });
+                    
+                    groupFieldDiv.appendChild(groupLabel);
+                    groupFieldDiv.appendChild(groupSelect);
+                    
+                    // Card Actions
+                    const actionsDiv = document.createElement('div');
+                    actionsDiv.className = 'card-actions';
+                    
+                    const deleteBtn = document.createElement('button');
+                    deleteBtn.className = 'btn btn-sm btn-danger';
+                    deleteBtn.innerHTML = `
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                            <polyline points="3 6 5 6 21 6"></polyline>
+                            <path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6M8 6V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path>
+                        </svg>
+                        Delete
                     `;
-                }).join('');
+                    deleteBtn.addEventListener('click', () => this.deleteStall(actualIndex));
+                    
+                    actionsDiv.appendChild(deleteBtn);
+                    
+                    cardDiv.appendChild(headerDiv);
+                    cardDiv.appendChild(nameFieldDiv);
+                    cardDiv.appendChild(numFieldDiv);
+                    cardDiv.appendChild(locFieldDiv);
+                    cardDiv.appendChild(groupFieldDiv);
+                    cardDiv.appendChild(actionsDiv);
+                    
+                    container.appendChild(cardDiv);
+                });
 
                 this.setupCardListeners();
             }
@@ -1049,25 +1462,89 @@
             }
 
             exportData() {
+                const campusName = this.currentCampus.charAt(0).toUpperCase() + this.currentCampus.slice(1);
                 const dataStr = JSON.stringify(this.stallholders, null, 2);
                 const blob = new Blob([dataStr], { type: 'application/json' });
                 const url = URL.createObjectURL(blob);
                 
                 const a = document.createElement('a');
                 a.href = url;
-                a.download = `stallholders-${new Date().toISOString().split('T')[0]}.json`;
+                a.download = `${this.currentCampus}-stallholders-${new Date().toISOString().split('T')[0]}.json`;
                 document.body.appendChild(a);
                 a.click();
                 document.body.removeChild(a);
                 
                 URL.revokeObjectURL(url);
 
-                // Show feedback with animation
+                this.hasUnsavedChanges = false;
+                this.updateSaveStatus();
+
+                // Show detailed instructions
+                this.showExportInstructions();
+                
                 const btn = document.getElementById('exportData');
                 btn.classList.add('success-animation');
                 setTimeout(() => btn.classList.remove('success-animation'), 300);
+            }
+
+            showExportInstructions() {
+                const modal = document.createElement('div');
+                modal.className = 'export-modal';
+                modal.innerHTML = `
+                    <div class="modal-overlay">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                <h3>File Exported Successfully!</h3>
+                                <button class="modal-close" onclick="this.closest('.export-modal').remove()">×</button>
+                            </div>
+                            <div class="modal-body">
+                                <h4>Next Steps to Update Website:</h4>
+                                <ol style="text-align: left; padding-left: 1.5rem; line-height: 1.8;">
+                                    <li><strong>Open the downloaded file</strong> and copy all content (Ctrl+A, Ctrl+C)</li>
+                                    <li><strong>Go to your GitHub repository</strong></li>
+                                    <li><strong>Navigate to:</strong> <code>data/${this.currentCampus}-stallholders.json</code></li>
+                                    <li><strong>Click the edit button</strong> (pencil icon)</li>
+                                    <li><strong>Select all existing content</strong> and replace with your copied data</li>
+                                    <li><strong>Commit the changes</strong> - your website will update automatically!</li>
+                                </ol>
+                                <div style="background: #f8f9fa; padding: 1rem; border-radius: 8px; margin-top: 1rem;">
+                                    <strong>💡 Tip:</strong> Always test your changes on a staging branch first if possible.
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                `;
                 
-                this.showToast('Data exported successfully!', 'success');
+                document.body.appendChild(modal);
+                setTimeout(() => modal.remove(), 15000); // Auto-remove after 15 seconds
+            }
+
+            setupAutoSaveReminder() {
+                // Remind user to save every 10 minutes if there are unsaved changes
+                setInterval(() => {
+                    if (this.hasUnsavedChanges) {
+                        this.showToast('Don\'t forget to export your changes!', 'warning');
+                    }
+                }, 10 * 60 * 1000); // 10 minutes
+
+                // Warn before page unload
+                window.addEventListener('beforeunload', (e) => {
+                    if (this.hasUnsavedChanges) {
+                        e.preventDefault();
+                        e.returnValue = 'You have unsaved changes. Are you sure you want to leave?';
+                        return e.returnValue;
+                    }
+                });
+            }
+
+            showLoading() {
+                document.getElementById('loadingIndicator').style.display = 'block';
+                document.getElementById('tableContainer').style.display = 'none';
+            }
+
+            hideLoading() {
+                document.getElementById('loadingIndicator').style.display = 'none';
+                document.getElementById('tableContainer').style.display = 'block';
             }
 
             showToast(message, type = 'info') {
@@ -1081,13 +1558,27 @@
                     info: 'ℹ'
                 };
 
-                toast.innerHTML = `
-                    <div class="toast-content">
-                        <span class="toast-icon">${iconMap[type] || iconMap.info}</span>
-                        <span class="toast-message">${message}</span>
-                    </div>
-                    <button class="toast-close" onclick="this.closest('.toast').remove()">×</button>
-                `;
+                const toastContent = document.createElement('div');
+                toastContent.className = 'toast-content';
+                
+                const icon = document.createElement('span');
+                icon.className = 'toast-icon';
+                icon.textContent = iconMap[type] || iconMap.info;
+                
+                const messageSpan = document.createElement('span');
+                messageSpan.className = 'toast-message';
+                messageSpan.textContent = message;
+                
+                toastContent.appendChild(icon);
+                toastContent.appendChild(messageSpan);
+                
+                const closeBtn = document.createElement('button');
+                closeBtn.className = 'toast-close';
+                closeBtn.textContent = '×';
+                closeBtn.onclick = () => toast.remove();
+                
+                toast.appendChild(toastContent);
+                toast.appendChild(closeBtn);
 
                 // Add to toast container
                 let container = document.getElementById('toastContainer');
@@ -1114,12 +1605,10 @@
             }
         }
 
-        // Initialize the editor
-        let editor;
+        // Initialize the editor when DOM is loaded
         document.addEventListener('DOMContentLoaded', () => {
-            editor = new StallholderEditor();
+            window.editor = new StallholderEditor();
         });
     </script>
 </body>
 </html>
-                                
