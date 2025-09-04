@@ -414,7 +414,7 @@ class StallholderEditor {
             groupSelect.dataset.field = 'group';
             groupSelect.dataset.index = actualIndex;
             
-            const groups = ['Society', 'SU'];
+            const groups = ['Society', 'SU', 'Native', 'University'];
             groups.forEach(grp => {
                 const option = document.createElement('option');
                 option.value = grp;
@@ -562,7 +562,7 @@ class StallholderEditor {
             groupSelect.dataset.field = 'group';
             groupSelect.dataset.index = actualIndex;
             
-            const groups = ['Society', 'SU'];
+            const groups = ['Society', 'SU', 'Native', 'University'];
             groups.forEach(grp => {
                 const option = document.createElement('option');
                 option.value = grp;
