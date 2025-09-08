@@ -632,3 +632,82 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     window.eventManager = new UnionEventManager();
 });
+// Add this to your script.js file
+
+class VersionManager {
+    constructor() {
+        this.currentVersion = '3.0.0'; // Update this when you change sw.js version
+        this.init();
+    }
+    
+    async init() {
+        this.updateVersionDisplay();
+        await this.checkServiceWorkerVersion();
+        this.updateLastUpdatedTime();
+    }
+    
+    updateVersionDisplay() {
+        const versionElement = document.getElementById('appVersion');
+        if (versionElement) {
+            versionElement.textContent = `v${this.currentVersion}`;
+        }
+    }
+    
+    async checkServiceWorkerVersion() {
+        try {
+            if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
+                // Try to get version from service worker
+                const messageChannel = new MessageChannel();
+                messageChannel.port1.onmessage = (event) => {
+                    if (event.data && event.data.version) {
+                        const versionElement = document.getElementById('appVersion');
+                        if (versionElement) {
+                            versionElement.textContent = `v${event.data.version}`;
+                        }
+                    }
+                };
+                
+                navigator.serviceWorker.controller.postMessage(
+                    { type: 'GET_VERSION' },
+                    [messageChannel.port2]
+                );
+            }
+        } catch (error) {
+            console.log('Could not get SW version:', error);
+        }
+    }
+    
+    updateLastUpdatedTime() {
+        const lastUpdatedElement = document.getElementById('lastUpdated');
+        if (lastUpdatedElement) {
+            const now = new Date();
+            const timeString = now.toLocaleString('en-GB', {
+                day: '2-digit',
+                month: 'short',
+                year: 'numeric',
+                hour: '2-digit',
+                minute: '2-digit'
+            });
+            lastUpdatedElement.textContent = `Updated: ${timeString}`;
+        }
+    }
+    
+    // Call this when data is refreshed
+    onDataRefresh() {
+        this.updateLastUpdatedTime();
+    }
+}
+
+// Initialize version manager
+document.addEventListener('DOMContentLoaded', () => {
+    window.versionManager = new VersionManager();
+});
+
+// Update the refresh function to show when data was last refreshed
+const originalRefreshAppData = refreshAppData;
+refreshAppData = async function() {
+    await originalRefreshAppData();
+    if (window.versionManager) {
+        window.versionManager.onDataRefresh();
+    }
+};
