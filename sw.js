@@ -1,6 +1,6 @@
 // Simple Service Worker that actually works for data updates
 const APP_NAME = 'union-staff';
-const VERSION = '3.2.0'; // Change this every time you deploy
+const VERSION = '3.3.0'; // Change this every time you deploy
 const CACHE_NAME = `${APP_NAME}-v${VERSION}`;
 
 // What to cache
@@ -42,6 +42,15 @@ self.addEventListener('activate', (event) => {
       })
       .then(() => self.clients.claim())
   );
+});
+
+// Message handler - respond to version requests
+self.addEventListener('message', (event) => {
+  const { type } = event.data;
+  
+  if (type === 'GET_VERSION') {
+    event.ports[0].postMessage({ version: VERSION });
+  }
 });
 
 // Fetch - NEVER cache JSON data files
