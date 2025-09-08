@@ -2,7 +2,7 @@
 // Version: 2.0 - Enhanced cache management and update handling
 
 const APP_NAME = 'union-staff';
-const VERSION = '2.0.1'; // Increment this for each deployment
+const VERSION = '2.0.2'; // Increment this for each deployment
 const CACHE_NAME = `${APP_NAME}-v${VERSION}`;
 
 // Cache strategies for different types of resources
