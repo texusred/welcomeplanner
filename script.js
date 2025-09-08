@@ -636,7 +636,7 @@ document.addEventListener('DOMContentLoaded', () => {
 
 class VersionManager {
     constructor() {
-        this.currentVersion = '3.0.0'; // Update this when you change sw.js version
+        this.currentVersion = '3.3.0'; // Update this when you change sw.js version
         this.init();
     }
     
