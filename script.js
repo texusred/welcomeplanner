@@ -123,11 +123,11 @@ class UnionEventManager {
 
     setupEventListeners() {
         // Location switcher
-        document.getElementById('campusSelect').addEventListener('change', async (e) => {
-            this.currentLocation = e.target.value;
-            await this.loadData();
-            this.clearResults();
-        });
+//        document.getElementById('campusSelect').addEventListener('change', async (e) => {
+//            this.currentLocation = e.target.value;
+//            await this.loadData();
+ //           this.clearResults();
+ //       });
 
         // Staff search
         const staffSearchInput = document.getElementById('staffSearch');
