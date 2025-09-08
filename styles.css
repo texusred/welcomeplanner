@@ -965,3 +965,70 @@ p { margin-bottom: 1rem; }
     padding: 0;
   }
 }
+/* Add this to your styles.css */
+
+.version-footer {
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  background: rgba(0, 0, 0, 0.8);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  color: var(--brilliant-green);
+  padding: 0.5rem 1rem;
+  font-size: 0.75rem;
+  z-index: 50;
+  border-top: 1px solid rgba(215, 251, 89, 0.2);
+}
+
+.version-info {
+  max-width: 1400px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 0.5rem;
+  font-family: 'Inter', monospace;
+  font-weight: 500;
+}
+
+.separator {
+  opacity: 0.5;
+}
+
+#appVersion {
+  font-weight: 600;
+  color: var(--brilliant-green);
+}
+
+#lastUpdated {
+  opacity: 0.8;
+  font-size: 0.7rem;
+}
+
+/* Make sure main content doesn't get hidden behind footer */
+body {
+  padding-bottom: 40px;
+}
+
+/* Mobile adjustments */
+@media (max-width: 768px) {
+  .version-footer {
+    padding: 0.4rem 0.5rem;
+    font-size: 0.7rem;
+  }
+  
+  .version-info {
+    flex-direction: column;
+    gap: 0.25rem;
+  }
+  
+  .separator {
+    display: none;
+  }
+  
+  body {
+    padding-bottom: 50px;
+  }
+}
