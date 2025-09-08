@@ -558,6 +558,68 @@ class UnionEventManager {
         }, 3000);
     }
 }
+// Add this to the end of your script.js file
+
+// Enhanced refresh function that works on all devices
+async function refreshAppData() {
+    const refreshBtn = document.getElementById('refreshDataBtn');
+    
+    // Show loading state
+    refreshBtn.disabled = true;
+    refreshBtn.innerHTML = `
+        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <polyline points="23 4 23 10 17 10"></polyline>
+            <polyline points="1 20 1 14 7 14"></polyline>
+            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+        </svg>
+        Refreshing...
+    `;
+    
+    try {
+        // Clear any existing caches
+        if ('caches' in window) {
+            const cacheNames = await caches.keys();
+            await Promise.all(
+                cacheNames
+                    .filter(name => name.includes('data'))
+                    .map(name => caches.delete(name))
+            );
+        }
+        
+        // Force reload the app data
+        if (window.eventManager) {
+            await window.eventManager.loadData();
+            window.eventManager.showToast('Data refreshed successfully!', 'success');
+        } else {
+            // Fallback: hard reload if eventManager not available
+            window.location.reload();
+        }
+        
+    } catch (error) {
+        console.error('Refresh failed:', error);
+        // Fallback: hard reload
+        window.location.reload();
+    } finally {
+        // Reset button
+        refreshBtn.disabled = false;
+        refreshBtn.innerHTML = `
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                <polyline points="23 4 23 10 17 10"></polyline>
+                <polyline points="1 20 1 14 7 14"></polyline>
+                <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
+            </svg>
+            Refresh
+        `;
+    }
+}
+
+// Set up refresh button when page loads
+document.addEventListener('DOMContentLoaded', () => {
+    const refreshBtn = document.getElementById('refreshDataBtn');
+    if (refreshBtn) {
+        refreshBtn.addEventListener('click', refreshAppData);
+    }
+});
 
 document.addEventListener('DOMContentLoaded', () => {
     window.eventManager = new UnionEventManager();
