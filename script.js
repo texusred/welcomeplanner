@@ -1,12 +1,6 @@
-// Location configuration for different campuses
-const LOCATION_CONFIG = {
-    cambridge: ['Ruskin Courtyard', 'LAB Courtyard', 'Science Walkway'],
-    chelmsford: ['Central Walkway']
-};
-
 class UnionEventManager {
     constructor() {
-        this.currentLocation = 'cambridge';
+        this.currentLocation = 'cambridge'; // Fixed to cambridge only
         this.staffData = null;
         this.stallholderData = null;
         this.currentTime = new Date();
@@ -32,8 +26,8 @@ class UnionEventManager {
             this.showLoading();
             
             const [staffResponse, stallholderResponse] = await Promise.all([
-                fetch(`data/${this.currentLocation}-staff-rota.json`),
-                fetch(`data/${this.currentLocation}-stallholders.json`)
+                fetch(`data/cambridge-staff-rota.json`),
+                fetch(`data/cambridge-stallholders.json`)
             ]);
 
             if (!staffResponse.ok || !stallholderResponse.ok) {
@@ -88,8 +82,6 @@ class UnionEventManager {
             throw new Error('Invalid stallholder data format');
         }
 
-        const validLocations = LOCATION_CONFIG[this.currentLocation] || [];
-
         return data.map(stall => {
             if (!stall || typeof stall !== 'object') return null;
             
@@ -100,19 +92,7 @@ class UnionEventManager {
 
             if (!name || stallNumber <= 0) return null;
 
-            // Auto-migrate location data for current campus
-            let validatedLocation = location;
-            if (!validLocations.includes(location)) {
-                // For Chelmsford, migrate any invalid location to Central Walkway
-                if (this.currentLocation === 'chelmsford') {
-                    validatedLocation = 'Central Walkway';
-                } else {
-                    // For Cambridge, default to Ruskin Courtyard if invalid
-                    validatedLocation = validLocations.includes(location) ? location : 'Ruskin Courtyard';
-                }
-            }
-
-            return { name, stallNumber, location: validatedLocation, group };
+            return { name, stallNumber, location, group };
         }).filter(Boolean);
     }
 
@@ -122,50 +102,62 @@ class UnionEventManager {
     }
 
     setupEventListeners() {
-        // Location switcher
-//        document.getElementById('campusSelect').addEventListener('change', async (e) => {
-//            this.currentLocation = e.target.value;
-//            await this.loadData();
- //           this.clearResults();
- //       });
-
         // Staff search
         const staffSearchInput = document.getElementById('staffSearch');
-        staffSearchInput.addEventListener('input', (e) => {
-            this.handleStaffSearch(e.target.value);
-        });
+        if (staffSearchInput) {
+            staffSearchInput.addEventListener('input', (e) => {
+                this.handleStaffSearch(e.target.value);
+            });
+        }
 
         // Location filter
-        document.getElementById('locationFilter').addEventListener('change', (e) => {
-            this.handleLocationFilter(e.target.value);
-        });
+        const locationFilter = document.getElementById('locationFilter');
+        if (locationFilter) {
+            locationFilter.addEventListener('change', (e) => {
+                this.handleLocationFilter(e.target.value);
+            });
+        }
 
         // Stallholder search
         const stallholderSearchInput = document.getElementById('stallholderSearch');
-        stallholderSearchInput.addEventListener('input', (e) => {
-            this.handleStallholderSearch(e.target.value);
-        });
+        if (stallholderSearchInput) {
+            stallholderSearchInput.addEventListener('input', (e) => {
+                this.handleStallholderSearch(e.target.value);
+            });
+        }
 
         // List all stallholders
-        document.getElementById('listAllStallholders').addEventListener('click', () => {
-            this.showAllStallholders();
-        });
+        const listAllBtn = document.getElementById('listAllStallholders');
+        if (listAllBtn) {
+            listAllBtn.addEventListener('click', () => {
+                this.showAllStallholders();
+            });
+        }
 
-        // Edit stallholders with password - now passes campus context
-        document.getElementById('editStallholdersBtn').addEventListener('click', () => {
-            this.handleEditStallholders();
-        });
+        // Edit stallholders with password
+        const editBtn = document.getElementById('editStallholdersBtn');
+        if (editBtn) {
+            editBtn.addEventListener('click', () => {
+                this.handleEditStallholders();
+            });
+        }
 
         // Modal functionality
-        document.getElementById('closeModal').addEventListener('click', () => {
-            this.hideModal();
-        });
-
-        document.getElementById('stallModal').addEventListener('click', (e) => {
-            if (e.target.classList.contains('modal-overlay')) {
+        const closeModal = document.getElementById('closeModal');
+        if (closeModal) {
+            closeModal.addEventListener('click', () => {
                 this.hideModal();
-            }
-        });
+            });
+        }
+
+        const stallModal = document.getElementById('stallModal');
+        if (stallModal) {
+            stallModal.addEventListener('click', (e) => {
+                if (e.target.classList.contains('modal-overlay')) {
+                    this.hideModal();
+                }
+            });
+        }
     }
 
     startTimeUpdater() {
@@ -182,13 +174,15 @@ class UnionEventManager {
             minute: '2-digit',
             hour12: false 
         });
-        document.getElementById('currentTime').textContent = timeStr;
+        const timeElement = document.getElementById('currentTime');
+        if (timeElement) {
+            timeElement.textContent = timeStr;
+        }
         this.currentTime = now;
     }
 
     updateLocationDisplay() {
-        const locationName = this.currentLocation.charAt(0).toUpperCase() + this.currentLocation.slice(1);
-        document.title = `Staff Rota & Event Management - ${locationName} | UNION`;
+        document.title = `Staff Rota & Event Management - Cambridge | UNION`;
     }
 
     handleStaffSearch(query) {
@@ -256,7 +250,10 @@ class UnionEventManager {
         });
 
         scheduleHTML += `</div></div>`;
-        document.getElementById('staffResults').innerHTML = scheduleHTML;
+        const resultsElement = document.getElementById('staffResults');
+        if (resultsElement) {
+            resultsElement.innerHTML = scheduleHTML;
+        }
     }
 
     showLocationStaff(location, staffList) {
@@ -286,7 +283,10 @@ class UnionEventManager {
         });
 
         html += `</div></div>`;
-        document.getElementById('staffResults').innerHTML = html;
+        const resultsElement = document.getElementById('staffResults');
+        if (resultsElement) {
+            resultsElement.innerHTML = html;
+        }
     }
 
     getShiftStatus(timeSlot) {
@@ -341,27 +341,36 @@ class UnionEventManager {
         });
 
         html += `</div></div>`;
-        document.getElementById('staffResults').innerHTML = html;
+        const resultsElement = document.getElementById('staffResults');
+        if (resultsElement) {
+            resultsElement.innerHTML = html;
+        }
     }
 
     showNoStaffResults(query) {
-        document.getElementById('staffResults').innerHTML = `
-            <div class="no-results">
-                <div class="placeholder-icon">❌</div>
-                <h3>No staff found</h3>
-                <p>No staff member named "${query}" found</p>
-            </div>
-        `;
+        const resultsElement = document.getElementById('staffResults');
+        if (resultsElement) {
+            resultsElement.innerHTML = `
+                <div class="no-results">
+                    <div class="placeholder-icon">❌</div>
+                    <h3>No staff found</h3>
+                    <p>No staff member named "${query}" found</p>
+                </div>
+            `;
+        }
     }
 
     clearStaffResults() {
-        document.getElementById('staffResults').innerHTML = `
-            <div class="results-placeholder">
-                <div class="placeholder-icon">👥</div>
-                <h3>Search Staff or Location</h3>
-                <p>Search for a staff member to see their full schedule, or filter by location to see all staff working there</p>
-            </div>
-        `;
+        const resultsElement = document.getElementById('staffResults');
+        if (resultsElement) {
+            resultsElement.innerHTML = `
+                <div class="results-placeholder">
+                    <div class="placeholder-icon">👥</div>
+                    <h3>Search Staff or Location</h3>
+                    <p>Search for a staff member to see their full schedule, or filter by location to see all staff working there</p>
+                </div>
+            `;
+        }
     }
 
     handleStallholderSearch(query) {
@@ -397,7 +406,7 @@ class UnionEventManager {
                         </svg>
                         Back
                     </button>
-                    <h2>All Stallholders - ${this.currentLocation.charAt(0).toUpperCase() + this.currentLocation.slice(1)}</h2>
+                    <h2>All Stallholders - Cambridge</h2>
                     <input type="text" id="fullListSearch" class="search-input" placeholder="Search stallholders...">
                 </div>
                 <div class="stallholder-full-grid">
@@ -420,12 +429,16 @@ class UnionEventManager {
     }
 
     returnToMain() {
-        document.querySelector('.main-content').innerHTML = this.originalMainContent;
-        this.setupEventListeners(); // Re-setup event listeners
+        const mainContent = document.querySelector('.main-content');
+        if (mainContent && this.originalMainContent) {
+            mainContent.innerHTML = this.originalMainContent;
+            this.setupEventListeners(); // Re-setup event listeners
+        }
     }
 
     displayFullStallholderGrid(stallholders) {
         const container = document.getElementById('fullGridResults');
+        if (!container) return;
         
         let html = '';
         stallholders.forEach(stall => {
@@ -443,27 +456,31 @@ class UnionEventManager {
     }
 
     setupFullListSearch() {
-        document.getElementById('fullListSearch').addEventListener('input', (e) => {
-            const query = e.target.value.toLowerCase();
-            
-            if (query.length === 0) {
-                this.displayFullStallholderGrid(this.stallholderData);
-                return;
-            }
-            
-            const filtered = this.stallholderData.filter(stall => 
-                stall.name.toLowerCase().includes(query) ||
-                stall.location.toLowerCase().includes(query) ||
-                stall.group.toLowerCase().includes(query) ||
-                stall.stallNumber.toString().includes(query)
-            );
-            
-            this.displayFullStallholderGrid(filtered);
-        });
+        const searchInput = document.getElementById('fullListSearch');
+        if (searchInput) {
+            searchInput.addEventListener('input', (e) => {
+                const query = e.target.value.toLowerCase();
+                
+                if (query.length === 0) {
+                    this.displayFullStallholderGrid(this.stallholderData);
+                    return;
+                }
+                
+                const filtered = this.stallholderData.filter(stall => 
+                    stall.name.toLowerCase().includes(query) ||
+                    stall.location.toLowerCase().includes(query) ||
+                    stall.group.toLowerCase().includes(query) ||
+                    stall.stallNumber.toString().includes(query)
+                );
+                
+                this.displayFullStallholderGrid(filtered);
+            });
+        }
     }
 
     displayStallholderResults(results) {
         const container = document.getElementById('stallholderResults');
+        if (!container) return;
         
         if (results.length === 0) {
             container.innerHTML = `
@@ -492,36 +509,47 @@ class UnionEventManager {
     }
 
     clearStallholderResults() {
-        document.getElementById('stallholderResults').innerHTML = `
-            <div class="results-placeholder">
-                <div class="placeholder-icon">🏪</div>
-                <p>Type to search stallholders or view complete list</p>
-            </div>
-        `;
+        const container = document.getElementById('stallholderResults');
+        if (container) {
+            container.innerHTML = `
+                <div class="results-placeholder">
+                    <div class="placeholder-icon">🏪</div>
+                    <p>Type to search stallholders or view complete list</p>
+                </div>
+            `;
+        }
     }
 
     showStallholderModal(stallNumber) {
         const stall = this.stallholderData.find(s => s.stallNumber === stallNumber);
         if (!stall) return;
 
-        document.getElementById('modalStallName').textContent = stall.name;
-        document.getElementById('modalStallNumber').textContent = stall.stallNumber;
-        document.getElementById('modalStallLocation').textContent = stall.location;
-        document.getElementById('modalStallGroup').textContent = stall.group;
-        
-        document.getElementById('stallModal').style.display = 'flex';
+        const elements = {
+            name: document.getElementById('modalStallName'),
+            number: document.getElementById('modalStallNumber'),
+            location: document.getElementById('modalStallLocation'),
+            group: document.getElementById('modalStallGroup'),
+            modal: document.getElementById('stallModal')
+        };
+
+        if (elements.name) elements.name.textContent = stall.name;
+        if (elements.number) elements.number.textContent = stall.stallNumber;
+        if (elements.location) elements.location.textContent = stall.location;
+        if (elements.group) elements.group.textContent = stall.group;
+        if (elements.modal) elements.modal.style.display = 'flex';
     }
 
     hideModal() {
-        document.getElementById('stallModal').style.display = 'none';
+        const modal = document.getElementById('stallModal');
+        if (modal) {
+            modal.style.display = 'none';
+        }
     }
 
     handleEditStallholders() {
         const password = prompt('Enter admin password:');
         if (password === 'union2024') {
-            // Pass current campus to the editor via URL parameter
-            const editorUrl = `admin/stallholder-editor.html?campus=${this.currentLocation}`;
-            window.open(editorUrl, '_blank');
+            window.open('admin/stallholder-editor.html?campus=cambridge', '_blank');
         } else if (password !== null) {
             this.showToast('Incorrect password', 'error');
         }
@@ -530,17 +558,28 @@ class UnionEventManager {
     clearResults() {
         this.clearStaffResults();
         this.clearStallholderResults();
-        document.getElementById('staffSearch').value = '';
-        document.getElementById('locationFilter').value = '';
-        document.getElementById('stallholderSearch').value = '';
+        
+        const staffSearch = document.getElementById('staffSearch');
+        const locationFilter = document.getElementById('locationFilter');
+        const stallholderSearch = document.getElementById('stallholderSearch');
+        
+        if (staffSearch) staffSearch.value = '';
+        if (locationFilter) locationFilter.value = '';
+        if (stallholderSearch) stallholderSearch.value = '';
     }
 
     showLoading() {
-        document.getElementById('loadingIndicator').style.display = 'flex';
+        const loading = document.getElementById('loadingIndicator');
+        if (loading) {
+            loading.style.display = 'flex';
+        }
     }
 
     hideLoading() {
-        document.getElementById('loadingIndicator').style.display = 'none';
+        const loading = document.getElementById('loadingIndicator');
+        if (loading) {
+            loading.style.display = 'none';
+        }
     }
 
     showToast(message, type = 'info') {
@@ -558,8 +597,8 @@ class UnionEventManager {
         }, 3000);
     }
 }
-// Simple refresh function - no animations, just works
 
+// Refresh function
 async function refreshAppData() {
     const refreshBtn = document.getElementById('refreshDataBtn');
     if (!refreshBtn) return;
@@ -629,13 +668,10 @@ document.addEventListener('DOMContentLoaded', () => {
     }
 });
 
-document.addEventListener('DOMContentLoaded', () => {
-    window.eventManager = new UnionEventManager();
-});
-// Version Management - Add this to the end of script.js
+// Version Management
 class VersionManager {
     constructor() {
-        this.currentVersion = '3.4.0'; // Update this when you change sw.js version
+        this.currentVersion = '3.4.0';
         this.init();
     }
     
@@ -695,10 +731,10 @@ class VersionManager {
     }
 }
 
-// Initialize version manager
+// Initialize everything
 document.addEventListener('DOMContentLoaded', () => {
     window.eventManager = new UnionEventManager();
-    window.versionManager = new VersionManager(); // Add this line
+    window.versionManager = new VersionManager();
 });
 
 // Update refresh function to update timestamp
