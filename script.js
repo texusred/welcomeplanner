@@ -558,22 +558,15 @@ class UnionEventManager {
         }, 3000);
     }
 }
-// Add this to the end of your script.js file
+// Simple refresh function - no animations, just works
 
-// Enhanced refresh function that works on all devices
 async function refreshAppData() {
     const refreshBtn = document.getElementById('refreshDataBtn');
+    if (!refreshBtn) return;
     
-    // Show loading state
+    // Disable button during refresh
     refreshBtn.disabled = true;
-    refreshBtn.innerHTML = `
-        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
-            <polyline points="23 4 23 10 17 10"></polyline>
-            <polyline points="1 20 1 14 7 14"></polyline>
-            <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
-        </svg>
-        Refreshing...
-    `;
+    refreshBtn.textContent = 'Refreshing...';
     
     try {
         // Clear any existing caches
@@ -589,26 +582,26 @@ async function refreshAppData() {
         // Force reload the app data
         if (window.eventManager) {
             await window.eventManager.loadData();
-            window.eventManager.showToast('Data refreshed successfully!', 'success');
+            window.eventManager.showToast('Data refreshed!', 'success');
         } else {
-            // Fallback: hard reload if eventManager not available
+            // Fallback: reload page
             window.location.reload();
         }
         
     } catch (error) {
         console.error('Refresh failed:', error);
-        // Fallback: hard reload
+        // Fallback: reload page
         window.location.reload();
     } finally {
         // Reset button
         refreshBtn.disabled = false;
         refreshBtn.innerHTML = `
-            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+            <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
                 <polyline points="23 4 23 10 17 10"></polyline>
                 <polyline points="1 20 1 14 7 14"></polyline>
                 <path d="M20.49 9A9 9 0 0 0 5.64 5.64L1 10m22 4l-4.64 4.36A9 9 0 0 1 3.51 15"></path>
             </svg>
-            Refresh
+            <span>Refresh</span>
         `;
     }
 }
@@ -618,6 +611,21 @@ document.addEventListener('DOMContentLoaded', () => {
     const refreshBtn = document.getElementById('refreshDataBtn');
     if (refreshBtn) {
         refreshBtn.addEventListener('click', refreshAppData);
+        
+        // Add touch event for better mobile response
+        refreshBtn.addEventListener('touchstart', function() {
+            this.style.background = 'var(--brilliant-green)';
+            this.style.color = 'var(--union-black)';
+        });
+        
+        refreshBtn.addEventListener('touchend', function() {
+            setTimeout(() => {
+                if (!this.disabled) {
+                    this.style.background = 'transparent';
+                    this.style.color = 'var(--text-primary)';
+                }
+            }, 150);
+        });
     }
 });
 
