@@ -632,11 +632,10 @@ document.addEventListener('DOMContentLoaded', () => {
 document.addEventListener('DOMContentLoaded', () => {
     window.eventManager = new UnionEventManager();
 });
-// Add this to your script.js file
-
+// Version Management - Add this to the end of script.js
 class VersionManager {
     constructor() {
-        this.currentVersion = '3.3.0'; // Update this when you change sw.js version
+        this.currentVersion = '3.4.0'; // Update this when you change sw.js version
         this.init();
     }
     
@@ -656,7 +655,6 @@ class VersionManager {
     async checkServiceWorkerVersion() {
         try {
             if ('serviceWorker' in navigator && navigator.serviceWorker.controller) {
-                // Try to get version from service worker
                 const messageChannel = new MessageChannel();
                 messageChannel.port1.onmessage = (event) => {
                     if (event.data && event.data.version) {
@@ -692,7 +690,6 @@ class VersionManager {
         }
     }
     
-    // Call this when data is refreshed
     onDataRefresh() {
         this.updateLastUpdatedTime();
     }
@@ -700,10 +697,11 @@ class VersionManager {
 
 // Initialize version manager
 document.addEventListener('DOMContentLoaded', () => {
-    window.versionManager = new VersionManager();
+    window.eventManager = new UnionEventManager();
+    window.versionManager = new VersionManager(); // Add this line
 });
 
-// Update the refresh function to show when data was last refreshed
+// Update refresh function to update timestamp
 const originalRefreshAppData = refreshAppData;
 refreshAppData = async function() {
     await originalRefreshAppData();
