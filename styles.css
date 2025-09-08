@@ -265,20 +265,41 @@ p { margin-bottom: 1rem; }
   padding: 0.75rem;
   border-bottom: 1px solid var(--border-light);
   align-items: center;
+  transition: all 0.3s ease;
 }
 
 .schedule-row:last-child {
   border-bottom: none;
 }
 
+/* Enhanced active shift highlighting */
 .schedule-row.active {
-  background: rgba(215, 251, 89, 0.1);
+  background: rgba(215, 251, 89, 0.2);
   border-left: 4px solid var(--brilliant-green);
+  box-shadow: 0 2px 8px rgba(215, 251, 89, 0.3);
+  transform: translateX(2px);
+}
+
+.schedule-row.active .status-active {
+  background: var(--brilliant-green);
+  color: var(--union-black);
+  padding: 0.25rem 0.5rem;
+  border-radius: 12px;
+  font-weight: 700;
+  font-size: 0.85rem;
+}
+
+/* Pulse animation for active status */
+@keyframes pulse {
+  0% { opacity: 1; }
+  50% { opacity: 0.7; }
+  100% { opacity: 1; }
 }
 
 .status-active {
   color: var(--success-green);
   font-weight: 700;
+  animation: pulse 2s infinite;
 }
 
 .status-upcoming {
