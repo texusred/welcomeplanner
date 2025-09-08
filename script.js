@@ -671,7 +671,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Version Management
 class VersionManager {
     constructor() {
-        this.currentVersion = '3.4.0';
+        this.currentVersion = '3.5.0';
         this.init();
     }
     
