@@ -552,7 +552,7 @@
     "group": "Native"
   },
   {
-    "name": "CUOTC",
+    "name": "Shake Shack",
     "stallNumber": 93,
     "location": "LAB Courtyard",
     "group": "Native"
@@ -578,6 +578,12 @@
   {
     "name": "Adobe",
     "stallNumber": 97,
+    "location": "LAB Courtyard",
+    "group": "Native"
+  },
+  {
+    "name": "CUOTC",
+    "stallNumber": 98,
     "location": "LAB Courtyard",
     "group": "Native"
   }
