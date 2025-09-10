@@ -211,45 +211,99 @@ class UnionEventManager {
             return;
         }
 
+        // Update location names for display
+        const displayLocation = this.updateLocationName(location);
+
         const staffAtLocation = this.staffData.staff.filter(person => 
-            person.schedule.some(slot => slot.taskName === location)
+            person.schedule.some(slot => {
+                const updatedTaskName = this.updateLocationName(slot.taskName);
+                return updatedTaskName === displayLocation;
+            })
         );
 
-        this.showLocationStaff(location, staffAtLocation);
+        this.showLocationStaff(displayLocation, staffAtLocation);
+    }
+
+    updateLocationName(taskName) {
+        // Convert old names to new names
+        if (taskName === 'SU Stall - Freebies Left Counter') {
+            return 'SU Stall - Freebies LAB Courtyard';
+        }
+        if (taskName === 'SU Stall - Freebies Right Counter') {
+            return 'SU Stall - Freebies Ruskin Courtyard';
+        }
+        return taskName;
     }
 
     showStaffSchedule(person) {
-        const currentTimeStr = this.currentTime.toLocaleTimeString('en-GB', { 
-            hour: '2-digit', 
-            minute: '2-digit',
-            hour12: false 
-        });
+        // Find current active shift
+        const currentShift = person.schedule.find(slot => 
+            this.getShiftStatus(slot.timeSlot) === 'ACTIVE'
+        );
 
         let scheduleHTML = `
             <div class="staff-schedule">
-                <h4>Schedule for ${person.name}</h4>
-                <div class="schedule-table">
-                    <div class="schedule-header">
-                        <span>Time</span>
-                        <span>Task</span>
-                        <span>Status</span>
-                    </div>
+                <div class="staff-name">${person.name}</div>
         `;
 
+        // Add current status banner
+        if (currentShift) {
+            const updatedTaskName = this.updateLocationName(currentShift.taskName);
+            const [startTime, endTime] = currentShift.timeSlot.split('-');
+            scheduleHTML += `
+                <div class="current-status">
+                    🟢 Currently: ${updatedTaskName}
+                    <div class="status-time">Ends at ${endTime}</div>
+                </div>
+            `;
+        } else {
+            // Find next shift
+            const nextShift = person.schedule.find(slot => 
+                this.getShiftStatus(slot.timeSlot) === 'Upcoming'
+            );
+            if (nextShift) {
+                const [startTime] = nextShift.timeSlot.split('-');
+                const updatedTaskName = this.updateLocationName(nextShift.taskName);
+                scheduleHTML += `
+                    <div class="current-status off">
+                        ⚪ Currently: Off Shift
+                        <div class="status-time">Next: ${updatedTaskName} at ${startTime}</div>
+                    </div>
+                `;
+            } else {
+                scheduleHTML += `
+                    <div class="current-status off">
+                        ⚪ Currently: Off Shift
+                    </div>
+                `;
+            }
+        }
+
+        // Add schedule items
         person.schedule.forEach(slot => {
             const status = this.getShiftStatus(slot.timeSlot);
             const statusClass = status.toLowerCase().replace(' ', '-');
+            const updatedTaskName = this.updateLocationName(slot.taskName);
+            
+            let statusBadge = '';
+            if (status === 'ACTIVE') {
+                statusBadge = '<div class="status-badge active">ACTIVE</div>';
+            } else if (status === 'Complete') {
+                statusBadge = '<div class="status-badge completed">✓</div>';
+            } else if (slot === person.schedule.find(s => this.getShiftStatus(s.timeSlot) === 'Upcoming')) {
+                statusBadge = '<div class="status-badge next">Next</div>';
+            }
             
             scheduleHTML += `
-                <div class="schedule-row ${statusClass}">
-                    <span>${slot.timeSlot}</span>
-                    <span>${slot.taskName}</span>
-                    <span class="status-${statusClass}">${status}</span>
+                <div class="schedule-item ${statusClass}">
+                    <div class="time-slot">${slot.timeSlot}</div>
+                    <div class="task-name">${updatedTaskName}</div>
+                    ${statusBadge}
                 </div>
             `;
         });
 
-        scheduleHTML += `</div></div>`;
+        scheduleHTML += `</div>`;
         const resultsElement = document.getElementById('staffResults');
         if (resultsElement) {
             resultsElement.innerHTML = scheduleHTML;
@@ -265,7 +319,10 @@ class UnionEventManager {
 
         staffList.forEach(person => {
             const shifts = person.schedule
-                .filter(slot => slot.taskName === location)
+                .filter(slot => {
+                    const updatedTaskName = this.updateLocationName(slot.taskName);
+                    return updatedTaskName === location;
+                })
                 .map(slot => slot.timeSlot)
                 .join(', ');
             
@@ -290,16 +347,16 @@ class UnionEventManager {
     }
 
     getShiftStatus(timeSlot) {
-        const [startTime] = timeSlot.split('-');
-        const currentTimeStr = this.currentTime.toLocaleTimeString('en-GB', { 
+        const [startTime, endTime] = timeSlot.split('-');
+        const currentTime = this.currentTime.toLocaleTimeString('en-GB', { 
             hour: '2-digit', 
             minute: '2-digit',
             hour12: false 
         });
         
-        if (timeSlot.includes(currentTimeStr.substring(0, 5))) {
+        if (currentTime >= startTime && currentTime < endTime) {
             return 'ACTIVE';
-        } else if (startTime > currentTimeStr.substring(0, 5)) {
+        } else if (startTime > currentTime) {
             return 'Upcoming';
         } else {
             return 'Complete';
@@ -307,14 +364,9 @@ class UnionEventManager {
     }
 
     getPersonCurrentStatus(person) {
-        const currentTimeStr = this.currentTime.toLocaleTimeString('en-GB', { 
-            hour: '2-digit', 
-            minute: '2-digit',
-            hour12: false 
-        });
-
         for (let slot of person.schedule) {
-            if (slot.timeSlot.includes(currentTimeStr.substring(0, 5))) {
+            const status = this.getShiftStatus(slot.timeSlot);
+            if (status === 'ACTIVE') {
                 return 'ACTIVE';
             }
         }
@@ -671,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Version Management
 class VersionManager {
     constructor() {
-        this.currentVersion = '3.5.0';
+        this.currentVersion = '3.7.0';
         this.init();
     }
     
