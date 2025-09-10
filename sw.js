@@ -1,6 +1,6 @@
 // Simple Service Worker that actually works for data updates
 const APP_NAME = 'union-staff';
-const VERSION = '3.5.0'; // Change this every time you deploy
+const VERSION = '3.7.0'; // Change this every time you deploy
 const CACHE_NAME = `${APP_NAME}-v${VERSION}`;
 
 // What to cache
