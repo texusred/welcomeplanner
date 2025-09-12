@@ -1,144 +1,144 @@
 [
   {
-    "name": "Native",
+    "name": "Cambridge Creatives Collective",
     "stallNumber": 1,
     "location": "Ruskin Courtyard",
-    "group": "Native"
+    "group": "Society"
   },
   {
-    "name": "Native",
+    "name": "Optics",
     "stallNumber": 2,
     "location": "Ruskin Courtyard",
-    "group": "Native"
+    "group": "Society"
   },
   {
-    "name": "Native",
+    "name": "Pre-Health",
     "stallNumber": 3,
-    "location": "Ruskin Courtyard",
-    "group": "Native"
-  },
-  {
-    "name": "Cambridge Creatives Collective",
-    "stallNumber": 4,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Placement",
-    "stallNumber": 5,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Sustainability",
-    "stallNumber": 6,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Pre Health",
-    "stallNumber": 7,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
     "name": "Law",
-    "stallNumber": 8,
+    "stallNumber": 4,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Paramedic",
-    "stallNumber": 9,
+    "name": "City of Peace Christian Fellowship",
+    "stallNumber": 5,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "ACS",
-    "stallNumber": 10,
+    "name": "Afro Caribbean Society",
+    "stallNumber": 6,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "First Love",
+    "stallNumber": 7,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
     "name": "Islamic",
-    "stallNumber": 11,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Indian",
-    "stallNumber": 12,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Nigerian",
-    "stallNumber": 13,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Kerala",
-    "stallNumber": 14,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Commonwealth of Independent States",
-    "stallNumber": 15,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Pakistan",
-    "stallNumber": 16,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Sri Lankan",
-    "stallNumber": 17,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Dil Se Desi",
-    "stallNumber": 18,
+    "stallNumber": 8,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
     "name": "Turkish",
-    "stallNumber": 19,
+    "stallNumber": 9,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Indian",
+    "stallNumber": 10,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Nigerian",
+    "stallNumber": 11,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Christ Followers",
+    "stallNumber": 12,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Kerala",
+    "stallNumber": 13,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Inter-Collegiate Prayer Fellowship",
+    "stallNumber": 14,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Pakistan",
+    "stallNumber": 15,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Sri Lankan",
+    "stallNumber": 16,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
     "name": "Lesbian",
-    "stallNumber": 20,
+    "stallNumber": 17,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Anime and Manga",
-    "stallNumber": 21,
+    "name": "Anime & Manga",
+    "stallNumber": 18,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Chess",
+    "stallNumber": 19,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
     "name": "Poe's Poets",
+    "stallNumber": 20,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Fandom",
+    "stallNumber": 21,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Tabletop & Gaming (TaGS)",
     "stallNumber": 22,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Marxist",
+    "name": "Kinkster",
     "stallNumber": 23,
     "location": "Ruskin Courtyard",
     "group": "SU"
   },
   {
-    "name": "Fandom",
+    "name": "eSports",
     "stallNumber": 24,
     "location": "Ruskin Courtyard",
     "group": "Society"
@@ -150,110 +150,92 @@
     "group": "Society"
   },
   {
-    "name": "TAGS",
+    "name": "Marxist",
     "stallNumber": 26,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Kinkster",
+    "name": "ARU Student Academics for Academic Freedom (SAFAF)",
     "stallNumber": 27,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "e-Sports",
+    "name": "Sustainability",
     "stallNumber": 28,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "SAFAF",
+    "name": "Arts & Crafts",
     "stallNumber": 29,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Arts and Crafts",
+    "name": "Paramedic",
     "stallNumber": 30,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Optics",
+    "name": "Biomedical Science",
     "stallNumber": 31,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Women in STEM",
+    "name": "Historical",
     "stallNumber": 32,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Biomed",
+    "name": "Christian Union",
     "stallNumber": 33,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Historical",
+    "name": "Dil se Desi",
     "stallNumber": 34,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "City of Peace Christian Fellowship",
+    "name": "Move Mental",
     "stallNumber": 35,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Inter-Collegiate Prayer Fellowship",
+    "name": "Yoga",
     "stallNumber": 36,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "First Love",
+    "name": "Dive",
     "stallNumber": 37,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Christian Union",
+    "name": "Cheerleading",
     "stallNumber": 38,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Dive",
+    "name": "Kickboxing",
     "stallNumber": 39,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
   {
-    "name": "Cheer",
-    "stallNumber": 40,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Kickboxing",
-    "stallNumber": 41,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
     "name": "Dance",
-    "stallNumber": 42,
-    "location": "Ruskin Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "Pole Fitness",
-    "stallNumber": 43,
+    "stallNumber": 40,
     "location": "Ruskin Courtyard",
     "group": "Society"
   },
@@ -264,19 +246,19 @@
     "group": "SU"
   },
   {
-    "name": "NATIVE",
+    "name": "SU SHOP",
     "stallNumber": 45,
-    "location": "Science Walkway",
+    "location": "Ruskin Courtyard",
     "group": "Native"
   },
   {
-    "name": "NATIVE",
+    "name": "St Matthews Church",
     "stallNumber": 46,
     "location": "Science Walkway",
     "group": "Native"
   },
   {
-    "name": "Cambridge United Football Club",
+    "name": "CUOTC",
     "stallNumber": 47,
     "location": "Science Walkway",
     "group": "Native"
@@ -396,7 +378,7 @@
     "group": "University"
   },
   {
-    "name": "NATIVE",
+    "name": "Cambridge United Football Club",
     "stallNumber": 48,
     "location": "Science Walkway",
     "group": "Native"
@@ -430,18 +412,6 @@
     "stallNumber": 72,
     "location": "LAB Courtyard",
     "group": "Native"
-  },
-  {
-    "name": "BLANK EMPTY",
-    "stallNumber": 73,
-    "location": "LAB Courtyard",
-    "group": "Society"
-  },
-  {
-    "name": "BLANK EMPTY",
-    "stallNumber": 74,
-    "location": "LAB Courtyard",
-    "group": "Society"
   },
   {
     "name": "RSPB",
@@ -578,12 +548,6 @@
   {
     "name": "Adobe",
     "stallNumber": 97,
-    "location": "LAB Courtyard",
-    "group": "Native"
-  },
-  {
-    "name": "CUOTC",
-    "stallNumber": 98,
     "location": "LAB Courtyard",
     "group": "Native"
   }
