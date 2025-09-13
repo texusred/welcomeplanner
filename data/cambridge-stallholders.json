@@ -550,5 +550,17 @@
     "stallNumber": 97,
     "location": "LAB Courtyard",
     "group": "Native"
+  },
+  {
+    "name": "The Light Cinema",
+    "stallNumber": 98,
+    "location": "LAB Courtyard",
+    "group": "Native"
+  },
+  {
+    "name": "Stagecoach East",
+    "stallNumber": 99,
+    "location": "LAB Courtyard",
+    "group": "Native"
   }
 ]
