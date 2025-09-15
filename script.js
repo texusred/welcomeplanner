@@ -723,7 +723,7 @@ document.addEventListener('DOMContentLoaded', () => {
 // Version Management
 class VersionManager {
     constructor() {
-        this.currentVersion = '3.7.0';
+        this.currentVersion = '3.8.0';
         this.init();
     }
     
