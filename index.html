@@ -40,46 +40,59 @@
         <section class="staff-rota-section">
             <div class="section-header">
                 <h2>Staff Rota</h2>
-                <p>Find staff schedules and current assignments</p>
+                <p>Live staff schedules and locations</p>
             </div>
             <div class="section-content">
                 <div class="search-interface">
                     <div class="search-group">
-                        <label for="staffSearch">Find by Person</label>
-                        <input type="text" id="staffSearch" class="search-input" 
-                               placeholder="Search staff member name..." autocomplete="off">
+                        <label for="staffSearch">Search Staff</label>
+                        <input type="text" id="staffSearch" class="search-input" placeholder="Enter staff member name...">
                     </div>
                     <div class="search-group">
                         <label for="locationFilter">Filter by Location</label>
                         <select id="locationFilter" class="search-select">
                             <option value="">All Locations</option>
-                            <option value="SU Stall - Freebies Left Counter">SU Stall - Freebies Left Counter</option>
-                            <option value="SU Stall - Freebies Right Counter">SU Stall - Freebies Right Counter</option>
-                            <option value="SU Stall - Get Involved">SU Stall - Get Involved</option>
-                            <option value="PayPoint">PayPoint</option>
-                            <option value="Communications">Communications</option>
-                            <option value="Wellbeing Zone">Wellbeing Zone</option>
-                            <option value="Welcome Desk">Welcome Desk</option>
-                            <option value="Stage Management">Stage Management</option>
-                            <option value="Set Up">Set Up</option>
-                            <option value="Pack Down">Pack Down</option>
-                            <option value="Event Manager">Event Manager</option>
-                            <option value="Area Manager">Area Manager</option>
-                            <option value="Health & Safety Check">Health & Safety Check</option>
-                            <option value="Shop Duties">Shop Duties</option>
-                            <option value="Tattoo">Tattoo</option>
-                            <option value="Steward">Steward</option>
-                            <option value="Native">Native</option>
-                            <option value="Societies Hub">Societies Hub</option>
+                            <option value="Ruskin Courtyard">Ruskin Courtyard</option>
+                            <option value="LAB Courtyard">LAB Courtyard</option>
+                            <option value="Science Walkway">Science Walkway</option>
                         </select>
                     </div>
                 </div>
-
-                <div id="staffResults" class="results-area">
+                
+                <div class="results-area" id="staffResults">
                     <div class="results-placeholder">
-                        <div class="placeholder-icon">👥</div>
-                        <h3>Search Staff or Location</h3>
-                        <p>Search for a staff member to see their full schedule, or filter by location to see all staff working there</p>
+                        <span class="placeholder-icon">👥</span>
+                        <h3>Staff Search</h3>
+                        <p>Search for staff members or filter by location to view schedules</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- NEW: Standalone Map Section -->
+        <section class="map-section">
+            <div class="section-header">
+                <h2>Location Maps</h2>
+                <p>Interactive venue maps</p>
+            </div>
+            <div class="section-content">
+                <div class="map-viewer-section">
+                    <div class="map-viewer-header">
+                        <h3>View Maps</h3>
+                        <p>Quick access to location maps</p>
+                    </div>
+                    <div class="map-viewer-content">
+                        <div class="map-buttons">
+                            <button class="map-btn" onclick="openMap('ruskin-courtyard')">
+                                🌿 Ruskin Courtyard
+                            </button>
+                            <button class="map-btn" onclick="openMap('science-walkway')">
+                                🔬 Science Walkway
+                            </button>
+                            <button class="map-btn" onclick="openMap('lab-courtyard')">
+                                ☂️ LAB Courtyard
+                            </button>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -88,42 +101,20 @@
         <aside class="stallholder-section">
             <div class="stallholder-card">
                 <div class="stallholder-header">
-                    <h3>Find Stallholders</h3>
-                    <p>Quick lookup for event day</p>
+                    <h3>Stallholder Search</h3>
+                    <p>Find stall locations</p>
                 </div>
                 <div class="stallholder-content">
-                    <input type="text" id="stallholderSearch" class="stallholder-search" 
-                           placeholder="Search stallholder names...">
-                    
+                    <input type="text" id="stallholderSearch" class="stallholder-search" placeholder="Search stallholders...">
                     <div class="stallholder-actions">
-                        <button id="listAllStallholders" class="btn btn-secondary">List All Stallholders</button>
+                        <button id="listAllStallholders" class="btn btn-secondary">List All</button>
                     </div>
-
-                    <div id="stallholderResults" class="stallholder-results">
+                    <div class="stallholder-results" id="stallholder-results">
                         <div class="results-placeholder">
                             <div class="placeholder-icon">🏪</div>
                             <p>Type to search stallholders or view complete list</p>
                         </div>
-                        <!-- NEW: Map Viewer Section -->
-<div class="map-viewer-section">
-    <div class="map-viewer-header">
-        <h3>View Maps</h3>
-        <p>Quick access to location maps</p>
-    </div>
-    <div class="map-viewer-content">
-        <div class="map-buttons">
-            <button class="map-btn" onclick="openMap('ruskin-courtyard')">
-                🏛️ Ruskin Courtyard
-            </button>
-            <button class="map-btn" onclick="openMap('science-walkway')">
-                🔬 Science Walkway
-            </button>
-            <button class="map-btn" onclick="openMap('lab-courtyard')">
-                🧪 LAB Courtyard
-            </button>
-        </div>
-    </div>
-</div>
+                        <!-- Map section removed from here -->
                     </div>
                 </div>
             </div>
@@ -148,54 +139,57 @@
             <div class="modal-content">
                 <div class="modal-header">
                     <h3 id="modalStallName">Stallholder Name</h3>
-                    <button id="closeModal" class="modal-close">&times;</button>
+                    <button class="modal-close" onclick="closeModal()">&times;</button>
                 </div>
                 <div class="modal-body">
-                    <div class="stall-info">
+                    <div class="modal-info">
                         <div class="info-item">
-                            <strong>Stall Number:</strong>
-                            <span id="modalStallNumber"></span>
+                            <label>Stall Number:</label>
+                            <span id="modalStallNumber">-</span>
                         </div>
                         <div class="info-item">
-                            <strong>Location:</strong>
-                            <span id="modalStallLocation"></span>
+                            <label>Location:</label>
+                            <span id="modalStallLocation">-</span>
                         </div>
                         <div class="info-item">
-                            <strong>Group:</strong>
-                            <span id="modalStallGroup"></span>
+                            <label>Group:</label>
+                            <span id="modalStallGroup">-</span>
                         </div>
+                    </div>
+                    <div class="modal-actions">
+                        <button id="viewOnMapBtn" class="btn btn-primary">View on Map</button>
                     </div>
                 </div>
             </div>
         </div>
     </div>
 
-    <div id="loadingIndicator" class="loading" style="display: none;">
-        <div class="loading-spinner"></div>
-        <p>Loading...</p>
+    <!-- Map Modal -->
+    <div id="mapModal" class="map-modal">
+        <div class="map-modal-close" onclick="closeMap()">&times;</div>
+        <img id="modalImage" src="" alt="Map">
     </div>
 
-    <footer class="version-footer">
+    <!-- Loading Indicator -->
+    <div id="loadingIndicator" class="loading" style="display: none;">
+        <div class="loading-spinner"></div>
+        <p>Loading data...</p>
+    </div>
+
+    <!-- Toast Container -->
+    <div id="toastContainer" class="toast-container"></div>
+
+    <!-- Version Footer -->
+    <footer id="versionFooter" class="version-footer">
         <div class="version-info">
-            <span id="appVersion">v3.0.0</span>
+            <span class="app-version">v3.7.0</span>
             <span class="separator">•</span>
-            <span id="lastUpdated">Loading...</span>
+            <span class="last-updated">Updated: --</span>
+            <span class="separator">•</span>
+            <span class="sw-status">Service Worker: Checking...</span>
         </div>
     </footer>
 
     <script src="script.js"></script>
-    <script>
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('/sw.js')
-                    .then(registration => console.log('SW registered'))
-                    .catch(registrationError => console.log('SW registration failed'));
-            });
-        }
-    </script>
-    <div id="mapModal" class="map-modal">
-    <div class="map-modal-close" onclick="closeMap()">&times;</div>
-    <img id="modalImage" alt="Map">
-</div>
 </body>
 </html>
