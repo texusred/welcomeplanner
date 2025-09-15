@@ -264,6 +264,12 @@
     "group": "Native"
   },
   {
+    "name": "Cambridge United Football Club",
+    "stallNumber": 48,
+    "location": "Science Walkway",
+    "group": "Native"
+  },
+  {
     "name": "Archery",
     "stallNumber": 49,
     "location": "Science Walkway",
@@ -324,12 +330,6 @@
     "group": "University"
   },
   {
-    "name": "Netball",
-    "stallNumber": 61,
-    "location": "Science Walkway",
-    "group": "University"
-  },
-  {
     "name": "Helmore Gym",
     "stallNumber": 59,
     "location": "Science Walkway",
@@ -338,6 +338,12 @@
   {
     "name": "Campus Sport",
     "stallNumber": 60,
+    "location": "Science Walkway",
+    "group": "University"
+  },
+  {
+    "name": "Netball",
+    "stallNumber": 61,
     "location": "Science Walkway",
     "group": "University"
   },
@@ -378,12 +384,6 @@
     "group": "University"
   },
   {
-    "name": "Cambridge United Football Club",
-    "stallNumber": 48,
-    "location": "Science Walkway",
-    "group": "Native"
-  },
-  {
     "name": "Veezu Holding",
     "stallNumber": 68,
     "location": "Science Walkway",
@@ -412,6 +412,18 @@
     "stallNumber": 72,
     "location": "LAB Courtyard",
     "group": "Native"
+  },
+  {
+    "name": "Shake Shack",
+    "stallNumber": 73,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
+  },
+  {
+    "name": "Shake Shack",
+    "stallNumber": 74,
+    "location": "Ruskin Courtyard",
+    "group": "Society"
   },
   {
     "name": "RSPB",
@@ -522,7 +534,7 @@
     "group": "Native"
   },
   {
-    "name": "Shake Shack",
+    "name": "Heavenly Desserts",
     "stallNumber": 93,
     "location": "LAB Courtyard",
     "group": "Native"
