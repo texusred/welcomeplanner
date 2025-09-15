@@ -797,3 +797,29 @@ refreshAppData = async function() {
         window.versionManager.onDataRefresh();
     }
 };
+// Map viewer functions
+function openMap(mapId) {
+    const modal = document.getElementById('mapModal');
+    const img = document.getElementById('modalImage');
+    
+    // Replace with your actual image paths
+    img.src = `maps/${mapId}.jpg`;
+    modal.classList.add('active');
+    document.body.style.overflow = 'hidden';
+}
+
+function closeMap() {
+    document.getElementById('mapModal').classList.remove('active');
+    document.body.style.overflow = '';
+}
+
+// Add these event listeners to your existing DOMContentLoaded section
+document.addEventListener('click', function(e) {
+    if (e.target.id === 'mapModal') {
+        closeMap();
+    }
+});
+
+document.addEventListener('keydown', function(e) {
+    if (e.key === 'Escape') closeMap();
+});
