@@ -132,7 +132,7 @@ p { margin-bottom: 1rem; }
   margin: 0 auto;
   padding: 2rem;
   display: grid;
-  grid-template-columns: 2fr 1fr;
+  grid-template-columns: 2fr 1fr 1fr; /* Changed from: 2fr 1fr */
   gap: 2rem;
   min-height: calc(100vh - 120px);
 }
@@ -1113,7 +1113,6 @@ body {
   body {
     padding-bottom: 50px;
   }
-}
 
 @media (max-width: 480px) {
   .union-logo {
@@ -1163,7 +1162,7 @@ body {
     height: 44px;
     padding: 0;
   }
-}
+  
 /* Map Viewer Section */
 .map-viewer-section {
     background: var(--union-white);
@@ -1262,4 +1261,13 @@ body {
 
 .map-modal-close:hover {
     background: var(--union-red);
+}
+
+.map-section {
+  background: var(--union-white);
+  border-radius: 12px;
+  border: 3px solid var(--union-black);
+  overflow: hidden;
+  box-shadow: 0 4px 16px var(--shadow);
+}
 }
